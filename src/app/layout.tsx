@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
 import "./globals.css";
+import { Navbar1 } from "@/components/general/navbar1";
+import { Footer2 } from "@/components/general/footer2";
+import { ThemeProvider } from "@/components/general/ThemeProvider";
 
 const barlow = Barlow({
-  weight: '400',
+  weight: "400",
   variable: "--font-barlow",
   subsets: ["latin"],
 });
@@ -19,11 +22,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={barlow.className}>
-      <body
-        className={`${barlow.variable} antialiased `}
-      >
-        {children}
+    <html lang="en" suppressHydrationWarning className={barlow.className}>
+      <body className={`${barlow.variable} antialiased `}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <header className="container-default">
+            <Navbar1 />
+          </header>
+
+          <main className="container-default">{children}</main>
+
+          <footer className="container-default">
+            <Footer2 />
+          </footer>
+        </ThemeProvider>
       </body>
     </html>
   );
