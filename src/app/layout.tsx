@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
 import "./globals.css";
+import { Provider } from "react-redux";
+import StoreProvider from "./StoreProvider";
 
 const barlow = Barlow({
   weight: '400',
@@ -23,7 +25,7 @@ export default function RootLayout({
       <body
         className={`${barlow.variable} antialiased `}
       >
-        {children}
+        <StoreProvider> {children} </StoreProvider>
       </body>
     </html>
   );
