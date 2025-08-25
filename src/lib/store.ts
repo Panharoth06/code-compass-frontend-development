@@ -1,13 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { judge0Api } from './services/judge0/judge0'
+import { problemApi } from './services/problem/problem'
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [judge0Api.reducerPath]: judge0Api.reducer,
+      [problemApi.reducerPath]: problemApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(judge0Api.middleware),
+      getDefaultMiddleware().concat(judge0Api.middleware)
+                            .concat(problemApi.middleware),
   })
 }
 
