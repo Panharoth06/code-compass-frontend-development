@@ -1,11 +1,11 @@
 'use client'
 
-import { useGetSubmissionQuery } from '@/lib/services/problem/problem';
+import { useGetProblemQuery } from '@/lib/services/problem/problem';
 import React from 'react'
 
 const ProblemDisplay = () => {
 
-    const {data, error, isLoading} = useGetSubmissionQuery("1");
+    const {data, error, isLoading} = useGetProblemQuery("1");
 
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error occurred: {(error as any).status}</div>;

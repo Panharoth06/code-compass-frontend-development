@@ -11,10 +11,10 @@ export const problemApi = createApi ({
         }
     ),
     endpoints: (builder) => ({
-        getSubmission: builder.query<ProblemResponse, string>({
+        getProblem: builder.query<ProblemResponse, string>({
             query: (problemId: string) => `problems/${problemId}`,
         }),
     }),
 });
 
-export const { useGetSubmissionQuery } = problemApi;
+export const { useGetProblemQuery } = problemApi;
