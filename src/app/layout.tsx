@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
 import "./globals.css";
-import { Provider } from "react-redux";
 import StoreProvider from "./StoreProvider";
 
 const barlow = Barlow({
