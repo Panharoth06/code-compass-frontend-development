@@ -286,178 +286,159 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      isScrolled 
-        ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-gray-200/30 dark:border-gray-700/30' 
-        : 'bg-transparent'
-    }`}>
-      {/* Gradient overlay for extra visual depth */}
-      <div className={`absolute inset-0 transition-opacity duration-500 ${
+    <>
+      {/* Fixed navbar */}
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled 
-          ? 'opacity-100' 
-          : 'opacity-0'
+          ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-xl border-b border-gray-200/30 dark:border-gray-700/30' 
+          : 'bg-transparent'
       }`}>
-        <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5 dark:from-gray-900/5 dark:via-transparent dark:to-gray-900/5"></div>
-      </div>
+        {/* Gradient overlay for extra visual depth */}
+        <div className={`absolute inset-0 transition-opacity duration-500 ${
+          isScrolled 
+            ? 'opacity-100' 
+            : 'opacity-0'
+        }`}>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5 dark:from-gray-900/5 dark:via-transparent dark:to-gray-900/5"></div>
+        </div>
 
-      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          
-          {/* Enhanced Logo with Image */}
-          <Link href="/" className="flex items-center space-x-3 group relative">
-            <div className="relative">
-              {/* Logo without background, bigger size */}
-              <div className="relative w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
-                <Image
-                  src="/image/logo2.svg"
-                  alt="CodeCompass Logo"
-                  width={48}
-                  height={48}
-                  className="w-12 h-12 object-contain"
-                  priority
-                />
-
-                {/* Subtle glow effect on hover */}
-                <div className="absolute inset-0 bg-[#CCF301]/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10"></div>
-              </div>
-            </div>
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             
-            <div className="flex flex-col">
-              <span className="text-xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#CCF301] transition-colors duration-200">
-                CodeCompass
-              </span>
-              <span className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-[#CCF301]/70 transition-colors duration-200 -mt-1">
-                Navigate Your Code
-              </span>
-            </div>
-          </Link>
+            {/* Enhanced Logo with Image */}
+            <Link href="/" className="flex items-center space-x-3 group relative">
+              <div className="relative">
+                {/* Logo without background, bigger size */}
+                <div className="relative w-12 h-12 flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+                  <Image
+                    src="/image/image/logo2.svg"
+                    alt="CodeCompass Logo"
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 object-contain"
+                    priority
+                  />
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
-            {mainNavItems.map((item) => {
-              const IconComponent = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
+                  {/* Subtle glow effect on hover */}
+                  <div className="absolute inset-0 bg-[#CCF301]/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md -z-10"></div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#CCF301] transition-colors duration-200">
+                  CodeCompass
+                </span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-[#CCF301]/70 transition-colors duration-200 -mt-1">
+                  Navigate Your Code
+                </span>
+              </div>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-1">
+              {mainNavItems.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
+                  >
+                    <IconComponent className="h-4 w-4" />
+                    <span>{item.name}</span>
+                    {/* Subtle glow on hover */}
+                    <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
+                  </Link>
+                );
+              })}
+              
+              {/* More Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setIsMoreOpen(true)}
+                  onMouseLeave={() => setIsMoreOpen(false)}
                   className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
                 >
-                  <IconComponent className="h-4 w-4" />
-                  <span>{item.name}</span>
-                  {/* Subtle glow on hover */}
+                  <span>More</span>
+                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMoreOpen ? 'rotate-180' : ''}`} />
                   <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-                </Link>
-              );
-            })}
-            
-            {/* More Dropdown */}
-            <div className="relative">
-              <button
-                onMouseEnter={() => setIsMoreOpen(true)}
-                onMouseLeave={() => setIsMoreOpen(false)}
-                className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
-              >
-                <span>More</span>
-                <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isMoreOpen ? 'rotate-180' : ''}`} />
-                <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-              </button>
-              
-              {/* Enhanced Dropdown Menu */}
-              <div 
-                onMouseEnter={() => setIsMoreOpen(true)}
-                onMouseLeave={() => setIsMoreOpen(false)}
-                className={`absolute top-full right-0 mt-2 w-48 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 ${
-                  isMoreOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
-                }`}
-              >
-                <div className="p-2">
-                  {moreItems.map((item) => {
-                    const IconComponent = item.icon;
-                    return (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="flex items-center space-x-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 transition-all duration-200 rounded-lg group"
-                      >
-                        <IconComponent className="h-4 w-4" />
-                        <span className="text-sm font-medium">{item.name}</span>
-                      </Link>
-                    );
-                  })}
+                </button>
+                
+                {/* Enhanced Dropdown Menu */}
+                <div 
+                  onMouseEnter={() => setIsMoreOpen(true)}
+                  onMouseLeave={() => setIsMoreOpen(false)}
+                  className={`absolute top-full right-0 mt-2 w-48 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl rounded-xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 ${
+                    isMoreOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'
+                  }`}
+                >
+                  <div className="p-2">
+                    {moreItems.map((item) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="flex items-center space-x-3 px-3 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 transition-all duration-200 rounded-lg group"
+                        >
+                          <IconComponent className="h-4 w-4" />
+                          <span className="text-sm font-medium">{item.name}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Enhanced Desktop Actions */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <SkyToggle />
-            
-            <button className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group">
-              <LogIn className="h-4 w-4" />
-              <span>Login</span>
+            {/* Enhanced Desktop Actions */}
+            <div className="hidden lg:flex items-center space-x-3">
+              <SkyToggle />
+              
+              <button className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group">
+                <LogIn className="h-4 w-4" />
+                <span>Login</span>
+                <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
+              </button>
+              
+              <button className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25 transform hover:scale-105">
+                <User className="h-4 w-4" />
+                <span>Sign Up</span>
+              </button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 relative group"
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
             </button>
-            
-            <button className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25 transform hover:scale-105">
-              <User className="h-4 w-4" />
-              <span>Sign Up</span>
-            </button>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 relative group"
-          >
-            {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-          </button>
         </div>
-      </div>
 
-      {/* Enhanced Mobile Menu */}
-      <div className={`lg:hidden transition-all duration-300 ${
-        isMenuOpen 
-          ? 'max-h-screen opacity-100' 
-          : 'max-h-0 opacity-0 overflow-hidden'
-      }`}>
-        <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200/30 dark:border-gray-700/30 shadow-xl">
-          {/* Gradient overlay for mobile menu */}
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent dark:via-gray-900/5"></div>
-          
-          <div className="relative px-4 py-6 space-y-1">
+        {/* Enhanced Mobile Menu */}
+        <div className={`lg:hidden transition-all duration-300 ${
+          isMenuOpen 
+            ? 'max-h-screen opacity-100' 
+            : 'max-h-0 opacity-0 overflow-hidden'
+        }`}>
+          <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200/30 dark:border-gray-700/30 shadow-xl">
+            {/* Gradient overlay for mobile menu */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent dark:via-gray-900/5"></div>
             
-            {/* Mobile Main Navigation */}
-            {mainNavItems.map((item) => {
-              const IconComponent = item.icon;
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium group"
-                >
-                  <IconComponent className="h-5 w-5" />
-                  <span>{item.name}</span>
-                  <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-                </Link>
-              );
-            })}
-
-            {/* Mobile More Items */}
-            <div className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4">
-              <div className="mb-3">
-                <span className="px-4 text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">More</span>
-              </div>
-              {moreItems.map((item) => {
+            <div className="relative px-4 py-6 space-y-1">
+              
+              {/* Mobile Main Navigation */}
+              {mainNavItems.map((item) => {
                 const IconComponent = item.icon;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
+                    className="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium group"
                   >
                     <IconComponent className="h-5 w-5" />
                     <span>{item.name}</span>
@@ -465,36 +446,61 @@ const Navbar = () => {
                   </Link>
                 );
               })}
-            </div>
 
-            {/* Enhanced Mobile Actions */}
-            <div className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4 space-y-3">
-              <div className="flex items-center justify-between px-4 py-2">
-                <span className="text-gray-600 dark:text-gray-300 font-medium">Theme</span>
-                <SkyToggle />
+              {/* Mobile More Items */}
+              <div className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4">
+                <div className="mb-3">
+                  <span className="px-4 text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">More</span>
+                </div>
+                {moreItems.map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
+                    >
+                      <IconComponent className="h-5 w-5" />
+                      <span>{item.name}</span>
+                      <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
+                    </Link>
+                  );
+                })}
               </div>
-              
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
-              >
-                <LogIn className="h-5 w-5" />
-                <span>Login</span>
-                <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-              </button>
-              
-              <button
-                onClick={() => setIsMenuOpen(false)}
-                className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25"
-              >
-                <User className="h-5 w-5" />
-                <span>Sign Up</span>
-              </button>
+
+              {/* Enhanced Mobile Actions */}
+              <div className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4 space-y-3">
+                <div className="flex items-center justify-between px-4 py-2">
+                  <span className="text-gray-600 dark:text-gray-300 font-medium">Theme</span>
+                  <SkyToggle />
+                </div>
+                
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
+                >
+                  <LogIn className="h-5 w-5" />
+                  <span>Login</span>
+                  <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
+                </button>
+                
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25"
+                >
+                  <User className="h-5 w-5" />
+                  <span>Sign Up</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Spacer div to prevent content from being hidden under fixed navbar */}
+      <div className="h-16"></div>
+    </>
   );
 };
 
