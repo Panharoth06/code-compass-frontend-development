@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./StoreProvider";
+import { Navbar1 } from "@/components/navbar1";
+import { ThemeProvider } from "@/components/theme-provider";
+// import Navbar from "@/components/Navbar";
 
 const barlow = Barlow({
   weight: '400',
@@ -20,11 +23,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={barlow.className}>
+    <html lang="en" className={barlow.className} suppressHydrationWarning>
       <body
         className={`${barlow.variable} antialiased `}
       >
-        <StoreProvider> {children} </StoreProvider>
+        <StoreProvider>
+          <ThemeProvider 
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar1/>
+            {children}
+          </ThemeProvider>
+        </StoreProvider>
+
+         <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-pap3DdDlsw0XwMhtlZut9R8x4Vg3g5G8ZzYpYvBqZ3C4X6j+8kNY8j5uGmDjqShKpQ+HDf0TOfX5pWqT1Wv4Yg=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
       </body>
     </html>
   );
