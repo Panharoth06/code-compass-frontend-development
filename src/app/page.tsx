@@ -1,16 +1,17 @@
-import Judge0Display from "@/components/Judge0Display";
-import ProblemDisplay from "@/components/ProblemDisplay";
+// app/page.tsx
+import Homepage from "@/components/homePage/HomePage";
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import ContactUsPage from "@/components/contact_Us/page";
 
 export default function Home() {
   return (
     <div>
-      <div>
-        <Navbar/>
-        
-        {/* <Judge0Display/>
-        <ProblemDisplay/> */}
-      </div>
+      <Navbar/>
+      <Homepage/>
+      {/* <ContactUsPage/> */}
+      
+      <Footer/>
     </div>
   );
 }

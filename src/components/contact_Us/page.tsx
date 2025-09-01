@@ -1,0 +1,447 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+export default function ContactUsPage() {
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [animationStage, setAnimationStage] = useState(0);
+
+  // Initialize theme from document class (managed by navbar)
+  useEffect(() => {
+    // Check if dark mode is already set by navbar
+    const checkDarkMode = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+    
+    checkDarkMode();
+    
+    // Watch for theme changes from navbar
+    const observer = new MutationObserver(() => {
+      checkDarkMode();
+    });
+    
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+    
+    // Trigger animations sequentially
+    const timeouts = [
+      setTimeout(() => setAnimationStage(1), 100),  // Hero
+      setTimeout(() => setAnimationStage(2), 300),  // Form
+      setTimeout(() => setAnimationStage(3), 500),  // Contact info 1
+      setTimeout(() => setAnimationStage(4), 700),  // Contact info 2
+      setTimeout(() => setAnimationStage(5), 900),  // Contact info 3
+    ];
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.firstName || !formData.email || !formData.message) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    setTimeout(() => {
+      alert('Message sent successfully! We\'ll get back to you within 24 hours.');
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      setIsSubmitting(false);
+    }, 2000);
+  };
+
+  const themeClasses = {
+    text: isDarkMode ? 'text-white' : 'text-gray-900',
+    textSecondary: isDarkMode ? 'text-gray-300' : 'text-gray-600',
+    cardBg: isDarkMode ? 'bg-gray-900/90' : 'bg-white/90',
+    cardBorder: isDarkMode ? 'border-gray-800' : 'border-gray-200',
+    inputBg: isDarkMode ? 'bg-gray-800' : 'bg-gray-50',
+    inputBorder: isDarkMode ? 'border-gray-700' : 'border-gray-300',
+    inputText: isDarkMode ? 'text-white' : 'text-gray-900',
+    placeholder: isDarkMode ? 'placeholder-gray-400' : 'placeholder-gray-500',
+    iconBg: isDarkMode ? 'bg-[#CCF301]/20' : 'bg-[#CCF301]/10',
+    socialBg: isDarkMode ? 'bg-gray-800' : 'bg-gray-100',
+    socialHover: isDarkMode ? 'hover:bg-[#CCF301]/20' : 'hover:bg-[#CCF301]/20',
+    socialIcon: isDarkMode ? 'text-gray-300' : 'text-gray-600'
+  };
+
+  return (
+    <div className="min-h-screen relative transition-colors duration-500">
+      {/* Background with your specified gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-black dark:via-slate-900 dark:to-black"></div>
+      
+      {/* Content */}
+      <div className={`relative ${themeClasses.text}`}>
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
+          {/* Hero Section */}
+          <div className={`text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-1000 ease-out ${
+            animationStage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+              Get in <span className="text-[#CCF301]">Touch</span>
+            </h2>
+            <p className={`text-base sm:text-lg lg:text-xl ${themeClasses.textSecondary} max-w-2xl mx-auto px-2`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+              Have questions about CodeCompass? Need technical support? We're here to help you on your coding journey.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 lg:mb-16">
+            {/* Contact Form */}
+            <div className={`lg:col-span-2 transition-all duration-1000 ease-out delay-200 ${
+              animationStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}>
+              <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)]`}>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+                  <span className="w-2 h-2 bg-[#CCF301] roued-full mr-3"></span>
+                  Send us a message
+                </h3>
+                
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                  <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+                    <div className="group">
+                      <label htmlFor="firstName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                        First Name
+                      </label>
+                      <input 
+                        type="text" 
+                        id="firstName" 
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                        placeholder="Enter your first name"
+                        style={{ fontFamily: 'Barlow, sans-serif' }}
+                      />
+                    </div>
+                    <div className="group">
+                      <label htmlFor="lastName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                        Last Name
+                      </label>
+                      <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                        placeholder="Enter your last name"
+                        style={{ fontFamily: 'Barlow, sans-serif' }}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="group">
+                    <label htmlFor="email" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                      Email Address
+                    </label>
+                    <input 
+                      type="email" 
+                      id="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                      placeholder="your@email.com"
+                      style={{ fontFamily: 'Barlow, sans-serif' }}
+                    />
+                  </div>
+                  
+                  <div className="group">
+                    <label htmlFor="subject" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                      Subject
+                    </label>
+                    <select 
+                      id="subject" 
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                      style={{ fontFamily: 'Barlow, sans-serif' }}
+                    >
+                      <option value="">Select a topic</option>
+                      <option value="technical">Technical Support</option>
+                      <option value="account">Account Issues</option>
+                      <option value="billing">Billing Questions</option>
+                      <option value="feedback">Feedback & Suggestions</option>
+                      <option value="partnership">Partnership Inquiry</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+                  
+                  <div className="group">
+                    <label htmlFor="message" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                      Message
+                    </label>
+                    <textarea 
+                      id="message" 
+                      name="message" 
+                      rows={4}
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 resize-none text-sm sm:text-base`}
+                      placeholder="Tell us how we can help you..."
+                      style={{ fontFamily: 'Barlow, sans-serif' }}
+                    />
+                  </div>
+                  
+                  <button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="w-full bg-[#CCF301] hover:bg-[#B8E000] text-black font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-[0_0_20px_rgba(204,243,1,0.3)] hover:shadow-[0_0_30px_rgba(204,243,1,0.5)] sm:hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm sm:text-base"
+                    style={{ fontFamily: 'Source Code Pro, monospace' }}
+                  >
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              </div>
+            </div>
+            
+            {/* Contact Information */}
+            <div className="space-y-4 sm:space-y-6">
+              {/* Quick Contact */}
+              <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
+                animationStage >= 3 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+              }`}>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+                  <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
+                  Quick Contact
+                </h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <div className="flex items-start space-x-3 group">
+                    <div className={`w-8 h-8 ${themeClasses.iconBg} rounded-lg flex items-center justify-center mt-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
+                      <svg className="w-4 h-4 text-[#CCF301]" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+                        <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} style={{ fontFamily: 'Source Code Pro, monospace' }}>Email</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`} style={{ fontFamily: 'Barlow, sans-serif' }}>support@codecompass.com</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3 group">
+                    <div className={`w-8 h-8 ${themeClasses.iconBg} rounded-lg flex items-center justify-center mt-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
+                      <svg className="w-4 h-4 text-[#CCF301]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} style={{ fontFamily: 'Source Code Pro, monospace' }}>Location</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`} style={{ fontFamily: 'Barlow, sans-serif' }}>San Francisco, CA</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3 group">
+                    <div className={`w-8 h-8 ${themeClasses.iconBg} rounded-lg flex items-center justify-center mt-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12`}>
+                      <svg className="w-4 h-4 text-[#CCF301]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd"></path>
+                      </svg>
+                    </div>
+                    <div>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} style={{ fontFamily: 'Source Code Pro, monospace' }}>Response Time</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`} style={{ fontFamily: 'Barlow, sans-serif' }}>Within 24 hours</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* FAQ Link */}
+              <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
+                animationStage >= 4 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+              }`}>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+                  <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
+                  Need Help?
+                </h3>
+                <p className={`${themeClasses.textSecondary} mb-3 sm:mb-4 text-sm sm:text-base`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                  Check out our FAQ section for quick answers to common questions.
+                </p>
+                <a href="#" className="inline-flex items-center text-[#CCF301] hover:text-[#B8E000] transition-all duration-300 sm:hover:translate-x-2 group text-sm sm:text-base">
+                  <span style={{ fontFamily: 'Source Code Pro, monospace' }}>View FAQ</span>
+                  <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                  </svg>
+                </a>
+              </div>
+              
+              {/* Social Links */}
+              <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
+                animationStage >= 5 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
+              }`}>
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center" style={{ fontFamily: 'Source Code Pro, monospace' }}>
+                  <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
+                  Follow Us
+                </h3>
+                <div className="flex space-x-3 sm:space-x-4">
+                  {[0, 1, 2, 3].map((index) => (
+                    <a 
+                      key={index}
+                      href="#" 
+                      className={`w-10 h-10 ${themeClasses.socialBg} ${themeClasses.socialHover} rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-12 group`}
+                      style={{
+                        animationDelay: `${index * 100}ms`,
+                        animation: animationStage >= 5 ? 'fadeInUp 0.6s ease-out forwards' : 'none'
+                      }}
+                    >
+                      {index === 0 && (
+                        <svg className={`w-4 sm:w-5 h-4 sm:h-5 ${themeClasses.socialIcon} group-hover:text-[#CCF301] transition-colors duration-300`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                      )}
+                      {index === 1 && (
+                        <svg className={`w-4 sm:w-5 h-4 sm:h-5 ${themeClasses.socialIcon} group-hover:text-[#CCF301] transition-colors duration-300`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                        </svg>
+                      )}
+                      {index === 2 && (
+                        <svg className={`w-4 sm:w-5 h-4 sm:h-5 ${themeClasses.socialIcon} group-hover:text-[#CCF301] transition-colors duration-300`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                      )}
+                      {index === 3 && (
+                        <svg className={`w-4 sm:w-5 h-4 sm:h-5 ${themeClasses.socialIcon} group-hover:text-[#CCF301] transition-colors duration-300`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.739.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001 12.017.001z"/>
+                        </svg>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Custom CSS for animations */}
+        <style jsx>{`
+          @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&family=Barlow:wght@300;400;500;600&display=swap');
+          
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px) scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(-10px);
+            }
+          }
+          
+          .animate-float {
+            animation: float 3s ease-in-out infinite;
+          }
+          
+          /* Smooth scrollbar */
+          ::-webkit-scrollbar {
+            width: 6px;
+          }
+          
+          @media (min-width: 640px) {
+            ::-webkit-scrollbar {
+              width: 8px;
+            }
+          }
+          
+          ::-webkit-scrollbar-track {
+            background: ${isDarkMode ? '#1f2937' : '#f3f4f6'};
+            border-radius: 4px;
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            background: #CCF301;
+            border-radius: 4px;
+          }
+          
+          ::-webkit-scrollbar-thumb:hover {
+            background: #B8E000;
+          }
+          
+          /* Mobile optimizations */
+          @media (max-width: 640px) {
+            /* Prevent horizontal scroll */
+            body {
+              overflow-x: hidden;
+            }
+            
+            /* Touch-friendly sizing */
+            input, textarea, select, button {
+              min-height: 44px;
+            }
+            
+            /* Better tap targets */
+            a, button {
+              min-height: 44px;
+              min-width: 44px;
+            }
+            
+            /* Disable hover effects on mobile */
+            @media (hover: none) {
+              .hover\\:scale-\\[1\\.02\\] {
+                transform: none !important;
+              }
+              
+              .hover\\:translate-y-\\[-8px\\] {
+                transform: none !important;
+              }
+              
+              .hover\\:translate-x-2 {
+                transform: none !important;
+              }
+            }
+          }
+          
+          /* Ensure proper touch scrolling */
+          * {
+            -webkit-overflow-scrolling: touch;
+          }
+        `}</style>
+      </div>
+    </div>
+  );
+}
