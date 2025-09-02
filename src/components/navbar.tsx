@@ -173,7 +173,7 @@ const Navbar = () => {
   // Main navigation items
   const mainNavItems = [
     { name: 'Home', href: '/', icon: Home },
-    { name: 'Problems', href: '/problems', icon: Puzzle },
+    { name: 'Problems', href: '/problemset', icon: Puzzle },
     { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
   ];
 

@@ -1,507 +1,894 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { 
-  Search, 
-  Filter, 
-  Star, 
-  Clock, 
-  CheckCircle, 
-  Circle, 
-  BarChart3, 
-  Users, 
-  Zap,
-  ChevronDown,
-  ChevronRight,
-  X,
-  Hash,
-  Target,
-  Trophy,
-  Book,
-  Lightbulb
-} from 'lucide-react';
+"use client"
 
-const ProblemSet = () => {
-  const [selectedTags, setSelectedTags] = useState(['All Topics']);
-  const [selectedDifficulty, setSelectedDifficulty] = useState(['All']);
-  const [selectedStatus, setSelectedStatus] = useState(['All']);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(true);
-  const [isDark, setIsDark] = useState(true);
+import { useState, useEffect, useRef, useCallback } from "react"
+import { Search, Filter, ArrowUpDown, BookOpen, Calendar, Heart, Star, Trophy, Menu, X, ChevronRight } from "lucide-react"
 
-  // Sample problem data
-  const problems = [
-    {
-      id: 1,
-      title: "Two Sum",
-      difficulty: "Easy",
-      acceptance: "49%",
-      status: "solved",
-      tags: ["Array", "Hash Table"],
-      submissions: "3.2M",
-      likes: 15420
-    },
-    {
-      id: 2,
-      title: "Add Two Numbers",
-      difficulty: "Medium", 
-      acceptance: "38%",
-      status: "attempted",
-      tags: ["Linked List", "Math", "Recursion"],
-      submissions: "1.8M",
-      likes: 9821
-    },
-    {
-      id: 3,
-      title: "Longest Substring Without Repeating Characters",
-      difficulty: "Medium",
-      acceptance: "33%", 
-      status: "unsolved",
-      tags: ["Hash Table", "String", "Sliding Window"],
-      submissions: "2.1M",
-      likes: 12453
-    },
-    {
-      id: 4,
-      title: "Median of Two Sorted Arrays",
-      difficulty: "Hard",
-      acceptance: "36%",
-      status: "unsolved", 
-      tags: ["Array", "Binary Search", "Divide and Conquer"],
-      submissions: "982K",
-      likes: 8734
-    },
-    {
-      id: 5,
-      title: "Longest Palindromic Substring",
-      difficulty: "Medium",
-      acceptance: "32%",
-      status: "solved",
-      tags: ["String", "Dynamic Programming"],
-      submissions: "1.5M", 
-      likes: 11267
-    },
-    {
-      id: 6,
-      title: "Reverse Integer",
-      difficulty: "Medium",
-      acceptance: "26%",
-      status: "unsolved",
-      tags: ["Math"],
-      submissions: "1.7M",
-      likes: 6543
-    },
-    {
-      id: 7,
-      title: "Palindrome Number",
-      difficulty: "Easy", 
-      acceptance: "52%",
-      status: "solved",
-      tags: ["Math"],
-      submissions: "2.8M",
-      likes: 7821
-    },
-    {
-      id: 8,
-      title: "Regular Expression Matching",
-      difficulty: "Hard",
-      acceptance: "27%",
-      status: "unsolved",
-      tags: ["String", "Dynamic Programming", "Recursion"],
-      submissions: "756K",
-      likes: 9156
-    },
-    {
-      id: 9,
-      title: "Valid Parentheses",
-      difficulty: "Easy",
-      acceptance: "41%", 
-      status: "solved",
-      tags: ["String", "Stack"],
-      submissions: "2.4M",
-      likes: 13245
-    },
-    {
-      id: 10,
-      title: "Remove With Duplicates",
-      difficulty: "Easy",
-      acceptance: "48%",
-      status: "attempted",
-      tags: ["Array", "Two Pointers"],
-      submissions: "1.9M",
-      likes: 8976
-    }
-  ];
+const mockData = [
+  {
+    id: 1,
+    title: "Two Sum Problem",
+    difficulty: "EASY",
+    coins: 15,
+    stars: "TWO",
+    tags: ["arrays", "hash-table", "beginner"],
+    language: "Python",
+    solved: false,
+    attempts: 0,
+  },
+  {
+    id: 2,
+    title: "Valid Parentheses",
+    difficulty: "EASY",
+    coins: 25,
+    stars: "THREE",
+    tags: ["stack", "strings", "beginner"],
+    language: "JavaScript",
+    solved: true,
+    attempts: 2,
+  },
+  {
+    id: 3,
+    title: "Running Sum of an Array",
+    difficulty: "EASY",
+    coins: 20,
+    stars: "THREE",
+    tags: ["implementation", "arrays", "prefix-sum", "beginner"],
+    language: "Java",
+    solved: false,
+    attempts: 1,
+  },
+  {
+    id: 4,
+    title: "Simplifying Long Words",
+    difficulty: "EASY",
+    coins: 20,
+    stars: "THREE",
+    tags: ["implementation", "beginner", "strings"],
+    language: "Python",
+    solved: true,
+    attempts: 1,
+  },
+  {
+    id: 5,
+    title: "Merge Two Sorted Lists",
+    difficulty: "EASY",
+    coins: 30,
+    stars: "THREE",
+    tags: ["linked-list", "recursion", "beginner"],
+    language: "C++",
+    solved: false,
+    attempts: 0,
+  },
+  {
+    id: 6,
+    title: "Binary Tree Inorder Traversal",
+    difficulty: "MEDIUM",
+    coins: 40,
+    stars: "FOUR",
+    tags: ["tree", "depth-first-search", "binary-tree"],
+    language: "Go",
+    solved: true,
+    attempts: 3,
+  },
+  {
+    id: 7,
+    title: "3Sum Problem",
+    difficulty: "MEDIUM",
+    coins: 50,
+    stars: "FOUR",
+    tags: ["arrays", "two-pointers", "sorting"],
+    language: "Python",
+    solved: false,
+    attempts: 2,
+  },
+  {
+    id: 8,
+    title: "Longest Palindromic Substring",
+    difficulty: "MEDIUM",
+    coins: 45,
+    stars: "FOUR",
+    tags: ["string", "dynamic-programming"],
+    language: "Java",
+    solved: false,
+    attempts: 1,
+  },
+  {
+    id: 9,
+    title: "Regular Expression Matching",
+    difficulty: "HARD",
+    coins: 80,
+    stars: "FIVE",
+    tags: ["string", "dynamic-programming", "recursion"],
+    language: "C++",
+    solved: false,
+    attempts: 0,
+  },
+  {
+    id: 10,
+    title: "Merge k Sorted Lists",
+    difficulty: "HARD",
+    coins: 75,
+    stars: "FIVE",
+    tags: ["linked-list", "divide-and-conquer", "heap"],
+    language: "Go",
+    solved: true,
+    attempts: 5,
+  },
+  {
+    id: 11,
+    title: "Trapping Rain Water",
+    difficulty: "HARD",
+    coins: 70,
+    stars: "FIVE",
+    tags: ["array", "two-pointers", "dynamic-programming"],
+    language: "JavaScript",
+    solved: false,
+    attempts: 1,
+  },
+]
 
-  const allTags = [
-    "All Topics", "Array", "String", "Hash Table", "Dynamic Programming", 
-    "Math", "Binary Search", "Two Pointers", "Linked List", "Stack", 
-    "Recursion", "Sliding Window", "Divide and Conquer"
-  ];
+// Modern UI Components with Light/Dark Mode Support and Barlow Font
+const Card = ({ children, className = "", hover = true }: { children: React.ReactNode, className?: string, hover?: boolean }) => (
+  <div className={`rounded-xl border border-gray-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm ${hover ? 'hover:border-[#CCF301]/50 hover:shadow-xl hover:shadow-[#CCF301]/10 transition-all duration-300' : ''} ${className}`}>
+    {children}
+  </div>
+)
 
-  const difficulties = ["All", "Easy", "Medium", "Hard"];
-  const statuses = ["All", "Solved", "Attempted", "Unsolved"];
+const CardHeader = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <div className={`p-4 sm:p-6 pb-3 ${className}`}>{children}</div>
+)
 
-  // Filter problems based on selected filters
-  const filteredProblems = problems.filter(problem => {
-    const matchesTags = selectedTags.includes("All Topics") || 
-      problem.tags.some(tag => selectedTags.includes(tag));
-    
-    const matchesDifficulty = selectedDifficulty.includes("All") || 
-      selectedDifficulty.includes(problem.difficulty);
-    
-    const matchesStatus = selectedStatus.includes("All") || 
-      selectedStatus.some(status => status.toLowerCase() === problem.status);
-    
-    const matchesSearch = problem.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      problem.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+const CardTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <h5 className={`text-base font-semibold text-gray-900 dark:text-slate-100 leading-tight ${className}`}>{children}</h5>
+)
 
-    return matchesTags && matchesDifficulty && matchesStatus && matchesSearch;
-  });
+const CardContent = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+  <div className={`px-4 sm:px-6 pb-4 sm:pb-6 pt-0 ${className}`}>{children}</div>
+)
 
-  const handleTagToggle = (tag) => {
-    if (tag === "All Topics") {
-      setSelectedTags(["All Topics"]);
-    } else {
-      setSelectedTags(prev => {
-        const withoutAll = prev.filter(t => t !== "All Topics");
-        if (withoutAll.includes(tag)) {
-          const newTags = withoutAll.filter(t => t !== tag);
-          return newTags.length === 0 ? ["All Topics"] : newTags;
-        } else {
-          return [...withoutAll, tag];
-        }
-      });
-    }
-  };
+const Button = ({ children, variant = "default", size = "default", className = "", onClick, disabled = false, ...props }: { 
+  children: React.ReactNode, 
+  variant?: "default" | "outline" | "ghost" | "secondary", 
+  size?: "default" | "sm" | "icon" | "lg", 
+  className?: string,
+  onClick?: (e: React.MouseEvent) => void,
+  disabled?: boolean,
+  [key: string]: any 
+}) => {
+  const baseClasses = "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CCF301]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50 touch-manipulation"
+  const variants = {
+    default: "bg-[#CCF301] text-gray-900 hover:bg-[#CCF301]/90 shadow-lg shadow-[#CCF301]/25 hover:shadow-[#CCF301]/30",
+    outline: "border border-gray-300 dark:border-slate-600 bg-transparent text-gray-700 dark:text-slate-300 hover:bg-[#CCF301]/10 hover:text-[#CCF301] hover:border-[#CCF301]/50",
+    ghost: "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10",
+    secondary: "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-600"
+  }
+  const sizes = {
+    default: "h-10 px-4 py-2 text-sm sm:text-base",
+    sm: "h-8 px-3 text-xs sm:text-sm",
+    icon: "h-10 w-10 min-h-10 min-w-10",
+    lg: "h-12 px-6 text-sm sm:text-base"
+  }
+  
+  return (
+    <button 
+      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`} 
+      onClick={onClick}
+      disabled={disabled}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+}
 
-  const getDifficultyColor = (difficulty) => {
-    switch(difficulty) {
-      case 'Easy': return 'text-green-500';
-      case 'Medium': return 'text-yellow-500';
-      case 'Hard': return 'text-red-500';
-      default: return 'text-gray-500';
-    }
-  };
+const Input = ({ className = "", ...props }: { className?: string, [key: string]: any }) => (
+  <input
+    className={`flex h-10 w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-500 dark:placeholder:text-slate-400 focus:border-[#CCF301] focus:outline-none focus:ring-2 focus:ring-[#CCF301]/20 transition-all duration-200 ${className}`}
+    {...props}
+  />
+)
 
-  const getStatusIcon = (status) => {
-    switch(status) {
-      case 'solved': return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'attempted': return <Circle className="h-5 w-5 text-yellow-500" />;
-      default: return <Circle className="h-5 w-5 text-gray-400" />;
-    }
-  };
+const Badge = ({ children, variant = "default", className = "" }: { children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "success" | "warning" | "danger", className?: string }) => {
+  const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors"
+  const variantClasses = {
+    default: "bg-[#CCF301]/15 text-[#CCF301] border border-[#CCF301]/20",
+    secondary: "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-600/50",
+    outline: "border border-current text-gray-600 dark:text-slate-400",
+    success: "bg-green-500/15 text-green-600 dark:text-green-400 border border-green-500/20",
+    warning: "bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/20",
+    danger: "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/20"
+  }
+  
+  return (
+    <span className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
+      {children}
+    </span>
+  )
+}
 
-  const getAcceptanceColor = (acceptance) => {
-    const rate = parseInt(acceptance);
-    if (rate >= 50) return 'text-green-500';
-    if (rate >= 30) return 'text-yellow-500';
-    return 'text-red-500';
-  };
+const topicFilters = ["All Topics", "Arrays", "Strings", "Trees", "Dynamic Programming"]
+const languageFilters = ["All Languages", "Python", "JavaScript", "Java", "C++", "Go"]
+
+const getDifficultyConfig = (difficulty: string) => {
+  switch (difficulty) {
+    case "EASY":
+      return { 
+        color: "text-green-600 dark:text-green-400", 
+        bg: "bg-green-500/15 border-green-500/20", 
+        progressColor: "bg-gradient-to-r from-green-400 to-green-500",
+        progressWidth: "w-1/3"
+      }
+    case "MEDIUM":
+      return { 
+        color: "text-orange-600 dark:text-orange-400", 
+        bg: "bg-orange-500/15 border-orange-500/20", 
+        progressColor: "bg-gradient-to-r from-orange-400 to-orange-500",
+        progressWidth: "w-2/3"
+      }
+    case "HARD":
+      return { 
+        color: "text-red-600 dark:text-red-400", 
+        bg: "bg-red-500/15 border-red-500/20", 
+        progressColor: "bg-gradient-to-r from-red-400 to-red-500",
+        progressWidth: "w-full"
+      }
+    default:
+      return { 
+        color: "text-gray-600 dark:text-slate-400", 
+        bg: "bg-gray-500/15 dark:bg-slate-500/15 border-gray-500/20 dark:border-slate-500/20", 
+        progressColor: "bg-gray-400 dark:bg-slate-400",
+        progressWidth: "w-1/4"
+      }
+  }
+}
+
+export default function Problemset() {
+  const [activeFilter, setActiveFilter] = useState("All Topics")
+  const [activeLanguage, setActiveLanguage] = useState("All Languages")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [favorites, setFavorites] = useState<number[]>([2, 6])
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [sidebarWidth, setSidebarWidth] = useState(288) // 72 * 4 = 288px (w-72)
+  const [isDragging, setIsDragging] = useState(false)
+  const [isDark, setIsDark] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const sidebarRef = useRef<HTMLDivElement>(null)
+  const dragRef = useRef<HTMLDivElement>(null)
+
+  const minWidth = 64 // w-16
+  const maxWidth = 400
 
   useEffect(() => {
-    document.documentElement.classList.add('dark');
-  }, []);
+    // Check for mobile device
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024)
+      if (window.innerWidth < 1024) {
+        setIsCollapsed(true)
+        setSidebarWidth(64)
+      }
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    // Check for saved theme preference or default to dark mode
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme) {
+      setIsDark(savedTheme === 'dark')
+      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+    } else {
+      document.documentElement.classList.add('dark')
+    }
+
+    // Load saved sidebar width
+    const savedWidth = localStorage.getItem('sidebarWidth')
+    if (savedWidth && !isMobile) {
+      setSidebarWidth(parseInt(savedWidth))
+    }
+
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
+  const toggleTheme = () => {
+    const newTheme = !isDark
+    setIsDark(newTheme)
+    document.documentElement.classList.toggle('dark', newTheme)
+    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
+  }
+
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (isMobile) return
+    e.preventDefault()
+    setIsDragging(true)
+  }, [isMobile])
+
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging || isMobile) return
+    
+    const newWidth = e.clientX
+    if (newWidth >= minWidth && newWidth <= maxWidth) {
+      setSidebarWidth(newWidth)
+      setIsCollapsed(newWidth <= 80) // Auto-collapse when very narrow
+    }
+  }, [isDragging, isMobile])
+
+  const handleMouseUp = useCallback(() => {
+    if (isDragging) {
+      setIsDragging(false)
+      localStorage.setItem('sidebarWidth', sidebarWidth.toString())
+    }
+  }, [isDragging, sidebarWidth])
+
+  useEffect(() => {
+    if (isDragging && !isMobile) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = 'col-resize'
+      document.body.style.userSelect = 'none'
+    } else {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isDragging, handleMouseMove, handleMouseUp, isMobile])
+
+  const toggleCollapse = () => {
+    if (isMobile) {
+      setMobileMenuOpen(!mobileMenuOpen)
+      return
+    }
+    
+    if (isCollapsed) {
+      setSidebarWidth(288)
+      setIsCollapsed(false)
+    } else {
+      setSidebarWidth(64)
+      setIsCollapsed(true)
+    }
+  }
+
+  const toggleFavorite = (problemId: number, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation()
+      e.preventDefault()
+    }
+    setFavorites((prev) => 
+      prev.includes(problemId) 
+        ? prev.filter((id) => id !== problemId) 
+        : [...prev, problemId]
+    )
+  }
+
+  const filteredData = mockData
+    .sort((a, b) => a.id - b.id)
+    .filter((problem) => {
+      const matchesSearch = problem.title.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesLanguage = activeLanguage === "All Languages" || problem.language === activeLanguage
+      const matchesTopic =
+        activeFilter === "All Topics" ||
+        problem.tags.some((tag) => {
+          const normalizedTag = tag.toLowerCase().replace(/-/g, " ")
+          const normalizedFilter = activeFilter.toLowerCase()
+          return normalizedTag.includes(normalizedFilter) || normalizedFilter.includes(normalizedTag)
+        })
+      const matchesFavorites = !showFavoritesOnly || favorites.includes(problem.id)
+
+      return matchesSearch && matchesLanguage && matchesTopic && matchesFavorites
+    })
+
+  const solvedCount = mockData.filter(p => p.solved).length
 
   return (
-    <div className="min-h-screen relative">
-      {/* Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-black dark:via-slate-900 dark:to-black"></div>
+    <>
+      {/* Google Fonts - Barlow */}
+      <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
       
-      <div className="relative z-10">
-        {/* Header */}
-        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Problems</h1>
-                <p className="text-gray-600 dark:text-gray-400 mt-1">
-                  Practice coding problems and improve your skills
-                </p>
-              </div>
-              
-              <div className="flex items-center gap-3">
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-green-500">{problems.filter(p => p.status === 'solved').length}</span> solved, 
-                  <span className="font-medium text-yellow-500 ml-1">{problems.filter(p => p.status === 'attempted').length}</span> attempted
-                </div>
-              </div>
-            </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden" style={{ fontFamily: 'Barlow, sans-serif' }}>
+        {/* Animated background */}
+        <div className="fixed inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -inset-10 opacity-20 dark:opacity-30">
+            <div className="absolute top-0 -left-4 w-72 h-72 bg-[#CCF301] rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse"></div>
+            <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse animation-delay-2000"></div>
+            <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse animation-delay-4000"></div>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex gap-6">
-            
-            {/* Sidebar */}
-            <div className={`${showFilters ? 'w-80' : 'w-0'} transition-all duration-300 overflow-hidden`}>
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-6 space-y-6 sticky top-24">
-                
-                {/* Search */}
-                <div>
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <input
-                      type="text"
-                      placeholder="Search problems..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#CCF301] focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-                    />
-                  </div>
-                </div>
+        {/* Mobile Overlay */}
+        {isMobile && mobileMenuOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+        )}
 
-                {/* Quick Stats */}
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span className="text-sm font-medium text-green-700 dark:text-green-400">Solved</span>
-                    </div>
-                    <p className="text-xl font-bold text-green-600 dark:text-green-400 mt-1">
-                      {problems.filter(p => p.status === 'solved').length}
-                    </p>
-                  </div>
-                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded-lg">
-                    <div className="flex items-center gap-2">
-                      <Circle className="h-4 w-4 text-yellow-500" />
-                      <span className="text-sm font-medium text-yellow-700 dark:text-yellow-400">Attempted</span>
-                    </div>
-                    <p className="text-xl font-bold text-yellow-600 dark:text-yellow-400 mt-1">
-                      {problems.filter(p => p.status === 'attempted').length}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Difficulty Filter */}
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <BarChart3 className="h-4 w-4" />
-                    Difficulty
-                  </h3>
-                  <div className="space-y-2">
-                    {difficulties.map(difficulty => (
-                      <label key={difficulty} className="flex items-center gap-2 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedDifficulty.includes(difficulty)}
-                          onChange={() => {
-                            if (difficulty === "All") {
-                              setSelectedDifficulty(["All"]);
-                            } else {
-                              setSelectedDifficulty(prev => {
-                                const withoutAll = prev.filter(d => d !== "All");
-                                if (withoutAll.includes(difficulty)) {
-                                  const newDiff = withoutAll.filter(d => d !== difficulty);
-                                  return newDiff.length === 0 ? ["All"] : newDiff;
-                                } else {
-                                  return [...withoutAll, difficulty];
-                                }
-                              });
-                            }
-                          }}
-                          className="w-4 h-4 text-[#CCF301] bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[#CCF301] focus:ring-2"
-                        />
-                        <span className={`text-sm group-hover:text-[#CCF301] transition-colors ${
-                          difficulty === "All" ? "text-gray-700 dark:text-gray-300" : getDifficultyColor(difficulty)
-                        }`}>
-                          {difficulty}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Status Filter */}
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Target className="h-4 w-4" />
-                    Status
-                  </h3>
-                  <div className="space-y-2">
-                    {statuses.map(status => (
-                      <label key={status} className="flex items-center gap-2 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedStatus.includes(status)}
-                          onChange={() => {
-                            if (status === "All") {
-                              setSelectedStatus(["All"]);
-                            } else {
-                              setSelectedStatus(prev => {
-                                const withoutAll = prev.filter(s => s !== "All");
-                                if (withoutAll.includes(status)) {
-                                  const newStatus = withoutAll.filter(s => s !== status);
-                                  return newStatus.length === 0 ? ["All"] : newStatus;
-                                } else {
-                                  return [...withoutAll, status];
-                                }
-                              });
-                            }
-                          }}
-                          className="w-4 h-4 text-[#CCF301] bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[#CCF301] focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-[#CCF301] transition-colors">
-                          {status}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Topics Filter */}
-                <div>
-                  <h3 className="font-medium text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <Hash className="h-4 w-4" />
-                    Topics
-                  </h3>
-                  <div className="space-y-2 max-h-64 overflow-y-auto">
-                    {allTags.map(tag => (
-                      <label key={tag} className="flex items-center gap-2 cursor-pointer group">
-                        <input
-                          type="checkbox"
-                          checked={selectedTags.includes(tag)}
-                          onChange={() => handleTagToggle(tag)}
-                          className="w-4 h-4 text-[#CCF301] bg-gray-100 dark:bg-gray-600 border-gray-300 dark:border-gray-500 rounded focus:ring-[#CCF301] focus:ring-2"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-[#CCF301] transition-colors">
-                          {tag}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
+        {/* Resizable Sidebar */}
+        <div 
+          ref={sidebarRef}
+          className={`${
+            isMobile 
+              ? `fixed left-0 top-0 z-50 transform transition-transform duration-300 ${
+                  mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+                } w-80`
+              : 'relative z-40'
+          } bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border-r border-gray-200 dark:border-slate-700/50 transition-all duration-300 ease-in-out group`}
+          style={!isMobile ? { 
+            width: `${sidebarWidth}px`,
+            height: '100vh',
+            minHeight: '100vh',
+            borderRadius: '25px'
+          } : {
+            height: '100vh',
+            minHeight: '100vh'
+          }}
+        >
+          {/* Resize Handle - Desktop Only */}
+          {!isMobile && (
+            <div
+              ref={dragRef}
+              className={`absolute right-0 top-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-[#CCF301]/50 transition-colors duration-200 group-hover:opacity-100 opacity-0 ${isDragging ? 'bg-[#CCF301] opacity-100' : ''}`}
+              onMouseDown={handleMouseDown}
+            >
+              <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-8 bg-gray-300 dark:bg-slate-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="w-0.5 h-4 bg-gray-500 dark:bg-slate-400 rounded-full"></div>
               </div>
             </div>
+          )}
 
-            {/* Main Content */}
-            <div className="flex-1 min-w-0">
-              {/* Controls */}
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6">
-                <div className="flex items-center justify-between">
-                  <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition-colors text-gray-700 dark:text-gray-300"
-                  >
-                    <Filter className="h-4 w-4" />
-                    {showFilters ? 'Hide Filters' : 'Show Filters'}
-                  </button>
-                  
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    Showing {filteredProblems.length} of {problems.length} problems
-                  </div>
+          <div className="h-full flex flex-col">
+            {/* Fixed header section */}
+            <div className="flex-shrink-0 p-4 sm:p-6 pb-4">
+              {/* Logo */}
+              <div className={`flex items-center gap-3 mb-6 ${isCollapsed && !isMobile ? 'justify-center' : ''}`}>
+                <div className="w-10 h-10 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <BookOpen className="w-6 h-6 text-gray-900" />
                 </div>
-              </div>
-
-              {/* Problems Table */}
-              <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50/80 dark:bg-gray-700/80">
-                      <tr>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Status
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Title
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Acceptance
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Difficulty
-                        </th>
-                        <th className="px-6 py-4 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                          Tags
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                      {filteredProblems.map((problem, index) => (
-                        <tr 
-                          key={problem.id} 
-                          className="hover:bg-gray-50/50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors group"
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {getStatusIcon(problem.status)}
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                {problem.id}.
-                              </span>
-                              <div>
-                                <div className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-[#CCF301] transition-colors">
-                                  {problem.title}
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-3">
-                                  <span className="flex items-center gap-1">
-                                    <Users className="h-3 w-3" />
-                                    {problem.submissions}
-                                  </span>
-                                  <span className="flex items-center gap-1">
-                                    <Star className="h-3 w-3" />
-                                    {problem.likes.toLocaleString()}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`text-sm font-medium ${getAcceptanceColor(problem.acceptance)}`}>
-                              {problem.acceptance}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className={`text-sm font-medium ${getDifficultyColor(problem.difficulty)}`}>
-                              {problem.difficulty}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="flex flex-wrap gap-1">
-                              {problem.tags.slice(0, 3).map(tag => (
-                                <span 
-                                  key={tag}
-                                  className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-[#CCF301]/20 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                              {problem.tags.length > 3 && (
-                                <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                                  +{problem.tags.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {filteredProblems.length === 0 && (
-                  <div className="text-center py-12">
-                    <Lightbulb className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No problems found</h3>
-                    <p className="text-gray-600 dark:text-gray-400">Try adjusting your filters or search query.</p>
+                {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
+                  <div className="min-w-0">
+                    <h5 className="text-lg font-bold text-[#CCF301] truncate">CodeCompass</h5>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problem Library</p>
                   </div>
                 )}
               </div>
 
-              {/* Load More Button */}
-              {filteredProblems.length > 0 && (
-                <div className="text-center mt-6">
-                  <button className="px-6 py-3 bg-[#CCF301] hover:bg-[#CCF301]/80 text-gray-900 font-medium rounded-lg transition-colors">
-                    Load More Problems
-                  </button>
+              {/* Toggle Button */}
+              <button
+                onClick={toggleCollapse}
+                className={`${
+                  isMobile 
+                    ? 'absolute right-4 top-4' 
+                    : 'absolute bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-slate-700 -right-4 top-6'
+                } transition-all duration-200 w-8 h-8 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-[#CCF301] z-20`}
+                title={isMobile ? "Close menu" : (isCollapsed ? "Expand sidebar" : "Collapse sidebar")}
+              >
+                {isMobile ? <X className="w-5 h-5" /> : (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <X className="w-4 h-4" />)}
+              </button>
+
+              {/* Stats Cards */}
+              {(!isCollapsed || isMobile) && sidebarWidth > 160 && (
+                <div className="space-y-3 mb-6">
+                  <Card hover={false} className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="min-w-0">
+                        <p className="text-2xl font-bold text-[#CCF301]">{solvedCount}</p>
+                        <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problems Solved</p>
+                      </div>
+                      <Trophy className="w-8 h-8 text-[#CCF301] flex-shrink-0" />
+                    </div>
+                  </Card>
                 </div>
               )}
+            </div>
+
+            {/* Scrollable navigation section */}
+            <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6">
+              <div className="space-y-2">
+                <div className={`flex items-center gap-3 p-3 bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301] rounded-xl font-medium transition-all duration-300 ${
+                  isCollapsed && !isMobile ? 'justify-center' : ''
+                }`}>
+                  <BookOpen className="w-5 h-5 flex-shrink-0" />
+                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Problem Library</span>}
+                  {(!isCollapsed || isMobile) && sidebarWidth > 200 && <ChevronRight className="w-4 h-4 ml-auto flex-shrink-0" />}
+                </div>
+                
+                <div className={`flex items-center gap-3 p-3 text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10 transition-all duration-200 cursor-pointer rounded-xl ${
+                  isCollapsed && !isMobile ? 'justify-center' : ''
+                }`} title="Study Plan">
+                  <Calendar className="w-5 h-5 flex-shrink-0" />
+                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Study Plan</span>}
+                </div>
+                
+                <div
+                  className={`flex items-center gap-3 p-3 transition-all duration-200 cursor-pointer rounded-xl ${
+                    showFavoritesOnly 
+                      ? "bg-pink-500/10 border border-pink-500/20 text-pink-500" 
+                      : "text-gray-600 dark:text-slate-400 hover:text-pink-500 hover:bg-pink-500/10"
+                  } ${isCollapsed && !isMobile ? 'justify-center' : ''}`}
+                  onClick={() => {
+                    setShowFavoritesOnly(!showFavoritesOnly)
+                    if (!showFavoritesOnly) {
+                      setActiveFilter("All Topics")
+                      setActiveLanguage("All Languages")
+                      setSearchQuery("")
+                    }
+                    if (isMobile) setMobileMenuOpen(false)
+                  }}
+                  title="My Favorites"
+                >
+                  <Heart className={`w-5 h-5 flex-shrink-0 ${showFavoritesOnly ? 'fill-current' : ''}`} />
+                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
+                    <>
+                      <span className="whitespace-nowrap truncate">My Favorites</span>
+                      {favorites.length > 0 && sidebarWidth > 200 && (
+                        <Badge variant="danger" className="text-xs ml-auto flex-shrink-0 bg-pink-500/15 text-pink-500 border-pink-500/20">{favorites.length}</Badge>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
+          isMobile ? 'w-full' : ''
+        }`} style={!isMobile ? { 
+          width: `calc(100% - ${sidebarWidth}px)`
+        } : {}}>
+          <div className="p-4 sm:p-6 lg:p-8">
+            {/* Mobile Header */}
+            {isMobile && (
+              <div className="flex items-center justify-between mb-6 lg:hidden">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setMobileMenuOpen(true)}
+                  className="lg:hidden"
+                >
+                  <Menu className="w-5 h-5" />
+                </Button>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-lg flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 text-gray-900" />
+                  </div>
+                  <h5 className="text-lg font-bold text-[#CCF301]">CodeCompass</h5>
+                </div>
+                <div className="w-10 h-10"></div>
+              </div>
+            )}
+
+            {/* Header - Made smaller and responsive */}
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Problem Library</h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400">Master coding interviews with curated problems</p>
+            </div>
+
+            {/* Course Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+              <Card className="group cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <BookOpen className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
+                    </div>
+                    <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-[#CCF301] transition-colors" />
+                  </div>
+                  <CardTitle className="group-hover:text-[#CCF301] transition-colors text-sm sm:text-base">
+                    System Design Masterclass
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Master system design concepts for technical interviews and real-world applications</p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
+                    <span>12 Problems</span>
+                    <span>•</span>
+                    <span>Advanced</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="group cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center">
+                      <Trophy className="w-5 sm:w-6 h-5 sm:h-6 text-gray-900" />
+                    </div>
+                    <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-[#CCF301] transition-colors" />
+                  </div>
+                  <CardTitle className="group-hover:text-[#CCF301] transition-colors text-sm sm:text-base">
+                    Data Structures & Algorithms
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Essential DSA concepts with hands-on coding practice</p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
+                    <span>25 Problems</span>
+                    <span>•</span>
+                    <span>Intermediate</span>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="group cursor-pointer sm:col-span-2 lg:col-span-1">
+                <CardHeader>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                      <Star className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
+                    </div>
+                    <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-[#CCF301] transition-colors" />
+                  </div>
+                  <CardTitle className="group-hover:text-[#CCF301] transition-colors text-sm sm:text-base">
+                    Top Interview Questions
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Most frequently asked questions from top tech companies</p>
+                  <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
+                    <span>50 Problems</span>
+                    <span>•</span>
+                    <span>Mixed</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Filters Section */}
+            <div className="mb-6 sm:mb-8">
+              <Card hover={false} className="p-4 sm:p-6">
+                <div className="flex flex-col gap-4 sm:gap-6">
+                  {/* Search */}
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Search Problems</label>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400 w-4 h-4" />
+                      <Input
+                        placeholder="Search by title..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Language Filter */}
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Programming Language</label>
+                    <div className="flex flex-wrap gap-2">
+                      {languageFilters.map((language) => (
+                        <Button
+                          key={language}
+                          variant={activeLanguage === language ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setActiveLanguage(language)}
+                          className="transition-all duration-200 whitespace-nowrap text-xs sm:text-sm"
+                        >
+                          {language}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Topic Filter */}
+                  <div className="w-full">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Topic Category</label>
+                    <div className="flex flex-wrap gap-2">
+                      {topicFilters.map((filter) => (
+                        <Button
+                          key={filter}
+                          variant={activeFilter === filter ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setActiveFilter(filter)}
+                          className="transition-all duration-200 whitespace-nowrap text-xs sm:text-sm"
+                        >
+                          {filter}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 justify-end">
+                    <Button variant="outline" size="icon" title="Advanced Filters" className="flex-shrink-0">
+                      <Filter className="w-4 h-4" />
+                    </Button>
+                    <Button variant="outline" size="icon" title="Sort Options" className="flex-shrink-0">
+                      <ArrowUpDown className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Problems Table - Mobile Responsive */}
+            <Card hover={false} className="overflow-hidden">
+              {/* Desktop Table View */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-800/50">
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">#</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Problem</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Language</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Status</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Difficulty</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredData.map((problem) => {
+                      const difficultyConfig = getDifficultyConfig(problem.difficulty)
+                      const isFavorite = favorites.includes(problem.id)
+                      return (
+                        <tr
+                          key={problem.id}
+                          className="border-b border-gray-200 dark:border-slate-700/30 hover:bg-gray-50 dark:hover:bg-slate-700/20 transition-all duration-200 cursor-pointer group"
+                        >
+                          <td className="p-3 sm:p-4 text-gray-600 dark:text-slate-400 font-mono text-sm">{problem.id}</td>
+                          <td className="p-3 sm:p-4">
+                            <div className="flex items-center gap-3">
+                              {problem.solved && (
+                                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                  </svg>
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
+                                  {problem.title}
+                                </div>
+                                {problem.attempts > 0 && !problem.solved && (
+                                  <div className="text-xs text-gray-500 dark:text-slate-500 mt-1">
+                                    {problem.attempts} attempt{problem.attempts > 1 ? 's' : ''}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <Badge variant="secondary" className="text-xs">
+                              {problem.language}
+                            </Badge>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <div className="flex items-center gap-2">
+                              <div className="w-16 sm:w-20 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                                <div
+                                  className={`h-full ${difficultyConfig.progressColor} ${difficultyConfig.progressWidth} transition-all duration-300`}
+                                />
+                              </div>
+                              <span className="text-xs text-gray-500 dark:text-slate-400">
+                                {problem.solved ? '100%' : problem.attempts > 0 ? `${Math.min(problem.attempts * 25, 75)}%` : '0%'}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
+                              {problem.difficulty}
+                            </Badge>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => toggleFavorite(problem.id, e)}
+                              className={`p-2 h-10 w-10 touch-manipulation ${
+                                isFavorite
+                                  ? "text-pink-500 hover:text-pink-400"
+                                  : "text-gray-400 dark:text-slate-400 hover:text-pink-500"
+                              } transition-colors duration-200`}
+                            >
+                              <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
+                            </Button>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="block sm:hidden">
+                <div className="divide-y divide-gray-200 dark:divide-slate-700/50">
+                  {filteredData.map((problem) => {
+                    const difficultyConfig = getDifficultyConfig(problem.difficulty)
+                    const isFavorite = favorites.includes(problem.id)
+                    return (
+                      <div
+                        key={problem.id}
+                        className="p-4 hover:bg-gray-50 dark:hover:bg-slate-700/20 transition-all duration-200 cursor-pointer"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">#{problem.id}</span>
+                            {problem.solved && (
+                              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            )}
+                            <div className="min-w-0 flex-1">
+                              <h6 className="text-gray-900 dark:text-slate-100 font-medium text-sm truncate">
+                                {problem.title}
+                              </h6>
+                              {problem.attempts > 0 && !problem.solved && (
+                                <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">
+                                  {problem.attempts} attempt{problem.attempts > 1 ? 's' : ''}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => toggleFavorite(problem.id, e)}
+                            className={`p-2 h-10 w-10 flex-shrink-0 touch-manipulation ${
+                              isFavorite
+                                ? "text-pink-500 hover:text-pink-400"
+                                : "text-gray-400 dark:text-slate-400 hover:text-pink-500"
+                            } transition-colors duration-200`}
+                          >
+                            <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
+                          </Button>
+                        </div>
+                        
+                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                          <Badge variant="secondary" className="text-xs">
+                            {problem.language}
+                          </Badge>
+                          <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
+                            {problem.difficulty}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <div className="flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${difficultyConfig.progressColor} ${difficultyConfig.progressWidth} transition-all duration-300`}
+                            />
+                          </div>
+                          <span className="text-xs text-gray-500 dark:text-slate-400 flex-shrink-0">
+                            {problem.solved ? '100%' : problem.attempts > 0 ? `${Math.min(problem.attempts * 25, 75)}%` : '0%'}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </Card>
+
+            {/* Footer */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 sm:mt-8">
+              <div className="text-gray-600 dark:text-slate-400 text-sm">
+                {showFavoritesOnly
+                  ? `Showing ${filteredData.length} favorite problems`
+                  : `Showing ${filteredData.length} of ${mockData.length} problems`}
+                {favorites.length > 0 && !showFavoritesOnly && ` • ${favorites.length} favorited`}
+              </div>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto px-6 sm:px-8 hover:border-[#CCF301] hover:text-[#CCF301] transition-all duration-300"
+              >
+                Load More Problems
+              </Button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
-
-export default ProblemSet;
+    </>
+  )
+}
