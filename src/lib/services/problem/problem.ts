@@ -1,4 +1,3 @@
-// Update the import path to the correct relative path if needed
 import { ProblemResponse } from "@/lib/types/problem/problemResponse";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 

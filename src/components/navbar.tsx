@@ -280,14 +280,14 @@ const Navbar = () => {
 
               {/* Desktop Navigation with Hover Effects */}
               <div className="hidden lg:flex items-center space-x-1 relative">
-                {mainNavItems.map((item, idx) => {
+                {mainNavItems.map((item, id) => {
                   const IconComponent = item.icon;
                   return (
                     <motion.div key={item.name} className="relative">
                       <Link
                         href={item.href}
                         className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] rounded-xl transition-all duration-200 font-medium relative group z-10"
-                        onMouseEnter={() => setHoveredItem(idx)}
+                        onMouseEnter={() => setHoveredItem(id)}
                         onMouseLeave={() => setHoveredItem(null)}
                       >
                         <IconComponent className="h-4 w-4" />
@@ -295,7 +295,7 @@ const Navbar = () => {
                       </Link>
                       
                       {/* Animated background for hovered item */}
-                      {hoveredItem === idx && (
+                      {hoveredItem === id && (
                         <motion.div
                           layoutId="navbar-hover"
                           className="absolute inset-0 bg-[#CCF301]/10 rounded-xl"

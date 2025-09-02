@@ -30,7 +30,7 @@ export default function HeroSection() {
         
         {/* Left side */}
         {/* Left side - Now just contains the PathAnimation with all content */}
-        <div className="max-w-xl z-10">
+        <div className="max-w-2xl z-10">
           <PathAnimation 
             heroContent={heroContent}
             setShowDescription={setShowDescription}
