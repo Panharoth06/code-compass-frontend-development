@@ -171,3 +171,8 @@ h6 {
 .text-extra-small {
   @apply font-medium text-[12px]
 }
+/* Remove any default margins that might cause spacing */
+.hero-section {
+  margin-top: 0;
+  padding-top: 0;
+}

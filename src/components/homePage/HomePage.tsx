@@ -1,17 +1,15 @@
 'use client';
 
 import React from 'react';
-import Navbar from "@/components/navbar";
 import HeroSection from "@/components/homePage/hero_section/hero-section";
 import { HeroScrollDemo } from "@/components/ui/hero-scroll-demo";
 import CodeCompassFeatures from "@/components/homePage/home_feature/CodeCompassFeatures";
 import CodeCompassOrbiting from "@/components/homePage/hero_section/CodeCompassOrbiting";
 import WhyChooseSection from "@/components/homePage/WhyChooseSection";
-import Footer from "@/components/footer";
 
 const Homepage = () => {
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full">
       {/* Unified Background */}
       <div className="absolute inset-0 bg-white dark:bg-black">
         {/* Main gradient overlay */}
@@ -26,13 +24,11 @@ const Homepage = () => {
 
       {/* Content */}
       <div className="relative z-10">
-
         <HeroSection />
         <HeroScrollDemo />
         <CodeCompassFeatures />
         <CodeCompassOrbiting />
         <WhyChooseSection />
-
       </div>
     </div>
   );
