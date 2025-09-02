@@ -34,11 +34,11 @@ export default function RootLayout({
             <Navbar1 />
           </header>
 
-          <main className="container-default">{children}</main>
+          <main className="container-default min-h-screen">{children}</main>
 
-          <footer className="container-default">
+          <div className="container-default">
             <Footer2 />
-          </footer>
+          </div>
         </ThemeProvider>
       </body>
     </html>

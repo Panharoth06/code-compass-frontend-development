@@ -5,9 +5,9 @@ export default function Page() {
     <>
       {/* About Us Section */}
       <div className="flex flex-col items-center justify-center gap-4 py-32 rounded-2xl px-6 sm:px-12 md:px-24 lg:px-36 max-w-7xl mx-auto">
-        <h3 className=" text-3xl font-semibold">About Us</h3>
-        <p className=" text-center max-w-4xl text-base sm:text-lg leading-relaxed">
-          LeetCode is a private online platform established in August 2015 by
+        <h3 className="text-3xl font-semibold">About Us</h3>
+        <p className="text-center max-w-4xl text-base sm:text-lg leading-relaxed">
+          CodeCompass is a private online platform established in August 2015 by
           Winston Tang and headquartered in Palo Alto, California. As of 2025,
           its leadership includes Hercy Chang as CEO.
         </p>

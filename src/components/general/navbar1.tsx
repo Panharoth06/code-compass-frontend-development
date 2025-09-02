@@ -1,3 +1,5 @@
+"use client";
+
 import { Menu } from "lucide-react";
 
 import {
@@ -27,6 +29,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import Aurora from "../Backgrounds/Aurora/Aurora";
 
 interface MenuItem {
   title: string;
@@ -61,7 +64,7 @@ interface Navbar1Props {
 const Navbar1 = ({
   logo = {
     url: "/",
-    src: "/images/Logo.png",
+    src: "/images/Logo.svg",
     alt: "logo",
     title: "Square up",
     width: 40,
@@ -95,8 +98,8 @@ const Navbar1 = ({
     <section className="py-4">
       <div className="container">
         {/* Desktop Menu */}
-        <nav className="hidden justify-between lg:flex">
-          <div className="flex items-center gap-6">
+        <nav className="hidden justify-between lg:flex ">
+          <div className="flex items-center gap-6 ">
             {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-2">
               <Image
@@ -110,22 +113,28 @@ const Navbar1 = ({
                 {logo.title}
               </span>
             </Link>
-            <div className="flex items-center">
-              <NavigationMenu>
-                <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
-                </NavigationMenuList>
-              </NavigationMenu>
-            </div>
           </div>
-          <div className="flex gap-2">
+
+          {/* nav-list */}
+          <div className="flex items-center">
+            <NavigationMenu>
+              <NavigationMenuList>
+                {menu.map((item) => renderMenuItem(item))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
+
+          {/* login */}
+          <div className="flex gap-4 ">
             <ThemeToggle />
-            <Button asChild variant="outline" size="sm">
-              <Link href={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link href={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="lg">
+                <Link href={auth.login.url}>{auth.login.title}</Link>
+              </Button>
+              <Button asChild size="lg">
+                <Link href={auth.signup.url}>{auth.signup.title}</Link>
+              </Button>
+            </div>
           </div>
         </nav>
 
@@ -151,7 +160,7 @@ const Navbar1 = ({
               <SheetContent className="overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>
-                    <a href={logo.url} className="flex items-center gap-2">
+                    <Link href={logo.url} className="flex items-center gap-2">
                       <Image
                         src={logo.src}
                         className="max-h-8 dark:invert"
@@ -159,7 +168,7 @@ const Navbar1 = ({
                         width={logo.width}
                         height={logo.height}
                       />
-                    </a>
+                    </Link>
                   </SheetTitle>
                 </SheetHeader>
                 <div className="flex flex-col gap-6 p-4">
@@ -242,7 +251,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
 
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
-    <a
+    <Link
       className="hover:bg-muted hover:text-accent-foreground flex select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
       href={item.url}
     >
@@ -255,7 +264,7 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
           </p>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 
