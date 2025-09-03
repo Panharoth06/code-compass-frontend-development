@@ -6,6 +6,7 @@ import { HeroScrollDemo } from "@/components/ui/hero-scroll-demo";
 import CodeCompassFeatures from "@/components/homePage/home_feature/CodeCompassFeatures";
 import CodeCompassOrbiting from "@/components/homePage/hero_section/CodeCompassOrbiting";
 import WhyChooseSection from "@/components/homePage/WhyChooseSection";
+import LogoMarquee from "@/components/homePage/LogoMarquee";
 
 const Homepage = () => {
   return (
@@ -26,6 +27,7 @@ const Homepage = () => {
       <div className="relative z-10">
         <HeroSection />
         <HeroScrollDemo />
+        <LogoMarquee/>
         <CodeCompassFeatures />
         <CodeCompassOrbiting />
         <WhyChooseSection />
