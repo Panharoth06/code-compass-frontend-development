@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
 const barlow = Barlow({
-  weight: '400',
+  weight: "400",
   variable: "--font-barlow",
   subsets: ["latin"],
 });
@@ -26,11 +26,17 @@ export default function RootLayout({
       <body className={`${barlow.variable} antialiased`}>
         <StoreProvider>
           <Navbar />
-          <main>
-            {children}
-          </main>
+          <main>{children}</main>
           <Footer />
         </StoreProvider>
+
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-pap3DdDlsw0XwMhtlZut9R8x4Vg3g5G8ZzYpYvBqZ3C4X6j+8kNY8j5uGmDjqShKpQ+HDf0TOfX5pWqT1Wv4Yg=="
+          crossOrigin="anonymous"
+          referrerPolicy="no-referrer"
+        />
       </body>
     </html>
   );

@@ -1,30 +1,49 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Menu, X, Code, User, LogIn, Home, Puzzle, Trophy, ChevronDown, Users, Mail, Shield, FileText } from 'lucide-react';
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Menu,
+  X,
+  Code,
+  User,
+  LogIn,
+  Home,
+  Puzzle,
+  Trophy,
+  ChevronDown,
+  Users,
+  Mail,
+  Shield,
+  FileText,
+} from "lucide-react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "framer-motion";
 
 // Uiverse Toggle Component
 const UiverseToggle = () => {
   const [isDark, setIsDark] = useState(true);
 
   useEffect(() => {
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add("dark");
   }, []);
 
   const toggleTheme = () => {
     setIsDark(!isDark);
-    document.documentElement.classList.toggle('dark');
+    document.documentElement.classList.toggle("dark");
   };
 
   return (
     <div className="uiverse-toggle">
       <div className="toggle-switch">
         <label className="switch-label">
-          <input 
-            type="checkbox" 
+          <input
+            type="checkbox"
             className="checkbox"
             checked={isDark}
             onChange={toggleTheme}
@@ -120,16 +139,16 @@ const UiverseToggle = () => {
             width: 45px;
             height: 22px;
           }
-          
+
           .uiverse-toggle .switch-label {
             height: 22px;
             border-radius: 11px;
           }
-          
+
           .uiverse-toggle .slider {
             border-radius: 11px;
           }
-          
+
           .uiverse-toggle .slider::before {
             width: 11px;
             height: 11px;
@@ -138,7 +157,7 @@ const UiverseToggle = () => {
             -webkit-box-shadow: inset 5px -1.5px 0px 0px var(--light);
             box-shadow: inset 5px -1.5px 0px 0px var(--light);
           }
-          
+
           .uiverse-toggle .checkbox:checked ~ .slider::before {
             -webkit-transform: translateX(22px);
             -ms-transform: translateX(22px);
@@ -167,28 +186,28 @@ const Navbar = () => {
   });
 
   useEffect(() => {
-    document.documentElement.classList.add('dark');
+    document.documentElement.classList.add("dark");
   }, []);
 
   // Main navigation items
   const mainNavItems = [
-    { name: 'Home', href: '/', icon: Home },
-    { name: 'Problems', href: '/problemset', icon: Puzzle },
-    { name: 'Leaderboard', href: '/leaderboard', icon: Trophy },
+    { name: "Home", href: "/", icon: Home },
+    { name: "Problems", href: "/problemset", icon: Puzzle },
+    { name: "Leaderboard", href: "/leaderboard", icon: Trophy },
   ];
 
   // More dropdown items (added Document)
   const moreItems = [
-    { name: 'Document', href: '/document', icon: FileText },
-    { name: 'About Us', href: '/about', icon: Users },
-    { name: 'Contact', href: '/contact', icon: Mail },
-    { name: 'Privacy Policy', href: '/privacy', icon: Shield },
+    { name: "Document", href: "/document", icon: FileText },
+    { name: "About Us", href: "/about", icon: Users },
+    { name: "Contact", href: "/contact", icon: Mail },
+    { name: "Privacy Policy", href: "/privacy", icon: Shield },
   ];
 
   return (
     <>
       {/* Fixed navbar with modern animations */}
-      <motion.nav 
+      <motion.nav
         className="fixed top-0 left-0 right-0 z-50"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
@@ -197,8 +216,8 @@ const Navbar = () => {
         <motion.div
           animate={{
             backdropFilter: isScrolled ? "blur(16px)" : "blur(0px)",
-            backgroundColor: isScrolled 
-              ? "rgba(255, 255, 255, 0.1)" 
+            backgroundColor: isScrolled
+              ? "rgba(255, 255, 255, 0.1)"
               : "rgba(255, 255, 255, 0)",
             boxShadow: isScrolled
               ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
@@ -212,16 +231,14 @@ const Navbar = () => {
             damping: 50,
           }}
           className={`relative mx-auto ${
-            isScrolled 
-              ? 'w-[90%] lg:w-[60%] lg:mx-auto' 
-              : 'w-full'
+            isScrolled ? "w-[90%] lg:w-[60%] lg:mx-auto" : "w-full"
           }`}
         >
           {/* Dark mode background */}
           <motion.div
             animate={{
-              backgroundColor: isScrolled 
-                ? "rgba(17, 24, 39, 0.8)" 
+              backgroundColor: isScrolled
+                ? "rgba(17, 24, 39, 0.8)"
                 : "rgba(17, 24, 39, 0)",
             }}
             transition={{
@@ -234,16 +251,18 @@ const Navbar = () => {
 
           <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              
               {/* Enhanced Logo with Animation */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Link href="/" className="flex items-center space-x-3 group relative">
+                <Link
+                  href="/"
+                  className="flex items-center space-x-3 group relative"
+                >
                   <div className="relative">
                     {/* Logo with enhanced animations */}
-                    <motion.div 
+                    <motion.div
                       className="relative w-12 h-12 flex items-center justify-center"
                       whileHover={{ rotate: 5 }}
                       transition={{ type: "spring", stiffness: 400 }}
@@ -258,7 +277,7 @@ const Navbar = () => {
                       />
 
                       {/* Enhanced glow effect */}
-                      <motion.div 
+                      <motion.div
                         className="absolute inset-0 bg-[#CCF301]/20 rounded-xl blur-md -z-10"
                         initial={{ opacity: 0, scale: 0.8 }}
                         whileHover={{ opacity: 1, scale: 1.2 }}
@@ -266,9 +285,9 @@ const Navbar = () => {
                       />
                     </motion.div>
                   </div>
-                  
+
                   <div className="flex flex-col">
-                    <motion.span 
+                    <motion.span
                       className="text-xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#CCF301] transition-colors duration-200"
                       whileHover={{ x: 2 }}
                     >
@@ -293,7 +312,7 @@ const Navbar = () => {
                         <IconComponent className="h-4 w-4" />
                         <span>{item.name}</span>
                       </Link>
-                      
+
                       {/* Animated background for hovered item */}
                       {hoveredItem === id && (
                         <motion.div
@@ -302,13 +321,17 @@ const Navbar = () => {
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 380,
+                            damping: 30,
+                          }}
                         />
                       )}
                     </motion.div>
                   );
                 })}
-                
+
                 {/* Enhanced More Dropdown */}
                 <div className="relative">
                   <motion.button
@@ -327,7 +350,7 @@ const Navbar = () => {
                     </motion.div>
                     <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
                   </motion.button>
-                  
+
                   {/* Enhanced Dropdown Menu with Framer Motion */}
                   <AnimatePresence>
                     {isMoreOpen && (
@@ -355,8 +378,10 @@ const Navbar = () => {
                                   className="flex items-center space-x-3 px-3 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 transition-all duration-200 rounded-lg group relative"
                                 >
                                   <IconComponent className="h-5 w-5" />
-                                  <span className="text-sm font-medium">{item.name}</span>
-                                  
+                                  <span className="text-sm font-medium">
+                                    {item.name}
+                                  </span>
+
                                   {/* Hover effect */}
                                   <motion.div
                                     className="absolute inset-0 bg-gradient-to-r from-[#CCF301]/5 to-transparent rounded-lg opacity-0 group-hover:opacity-100"
@@ -376,8 +401,8 @@ const Navbar = () => {
               {/* Enhanced Desktop Actions */}
               <div className="hidden lg:flex items-center space-x-3">
                 <UiverseToggle />
-                
-                <motion.button 
+
+                <motion.button
                   className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -386,15 +411,15 @@ const Navbar = () => {
                   <span>Login</span>
                   <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
                 </motion.button>
-                
-                <motion.button 
+
+                <motion.button
                   className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25 relative overflow-hidden"
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <User className="h-4 w-4" />
                   <span>Sign Up</span>
-                  
+
                   {/* Animated background shimmer */}
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
@@ -451,7 +476,7 @@ const Navbar = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="lg:hidden overflow-hidden"
             >
-              <motion.div 
+              <motion.div
                 className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-t border-gray-200/30 dark:border-gray-700/30 shadow-xl"
                 initial={{ y: -20 }}
                 animate={{ y: 0 }}
@@ -459,9 +484,8 @@ const Navbar = () => {
               >
                 {/* Gradient overlay for mobile menu */}
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent dark:via-gray-900/5"></div>
-                
+
                 <div className="relative px-4 py-6 space-y-1">
-                  
                   {/* Mobile Main Navigation with stagger animation */}
                   {mainNavItems.map((item, idx) => {
                     const IconComponent = item.icon;
@@ -489,14 +513,16 @@ const Navbar = () => {
                   })}
 
                   {/* Mobile More Items with enhanced animation */}
-                  <motion.div 
+                  <motion.div
                     className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5 }}
                   >
                     <div className="mb-3">
-                      <span className="px-4 text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">More</span>
+                      <span className="px-4 text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                        More
+                      </span>
                     </div>
                     {moreItems.map((item, idx) => {
                       const IconComponent = item.icon;
@@ -505,7 +531,7 @@ const Navbar = () => {
                           key={item.name}
                           initial={{ opacity: 0, x: -30 }}
                           animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: (idx * 0.1) + 0.6 }}
+                          transition={{ delay: idx * 0.1 + 0.6 }}
                         >
                           <Link
                             href={item.href}
@@ -525,17 +551,19 @@ const Navbar = () => {
                   </motion.div>
 
                   {/* Enhanced Mobile Actions */}
-                  <motion.div 
+                  <motion.div
                     className="border-t border-gray-200/30 dark:border-gray-700/30 pt-4 mt-4 space-y-3"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 1 }}
                   >
                     <div className="flex items-center justify-between px-4 py-2">
-                      <span className="text-gray-600 dark:text-gray-300 font-medium">Theme</span>
+                      <span className="text-gray-600 dark:text-gray-300 font-medium">
+                        Theme
+                      </span>
                       <UiverseToggle />
                     </div>
-                    
+
                     <motion.button
                       onClick={() => setIsMenuOpen(false)}
                       className="w-full flex items-center space-x-3 px-4 py-3 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
@@ -549,7 +577,7 @@ const Navbar = () => {
                         transition={{ duration: 0.2 }}
                       />
                     </motion.button>
-                    
+
                     <motion.button
                       onClick={() => setIsMenuOpen(false)}
                       className="w-full flex items-center space-x-3 px-4 py-3 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25 relative overflow-hidden"
@@ -558,7 +586,7 @@ const Navbar = () => {
                     >
                       <User className="h-5 w-5" />
                       <span>Sign Up</span>
-                      
+
                       {/* Animated background shimmer for mobile */}
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
