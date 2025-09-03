@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef, useCallback } from "react"
-import { Search, Filter, ArrowUpDown, BookOpen, Calendar, Heart, Star, Trophy, Menu, X, ChevronRight } from "lucide-react"
+import { Search, Filter, ArrowUpDown, BookOpen, Calendar, Star, Trophy, Menu, X, ChevronRight } from "lucide-react"
 
 const mockData = [
   {
@@ -11,9 +11,6 @@ const mockData = [
     coins: 15,
     stars: "TWO",
     tags: ["arrays", "hash-table", "beginner"],
-    language: "Python",
-    solved: false,
-    attempts: 0,
   },
   {
     id: 2,
@@ -22,9 +19,6 @@ const mockData = [
     coins: 25,
     stars: "THREE",
     tags: ["stack", "strings", "beginner"],
-    language: "JavaScript",
-    solved: true,
-    attempts: 2,
   },
   {
     id: 3,
@@ -33,9 +27,6 @@ const mockData = [
     coins: 20,
     stars: "THREE",
     tags: ["implementation", "arrays", "prefix-sum", "beginner"],
-    language: "Java",
-    solved: false,
-    attempts: 1,
   },
   {
     id: 4,
@@ -44,9 +35,6 @@ const mockData = [
     coins: 20,
     stars: "THREE",
     tags: ["implementation", "beginner", "strings"],
-    language: "Python",
-    solved: true,
-    attempts: 1,
   },
   {
     id: 5,
@@ -55,75 +43,54 @@ const mockData = [
     coins: 30,
     stars: "THREE",
     tags: ["linked-list", "recursion", "beginner"],
-    language: "C++",
-    solved: false,
-    attempts: 0,
   },
   {
     id: 6,
     title: "Binary Tree Inorder Traversal",
     difficulty: "MEDIUM",
     coins: 40,
-    stars: "FOUR",
+    stars: "THREE",
     tags: ["tree", "depth-first-search", "binary-tree"],
-    language: "Go",
-    solved: true,
-    attempts: 3,
   },
   {
     id: 7,
     title: "3Sum Problem",
     difficulty: "MEDIUM",
     coins: 50,
-    stars: "FOUR",
+    stars: "THREE",
     tags: ["arrays", "two-pointers", "sorting"],
-    language: "Python",
-    solved: false,
-    attempts: 2,
   },
   {
     id: 8,
     title: "Longest Palindromic Substring",
     difficulty: "MEDIUM",
     coins: 45,
-    stars: "FOUR",
+    stars: "THREE",
     tags: ["string", "dynamic-programming"],
-    language: "Java",
-    solved: false,
-    attempts: 1,
   },
   {
     id: 9,
     title: "Regular Expression Matching",
     difficulty: "HARD",
     coins: 80,
-    stars: "FIVE",
+    stars: "THREE",
     tags: ["string", "dynamic-programming", "recursion"],
-    language: "C++",
-    solved: false,
-    attempts: 0,
   },
   {
     id: 10,
     title: "Merge k Sorted Lists",
     difficulty: "HARD",
     coins: 75,
-    stars: "FIVE",
+    stars: "THREE",
     tags: ["linked-list", "divide-and-conquer", "heap"],
-    language: "Go",
-    solved: true,
-    attempts: 5,
   },
   {
     id: 11,
     title: "Trapping Rain Water",
     difficulty: "HARD",
     coins: 70,
-    stars: "FIVE",
+    stars: "THREE",
     tags: ["array", "two-pointers", "dynamic-programming"],
-    language: "JavaScript",
-    solved: false,
-    attempts: 1,
   },
 ]
 
@@ -207,7 +174,6 @@ const Badge = ({ children, variant = "default", className = "" }: { children: Re
 }
 
 const topicFilters = ["All Topics", "Arrays", "Strings", "Trees", "Dynamic Programming"]
-const languageFilters = ["All Languages", "Python", "JavaScript", "Java", "C++", "Go"]
 
 const getDifficultyConfig = (difficulty: string) => {
   switch (difficulty) {
@@ -215,39 +181,360 @@ const getDifficultyConfig = (difficulty: string) => {
       return { 
         color: "text-green-600 dark:text-green-400", 
         bg: "bg-green-500/15 border-green-500/20", 
-        progressColor: "bg-gradient-to-r from-green-400 to-green-500",
-        progressWidth: "w-1/3"
       }
     case "MEDIUM":
       return { 
         color: "text-orange-600 dark:text-orange-400", 
         bg: "bg-orange-500/15 border-orange-500/20", 
-        progressColor: "bg-gradient-to-r from-orange-400 to-orange-500",
-        progressWidth: "w-2/3"
       }
     case "HARD":
       return { 
         color: "text-red-600 dark:text-red-400", 
         bg: "bg-red-500/15 border-red-500/20", 
-        progressColor: "bg-gradient-to-r from-red-400 to-red-500",
-        progressWidth: "w-full"
       }
     default:
       return { 
         color: "text-gray-600 dark:text-slate-400", 
         bg: "bg-gray-500/15 dark:bg-slate-500/15 border-gray-500/20 dark:border-slate-500/20", 
-        progressColor: "bg-gray-400 dark:bg-slate-400",
-        progressWidth: "w-1/4"
       }
   }
 }
 
+// Fixed star display to only show 3 stars max
+const getStarsDisplay = (stars: string) => {
+  const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3 // Max 3 stars
+  return (
+    <div className="flex items-center gap-1">
+      {Array.from({ length: 3 }, (_, i) => (
+        <Star
+          key={i}
+          className={`w-3 h-3 ${
+            i < starCount
+              ? "text-yellow-500 fill-current"
+              : "text-gray-300 dark:text-slate-500"
+          }`}
+        />
+      ))}
+    </div>
+  )
+}
+
+// Sidebar Component - Extracted for reusability
+const Sidebar = ({ 
+  sidebarWidth, 
+  isMobile, 
+  isCollapsed, 
+  mobileMenuOpen, 
+  toggleCollapse, 
+  setMobileMenuOpen, 
+  sidebarRef, 
+  dragRef, 
+  isDragging, 
+  handleMouseDown, 
+  currentView, 
+  setCurrentView 
+}: {
+  sidebarWidth: number
+  isMobile: boolean
+  isCollapsed: boolean
+  mobileMenuOpen: boolean
+  toggleCollapse: () => void
+  setMobileMenuOpen: (open: boolean) => void
+  sidebarRef: React.RefObject<HTMLDivElement>
+  dragRef: React.RefObject<HTMLDivElement>
+  isDragging: boolean
+  handleMouseDown: (e: React.MouseEvent) => void
+  currentView: string
+  setCurrentView: (view: "problems" | "studyplan") => void
+}) => {
+  return (
+    <div 
+      ref={sidebarRef}
+      className={`${
+        isMobile 
+          ? `fixed left-0 top-0 z-50 transform transition-transform duration-300 ${
+              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            } w-80`
+          : 'relative z-40'
+      } bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border-r border-gray-200 dark:border-slate-700/50 transition-all duration-300 ease-in-out group`}
+      style={!isMobile ? { 
+        width: `${sidebarWidth}px`,
+        height: '100vh',
+        minHeight: '100vh',
+        borderRadius: '25px'
+      } : {
+        height: '100vh',
+        minHeight: '100vh'
+      }}
+    >
+      {/* Resize Handle - Desktop Only */}
+      {!isMobile && (
+        <div
+          ref={dragRef}
+          className={`absolute right-0 top-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-[#CCF301]/50 transition-colors duration-200 group-hover:opacity-100 opacity-0 ${isDragging ? 'bg-[#CCF301] opacity-100' : ''}`}
+          onMouseDown={handleMouseDown}
+        >
+          <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-8 bg-gray-300 dark:bg-slate-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <div className="w-0.5 h-4 bg-gray-500 dark:bg-slate-400 rounded-full"></div>
+          </div>
+        </div>
+      )}
+
+      <div className="h-full flex flex-col">
+        {/* Fixed header section */}
+        <div className="flex-shrink-0 p-4 sm:p-6 pb-4">
+          {/* Logo */}
+          <div className={`flex items-center gap-3 mb-6 ${isCollapsed && !isMobile ? 'justify-center' : ''}`}>
+            <div className="w-10 h-10 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center flex-shrink-0">
+              <BookOpen className="w-6 h-6 text-gray-900" />
+            </div>
+            {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
+              <div className="min-w-0">
+                <h5 className="text-lg font-bold text-[#CCF301] truncate">CodeCompass</h5>
+                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problem Library</p>
+              </div>
+            )}
+          </div>
+
+          {/* Toggle Button */}
+          <button
+            onClick={toggleCollapse}
+            className={`${
+              isMobile 
+                ? 'absolute right-4 top-4' 
+                : 'absolute bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-slate-700 -right-4 top-6'
+            } transition-all duration-200 w-8 h-8 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-[#CCF301] z-20`}
+            title={isMobile ? "Close menu" : (isCollapsed ? "Expand sidebar" : "Collapse sidebar")}
+          >
+            {isMobile ? <X className="w-5 h-5" /> : (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <X className="w-4 h-4" />)}
+          </button>
+
+          {/* Stats Cards */}
+          {(!isCollapsed || isMobile) && sidebarWidth > 160 && (
+            <div className="space-y-3 mb-6">
+              <Card hover={false} className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="min-w-0">
+                    <p className="text-2xl font-bold text-[#CCF301]">{mockData.length}</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Total Problems</p>
+                  </div>
+                  <Trophy className="w-8 h-8 text-[#CCF301] flex-shrink-0" />
+                </div>
+              </Card>
+            </div>
+          )}
+        </div>
+
+        {/* Scrollable navigation section */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6">
+          <div className="space-y-2">
+            <div className={`flex items-center gap-3 p-3 ${
+              currentView === "problems" 
+                ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]" 
+                : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
+            } rounded-xl font-medium transition-all duration-300 cursor-pointer ${
+              isCollapsed && !isMobile ? 'justify-center' : ''
+            }`} onClick={() => {
+              setCurrentView("problems")
+              if (isMobile) setMobileMenuOpen(false)
+            }}>
+              <BookOpen className="w-5 h-5 flex-shrink-0" />
+              {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Problem Library</span>}
+              {(!isCollapsed || isMobile) && sidebarWidth > 200 && <ChevronRight className="w-4 h-4 ml-auto flex-shrink-0" />}
+            </div>
+            
+            <div className={`flex items-center gap-3 p-3 ${
+              currentView === "studyplan" 
+                ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]" 
+                : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
+            } transition-all duration-200 cursor-pointer rounded-xl ${
+              isCollapsed && !isMobile ? 'justify-center' : ''
+            }`} onClick={() => {
+              setCurrentView("studyplan")
+              if (isMobile) setMobileMenuOpen(false)
+            }} title="Study Plan">
+              <Calendar className="w-5 h-5 flex-shrink-0" />
+              {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Study Plan</span>}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Study Plan Component - Now includes sidebar
+const StudyPlan = ({ 
+  sidebarWidth, 
+  isMobile, 
+  isCollapsed, 
+  mobileMenuOpen, 
+  toggleCollapse, 
+  setMobileMenuOpen, 
+  sidebarRef, 
+  dragRef, 
+  isDragging, 
+  handleMouseDown, 
+  onBack 
+}: { 
+  sidebarWidth: number
+  isMobile: boolean
+  isCollapsed: boolean
+  mobileMenuOpen: boolean
+  toggleCollapse: () => void
+  setMobileMenuOpen: (open: boolean) => void
+  sidebarRef: React.RefObject<HTMLDivElement>
+  dragRef: React.RefObject<HTMLDivElement>
+  isDragging: boolean
+  handleMouseDown: (e: React.MouseEvent) => void
+  onBack: () => void 
+}) => {
+  const studyPlans = [
+    {
+      id: "cpp",
+      title: "C++ Mastery",
+      description: "Master C++ programming with 75 curated problems",
+      subtitle: "System Programming & Performance",
+      problems: "75 Problems",
+      level: "Advanced",
+      gradient: "from-blue-500 to-blue-600",
+      icon: "💻"
+    },
+    {
+      id: "java",
+      title: "Java Excellence", 
+      description: "Enterprise Java development with top interview questions",
+      subtitle: "Object-Oriented Programming",
+      problems: "85 Problems",
+      level: "Intermediate",
+      gradient: "from-orange-500 to-red-500",
+      icon: "☕"
+    },
+    {
+      id: "javascript",
+      title: "JavaScript Pro",
+      description: "Modern JavaScript and web development essentials",
+      subtitle: "Frontend & Backend Development", 
+      problems: "90 Problems",
+      level: "Intermediate",
+      gradient: "from-yellow-500 to-yellow-600",
+      icon: "🚀"
+    },
+    {
+      id: "python",
+      title: "Python Expert",
+      description: "Data structures, algorithms, and Python mastery",
+      subtitle: "AI/ML & Data Science Ready",
+      problems: "80 Problems", 
+      level: "Mixed",
+      gradient: "from-green-500 to-blue-500",
+      icon: "🐍"
+    }
+  ]
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden" style={{ fontFamily: 'Barlow, sans-serif' }}>
+      {/* Animated background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -inset-10 opacity-20 dark:opacity-30">
+          <div className="absolute top-0 -left-4 w-72 h-72 bg-[#CCF301] rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse"></div>
+          <div className="absolute top-0 -right-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 dark:opacity-20 animate-pulse animation-delay-4000"></div>
+        </div>
+      </div>
+
+      {/* Mobile Overlay */}
+      {isMobile && mobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <Sidebar
+        sidebarWidth={sidebarWidth}
+        isMobile={isMobile}
+        isCollapsed={isCollapsed}
+        mobileMenuOpen={mobileMenuOpen}
+        toggleCollapse={toggleCollapse}
+        setMobileMenuOpen={setMobileMenuOpen}
+        sidebarRef={sidebarRef}
+        dragRef={dragRef}
+        isDragging={isDragging}
+        handleMouseDown={handleMouseDown}
+        currentView="studyplan"
+        setCurrentView={onBack}
+      />
+
+      {/* Main Content */}
+      <div className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
+        isMobile ? 'w-full' : ''
+      }`} style={!isMobile ? { 
+        width: `calc(100% - ${sidebarWidth}px)`
+      } : {}}>
+        <div className="p-4 sm:p-6 lg:p-8">
+          {/* Mobile Header */}
+          {isMobile && (
+            <div className="flex items-center justify-between mb-6 lg:hidden">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={() => setMobileMenuOpen(true)}
+                className="lg:hidden"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-lg flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-gray-900" />
+                </div>
+                <h5 className="text-lg font-bold text-[#CCF301]">CodeCompass</h5>
+              </div>
+              <div className="w-10 h-10"></div>
+            </div>
+          )}
+
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Study Plan</h3>
+            <p className="text-gray-600 dark:text-slate-400">Choose your programming language path</p>
+          </div>
+
+          <div className="mb-8">
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-6">Featured</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {studyPlans.map((plan) => (
+                <Card key={plan.id} className="group cursor-pointer h-64 relative overflow-hidden">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-90`} />
+                  <div className="relative z-10 h-full flex flex-col justify-between p-6 text-white">
+                    <div>
+                      <div className="text-3xl mb-3">{plan.icon}</div>
+                      <h5 className="font-bold text-lg mb-2">{plan.title}</h5>
+                      <p className="text-white/90 text-sm mb-1">{plan.subtitle}</p>
+                    </div>
+                    <div>
+                      <p className="text-white/80 text-sm mb-3">{plan.description}</p>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-white/90">{plan.problems}</span>
+                        <span className="text-white/90">•</span>
+                        <span className="text-white/90">{plan.level}</span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Problemset() {
   const [activeFilter, setActiveFilter] = useState("All Topics")
-  const [activeLanguage, setActiveLanguage] = useState("All Languages")
   const [searchQuery, setSearchQuery] = useState("")
-  const [favorites, setFavorites] = useState<number[]>([2, 6])
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false)
+  const [currentView, setCurrentView] = useState<"problems" | "studyplan">("problems")
   const [sidebarWidth, setSidebarWidth] = useState(288) // 72 * 4 = 288px (w-72)
   const [isDragging, setIsDragging] = useState(false)
   const [isDark, setIsDark] = useState(true)
@@ -357,23 +644,10 @@ export default function Problemset() {
     }
   }
 
-  const toggleFavorite = (problemId: number, e?: React.MouseEvent) => {
-    if (e) {
-      e.stopPropagation()
-      e.preventDefault()
-    }
-    setFavorites((prev) => 
-      prev.includes(problemId) 
-        ? prev.filter((id) => id !== problemId) 
-        : [...prev, problemId]
-    )
-  }
-
   const filteredData = mockData
     .sort((a, b) => a.id - b.id)
     .filter((problem) => {
       const matchesSearch = problem.title.toLowerCase().includes(searchQuery.toLowerCase())
-      const matchesLanguage = activeLanguage === "All Languages" || problem.language === activeLanguage
       const matchesTopic =
         activeFilter === "All Topics" ||
         problem.tags.some((tag) => {
@@ -381,12 +655,32 @@ export default function Problemset() {
           const normalizedFilter = activeFilter.toLowerCase()
           return normalizedTag.includes(normalizedFilter) || normalizedFilter.includes(normalizedTag)
         })
-      const matchesFavorites = !showFavoritesOnly || favorites.includes(problem.id)
 
-      return matchesSearch && matchesLanguage && matchesTopic && matchesFavorites
+      return matchesSearch && matchesTopic
     })
 
-  const solvedCount = mockData.filter(p => p.solved).length
+  const solvedCount = 0 // Since we removed solved status
+
+  if (currentView === "studyplan") {
+    return (
+      <>
+        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <StudyPlan 
+          sidebarWidth={sidebarWidth}
+          isMobile={isMobile}
+          isCollapsed={isCollapsed}
+          mobileMenuOpen={mobileMenuOpen}
+          toggleCollapse={toggleCollapse}
+          setMobileMenuOpen={setMobileMenuOpen}
+          sidebarRef={sidebarRef}
+          dragRef={dragRef}
+          isDragging={isDragging}
+          handleMouseDown={handleMouseDown}
+          onBack={() => setCurrentView("problems")} 
+        />
+      </>
+    )
+  }
 
   return (
     <>
@@ -411,133 +705,21 @@ export default function Problemset() {
           />
         )}
 
-        {/* Resizable Sidebar */}
-        <div 
-          ref={sidebarRef}
-          className={`${
-            isMobile 
-              ? `fixed left-0 top-0 z-50 transform transition-transform duration-300 ${
-                  mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-                } w-80`
-              : 'relative z-40'
-          } bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border-r border-gray-200 dark:border-slate-700/50 transition-all duration-300 ease-in-out group`}
-          style={!isMobile ? { 
-            width: `${sidebarWidth}px`,
-            height: '100vh',
-            minHeight: '100vh',
-            borderRadius: '25px'
-          } : {
-            height: '100vh',
-            minHeight: '100vh'
-          }}
-        >
-          {/* Resize Handle - Desktop Only */}
-          {!isMobile && (
-            <div
-              ref={dragRef}
-              className={`absolute right-0 top-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-[#CCF301]/50 transition-colors duration-200 group-hover:opacity-100 opacity-0 ${isDragging ? 'bg-[#CCF301] opacity-100' : ''}`}
-              onMouseDown={handleMouseDown}
-            >
-              <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-8 bg-gray-300 dark:bg-slate-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <div className="w-0.5 h-4 bg-gray-500 dark:bg-slate-400 rounded-full"></div>
-              </div>
-            </div>
-          )}
-
-          <div className="h-full flex flex-col">
-            {/* Fixed header section */}
-            <div className="flex-shrink-0 p-4 sm:p-6 pb-4">
-              {/* Logo */}
-              <div className={`flex items-center gap-3 mb-6 ${isCollapsed && !isMobile ? 'justify-center' : ''}`}>
-                <div className="w-10 h-10 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <BookOpen className="w-6 h-6 text-gray-900" />
-                </div>
-                {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
-                  <div className="min-w-0">
-                    <h5 className="text-lg font-bold text-[#CCF301] truncate">CodeCompass</h5>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problem Library</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Toggle Button */}
-              <button
-                onClick={toggleCollapse}
-                className={`${
-                  isMobile 
-                    ? 'absolute right-4 top-4' 
-                    : 'absolute bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-slate-700 -right-4 top-6'
-                } transition-all duration-200 w-8 h-8 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-[#CCF301] z-20`}
-                title={isMobile ? "Close menu" : (isCollapsed ? "Expand sidebar" : "Collapse sidebar")}
-              >
-                {isMobile ? <X className="w-5 h-5" /> : (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <X className="w-4 h-4" />)}
-              </button>
-
-              {/* Stats Cards */}
-              {(!isCollapsed || isMobile) && sidebarWidth > 160 && (
-                <div className="space-y-3 mb-6">
-                  <Card hover={false} className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div className="min-w-0">
-                        <p className="text-2xl font-bold text-[#CCF301]">{solvedCount}</p>
-                        <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problems Solved</p>
-                      </div>
-                      <Trophy className="w-8 h-8 text-[#CCF301] flex-shrink-0" />
-                    </div>
-                  </Card>
-                </div>
-              )}
-            </div>
-
-            {/* Scrollable navigation section */}
-            <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="space-y-2">
-                <div className={`flex items-center gap-3 p-3 bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301] rounded-xl font-medium transition-all duration-300 ${
-                  isCollapsed && !isMobile ? 'justify-center' : ''
-                }`}>
-                  <BookOpen className="w-5 h-5 flex-shrink-0" />
-                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Problem Library</span>}
-                  {(!isCollapsed || isMobile) && sidebarWidth > 200 && <ChevronRight className="w-4 h-4 ml-auto flex-shrink-0" />}
-                </div>
-                
-                <div className={`flex items-center gap-3 p-3 text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10 transition-all duration-200 cursor-pointer rounded-xl ${
-                  isCollapsed && !isMobile ? 'justify-center' : ''
-                }`} title="Study Plan">
-                  <Calendar className="w-5 h-5 flex-shrink-0" />
-                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Study Plan</span>}
-                </div>
-                
-                <div
-                  className={`flex items-center gap-3 p-3 transition-all duration-200 cursor-pointer rounded-xl ${
-                    showFavoritesOnly 
-                      ? "bg-pink-500/10 border border-pink-500/20 text-pink-500" 
-                      : "text-gray-600 dark:text-slate-400 hover:text-pink-500 hover:bg-pink-500/10"
-                  } ${isCollapsed && !isMobile ? 'justify-center' : ''}`}
-                  onClick={() => {
-                    setShowFavoritesOnly(!showFavoritesOnly)
-                    if (!showFavoritesOnly) {
-                      setActiveFilter("All Topics")
-                      setActiveLanguage("All Languages")
-                      setSearchQuery("")
-                    }
-                    if (isMobile) setMobileMenuOpen(false)
-                  }}
-                  title="My Favorites"
-                >
-                  <Heart className={`w-5 h-5 flex-shrink-0 ${showFavoritesOnly ? 'fill-current' : ''}`} />
-                  {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
-                    <>
-                      <span className="whitespace-nowrap truncate">My Favorites</span>
-                      {favorites.length > 0 && sidebarWidth > 200 && (
-                        <Badge variant="danger" className="text-xs ml-auto flex-shrink-0 bg-pink-500/15 text-pink-500 border-pink-500/20">{favorites.length}</Badge>
-                      )}
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Sidebar */}
+        <Sidebar
+          sidebarWidth={sidebarWidth}
+          isMobile={isMobile}
+          isCollapsed={isCollapsed}
+          mobileMenuOpen={mobileMenuOpen}
+          toggleCollapse={toggleCollapse}
+          setMobileMenuOpen={setMobileMenuOpen}
+          sidebarRef={sidebarRef}
+          dragRef={dragRef}
+          isDragging={isDragging}
+          handleMouseDown={handleMouseDown}
+          currentView={currentView}
+          setCurrentView={setCurrentView}
+        />
 
         {/* Main Content */}
         <div className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
@@ -660,24 +842,6 @@ export default function Problemset() {
                     </div>
                   </div>
 
-                  {/* Language Filter */}
-                  <div className="w-full">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Programming Language</label>
-                    <div className="flex flex-wrap gap-2">
-                      {languageFilters.map((language) => (
-                        <Button
-                          key={language}
-                          variant={activeLanguage === language ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setActiveLanguage(language)}
-                          className="transition-all duration-200 whitespace-nowrap text-xs sm:text-sm"
-                        >
-                          {language}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Topic Filter */}
                   <div className="w-full">
                     <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Topic Category</label>
@@ -718,16 +882,13 @@ export default function Problemset() {
                     <tr className="border-b border-gray-200 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-800/50">
                       <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">#</th>
                       <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Problem</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Language</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Status</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Stars</th>
                       <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Difficulty</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData.map((problem) => {
                       const difficultyConfig = getDifficultyConfig(problem.difficulty)
-                      const isFavorite = favorites.includes(problem.id)
                       return (
                         <tr
                           key={problem.id}
@@ -735,61 +896,31 @@ export default function Problemset() {
                         >
                           <td className="p-3 sm:p-4 text-gray-600 dark:text-slate-400 font-mono text-sm">{problem.id}</td>
                           <td className="p-3 sm:p-4">
-                            <div className="flex items-center gap-3">
-                              {problem.solved && (
-                                <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                  </svg>
-                                </div>
-                              )}
-                              <div className="min-w-0">
-                                <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
-                                  {problem.title}
-                                </div>
-                                {problem.attempts > 0 && !problem.solved && (
-                                  <div className="text-xs text-gray-500 dark:text-slate-500 mt-1">
-                                    {problem.attempts} attempt{problem.attempts > 1 ? 's' : ''}
-                                  </div>
+                            <div className="min-w-0">
+                              <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
+                                {problem.title}
+                              </div>
+                              <div className="flex flex-wrap gap-1 mt-2">
+                                {problem.tags.slice(0, 3).map((tag, index) => (
+                                  <Badge key={index} variant="secondary" className="text-xs">
+                                    {tag}
+                                  </Badge>
+                                ))}
+                                {problem.tags.length > 3 && (
+                                  <Badge variant="outline" className="text-xs">
+                                    +{problem.tags.length - 3}
+                                  </Badge>
                                 )}
                               </div>
                             </div>
                           </td>
                           <td className="p-3 sm:p-4">
-                            <Badge variant="secondary" className="text-xs">
-                              {problem.language}
-                            </Badge>
-                          </td>
-                          <td className="p-3 sm:p-4">
-                            <div className="flex items-center gap-2">
-                              <div className="w-16 sm:w-20 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                                <div
-                                  className={`h-full ${difficultyConfig.progressColor} ${difficultyConfig.progressWidth} transition-all duration-300`}
-                                />
-                              </div>
-                              <span className="text-xs text-gray-500 dark:text-slate-400">
-                                {problem.solved ? '100%' : problem.attempts > 0 ? `${Math.min(problem.attempts * 25, 75)}%` : '0%'}
-                              </span>
-                            </div>
+                            {getStarsDisplay(problem.stars)}
                           </td>
                           <td className="p-3 sm:p-4">
                             <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
                               {problem.difficulty}
                             </Badge>
-                          </td>
-                          <td className="p-3 sm:p-4">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={(e) => toggleFavorite(problem.id, e)}
-                              className={`p-2 h-10 w-10 touch-manipulation ${
-                                isFavorite
-                                  ? "text-pink-500 hover:text-pink-400"
-                                  : "text-gray-400 dark:text-slate-400 hover:text-pink-500"
-                              } transition-colors duration-200`}
-                            >
-                              <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
-                            </Button>
                           </td>
                         </tr>
                       )
@@ -803,7 +934,6 @@ export default function Problemset() {
                 <div className="divide-y divide-gray-200 dark:divide-slate-700/50">
                   {filteredData.map((problem) => {
                     const difficultyConfig = getDifficultyConfig(problem.difficulty)
-                    const isFavorite = favorites.includes(problem.id)
                     return (
                       <div
                         key={problem.id}
@@ -812,56 +942,31 @@ export default function Problemset() {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3 min-w-0 flex-1">
                             <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">#{problem.id}</span>
-                            {problem.solved && (
-                              <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            )}
                             <div className="min-w-0 flex-1">
                               <h6 className="text-gray-900 dark:text-slate-100 font-medium text-sm truncate">
                                 {problem.title}
                               </h6>
-                              {problem.attempts > 0 && !problem.solved && (
-                                <p className="text-xs text-gray-500 dark:text-slate-500 mt-1">
-                                  {problem.attempts} attempt{problem.attempts > 1 ? 's' : ''}
-                                </p>
-                              )}
                             </div>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => toggleFavorite(problem.id, e)}
-                            className={`p-2 h-10 w-10 flex-shrink-0 touch-manipulation ${
-                              isFavorite
-                                ? "text-pink-500 hover:text-pink-400"
-                                : "text-gray-400 dark:text-slate-400 hover:text-pink-500"
-                            } transition-colors duration-200`}
-                          >
-                            <Heart className={`w-5 h-5 ${isFavorite ? "fill-current" : ""}`} />
-                          </Button>
+                          <div className="flex-shrink-0 ml-2">
+                            {getStarsDisplay(problem.stars)}
+                          </div>
                         </div>
                         
                         <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <Badge variant="secondary" className="text-xs">
-                            {problem.language}
-                          </Badge>
                           <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
                             {problem.difficulty}
                           </Badge>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full ${difficultyConfig.progressColor} ${difficultyConfig.progressWidth} transition-all duration-300`}
-                            />
-                          </div>
-                          <span className="text-xs text-gray-500 dark:text-slate-400 flex-shrink-0">
-                            {problem.solved ? '100%' : problem.attempts > 0 ? `${Math.min(problem.attempts * 25, 75)}%` : '0%'}
-                          </span>
+                          {problem.tags.slice(0, 2).map((tag, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {tag}
+                            </Badge>
+                          ))}
+                          {problem.tags.length > 2 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{problem.tags.length - 2}
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     )
@@ -873,10 +978,7 @@ export default function Problemset() {
             {/* Footer */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-6 sm:mt-8">
               <div className="text-gray-600 dark:text-slate-400 text-sm">
-                {showFavoritesOnly
-                  ? `Showing ${filteredData.length} favorite problems`
-                  : `Showing ${filteredData.length} of ${mockData.length} problems`}
-                {favorites.length > 0 && !showFavoritesOnly && ` • ${favorites.length} favorited`}
+                Showing {filteredData.length} of {mockData.length} problems
               </div>
               <Button
                 variant="outline"
