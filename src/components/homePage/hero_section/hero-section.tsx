@@ -11,7 +11,7 @@ export default function HeroSection() {
   const [showDescription, setShowDescription] = useState(false);
 
   return (
-    <section className="relative min-h-[800px] lg:h-[800px] flex items-center overflow-hidden font-barlow bg-white dark:bg-black">
+    <section className="relative min-h-screen flex items-center overflow-hidden font-barlow bg-white dark:bg-black">
       {/* Background */}
       <div className="absolute inset-0">
         <GridDotBackground 

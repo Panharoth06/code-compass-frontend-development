@@ -1,6 +1,8 @@
 "use client";
 import React from "react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import Image from "next/image";
+import codeEditorImage from "../../../public/image/image.png"
 
 export function HeroScrollDemo() {
   return (
@@ -15,14 +17,17 @@ export function HeroScrollDemo() {
         }
       >
         <div
-          className="mx-auto rounded-2xl h-full w-full bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-800 flex items-center justify-center text-white text-2xl font-bold shadow-2xl"
+          className="mx-auto rounded-2xl h-full w-full flex items-center justify-center text-white text-2xl font-bold shadow-2xl"
           style={{ height: '100%', width: '100%' }}
         >
           <div className="text-center">
-            <div className="text-4xl mb-4">🚀</div>
-            <div>Your Amazing Content</div>
             <div className="text-lg font-normal mt-2 opacity-80">
-              Replace this with your own image
+              <Image 
+              src={codeEditorImage}
+              height={800}
+              width={1300}
+              alt="Code Editor Illustration"
+              />
             </div>
           </div>
         </div>
