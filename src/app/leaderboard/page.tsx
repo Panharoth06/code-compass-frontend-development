@@ -1,9 +1,9 @@
-import React from 'react'
+import ModernCodeCompassLeaderboard from "@/components/leaderboard/leaderboard";
 
-const page = () => {
+export default function LeaderboardPage() {
   return (
-    <div>page</div>
-  )
+    <div>
+        <ModernCodeCompassLeaderboard/>
+    </div>
+  );
 }
-
-export default page
