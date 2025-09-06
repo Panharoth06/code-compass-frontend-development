@@ -1,4 +1,5 @@
-'use client';
+"use client";
+
 import React, {
   Children,
   cloneElement,
@@ -6,7 +7,6 @@ import React, {
   isValidElement,
   ReactElement,
   ReactNode,
-  RefObject,
   useEffect,
   useMemo,
   useRef,
@@ -28,7 +28,7 @@ export interface CardSwapProps {
 
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   customClass?: string;
-  language?: 'java' | 'cpp' | 'python';
+  language?: "java" | "cpp" | "python";
   title?: string;
   code?: string;
 }
@@ -43,7 +43,7 @@ interface HeroContent {
 
 interface CodeCard {
   id: number;
-  language: 'java' | 'cpp' | 'python';
+  language: "java" | "cpp" | "python";
   title: string;
   content: string;
 }
@@ -51,15 +51,15 @@ interface CodeCard {
 export const heroContent: HeroContent = {
   title: {
     prefix: "Master",
-    animated: "Algorithms"
-  }
+    animated: "Algorithms",
+  },
 };
 
 export const codeCards: CodeCard[] = [
   {
     id: 1,
-    language: 'python',
-    title: 'CodeCompass',
+    language: "python",
+    title: "CodeCompass",
     content: `# CodeCompass Search 🧭
 def find(arr, x):
     l, r = 0, len(arr) - 1
@@ -72,12 +72,12 @@ def find(arr, x):
 
 # Usage
 nums = [1, 5, 9, 13]
-print(find(nums, 9))  # 2`
+print(find(nums, 9))  # 2`,
   },
   {
     id: 2,
-    language: 'java',
-    title: 'CodeCompass',
+    language: "java",
+    title: "CodeCompass",
     content: `// CodeCompass Sort ⚡
 class CodeCompass {
     static void sort(int[] a, int l, int h) {
@@ -94,12 +94,12 @@ class CodeCompass {
     }
     static void swap(int[] a, int i, int j) {
         int t=a[i]; a[i]=a[j]; a[j]=t; }
-}`
+}`,
   },
   {
     id: 3,
-    language: 'cpp',
-    title: 'CodeCompass',
+    language: "cpp",
+    title: "CodeCompass",
     content: `// CodeCompass Path 🗺️
 #include <vector>
 #include <queue>
@@ -116,79 +116,127 @@ public:
                     d[v] = d[u] + w, pq.push({-d[v], v});
         } return d;
     }
-};`
-  }
+};`,
+  },
 ];
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ customClass, language, title, code, children, ...rest }, ref) => {
     // Language-specific styling and icons
-    const getLanguageConfig = (lang?: string) => {
+    const getLanguagesStyle = (lang?: string) => {
       switch (lang) {
-        case 'java':
+        case "java":
           return {
-            gradient: 'from-red-500/20 via-orange-500/20 to-yellow-500/20',
-            border: 'border-orange-400/30',
-            accent: 'text-orange-400',
-            icon: '☕',
-            bgPattern: 'bg-gradient-to-br from-red-900/10 to-orange-900/10',
-            shadowColor: 'orange'
+            gradient: "from-red-500/20 via-orange-500/20 to-yellow-500/20",
+            border: "border-orange-400/30",
+            accent: "text-orange-400",
+            icon: "☕",
+            bgPattern: "bg-gradient-to-br from-red-900/10 to-orange-900/10",
+            shadowColor: "orange",
           };
-        case 'cpp':
+        case "cpp":
           return {
-            gradient: 'from-blue-500/20 via-indigo-500/20 to-purple-500/20',
-            border: 'border-blue-400/30',
-            accent: 'text-blue-400',
-            icon: '⚡',
-            bgPattern: 'bg-gradient-to-br from-blue-900/10 to-indigo-900/10',
-            shadowColor: 'blue'
+            gradient: "from-blue-500/20 via-indigo-500/20 to-purple-500/20",
+            border: "border-blue-400/30",
+            accent: "text-blue-400",
+            icon: "⚡",
+            bgPattern: "bg-gradient-to-br from-blue-900/10 to-indigo-900/10",
+            shadowColor: "blue",
           };
-        case 'python':
+        case "python":
           return {
-            gradient: 'from-green-500/20 via-emerald-500/20 to-teal-500/20',
-            border: 'border-green-400/30',
-            accent: 'text-green-400',
-            icon: '🐍',
-            bgPattern: 'bg-gradient-to-br from-green-900/10 to-emerald-900/10',
-            shadowColor: 'green'
+            gradient: "from-green-500/20 via-emerald-500/20 to-teal-500/20",
+            border: "border-green-400/30",
+            accent: "text-green-400",
+            icon: "🐍",
+            bgPattern: "bg-gradient-to-br from-green-900/10 to-emerald-900/10",
+            shadowColor: "green",
           };
         default:
           return {
-            gradient: 'from-gray-500/20 via-slate-500/20 to-zinc-500/20',
-            border: 'border-gray-400/30',
-            accent: 'text-gray-400',
-            icon: '💻',
-            bgPattern: 'bg-gradient-to-br from-gray-900/10 to-slate-900/10',
-            shadowColor: 'gray'
+            gradient: "from-gray-500/20 via-slate-500/20 to-zinc-500/20",
+            border: "border-gray-400/30",
+            accent: "text-gray-400",
+            icon: "💻",
+            bgPattern: "bg-gradient-to-br from-gray-900/10 to-slate-900/10",
+            shadowColor: "gray",
           };
       }
     };
 
+    const langStyle = getLanguagesStyle(language);
+
     // Syntax highlighting function
     const highlightCode = (code: string, lang?: string) => {
       if (!code) return code;
-      
+
       let highlighted = code;
-      
+
       // Keywords by language
       const keywords = {
-        java: ['public', 'class', 'private', 'void', 'int', 'boolean', 'if', 'else', 'return', 'new', 'null', 'static', 'for', 'while'],
-        cpp: ['#include', 'class', 'public', 'private', 'void', 'int', 'vector', 'std', 'using', 'namespace', 'if', 'else', 'return', 'for', 'while'],
-        python: ['def', 'if', 'else', 'return', 'for', 'in', 'enumerate', 'True', 'False', 'None', 'while', 'len', 'print']
+        java: [
+          "public",
+          "class",
+          "private",
+          "void",
+          "int",
+          "boolean",
+          "if",
+          "else",
+          "return",
+          "new",
+          "null",
+          "static",
+          "for",
+          "while",
+        ],
+        cpp: [
+          "#include",
+          "class",
+          "public",
+          "private",
+          "void",
+          "int",
+          "vector",
+          "std",
+          "using",
+          "namespace",
+          "if",
+          "else",
+          "return",
+          "for",
+          "while",
+        ],
+        python: [
+          "def",
+          "if",
+          "else",
+          "return",
+          "for",
+          "in",
+          "enumerate",
+          "True",
+          "False",
+          "None",
+          "while",
+          "len",
+          "print",
+        ],
       };
-      
+
       const langKeywords = keywords[lang as keyof typeof keywords] || [];
-      
+
       // Apply basic syntax highlighting
-      langKeywords.forEach(keyword => {
-        const regex = new RegExp(`\\b${keyword}\\b`, 'g');
-        highlighted = highlighted.replace(regex, `<span style="color: #ff6b6b; font-weight: bold;">${keyword}</span>`);
+      langKeywords.forEach((keyword) => {
+        const regex = new RegExp(`\\b${keyword}\\b`, "g");
+        highlighted = highlighted.replace(
+          regex,
+          `<span style="color: #ff6b6b; font-weight: bold;">${keyword}</span>`
+        );
       });
 
       return highlighted;
     };
-
-    const config = getLanguageConfig(language);
 
     return (
       <div
@@ -202,26 +250,35 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
           overflow-hidden group
           shadow-2xl shadow-black/50
           w-[400px] h-[300px] sm:w-[450px] sm:h-[350px] md:w-[500px] md:h-[400px]
+          ${langStyle.border}
+          ${langStyle.bgPattern}
           ${customClass ?? ""} 
           ${rest.className ?? ""}
         `.trim()}
         style={{
-          backgroundColor: '#1a1a1a',
-          border: `1px solid #333333`,
+          backgroundColor: "#1a1a1a",
+          transform: "translate(-50%, -50%)",
         }}
       >
+        {/* Background gradient */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${langStyle.gradient} opacity-50`}
+        />
+
         {/* Outer grid pattern */}
-        <div className="absolute -inset-4 opacity-20 pointer-events-none"
-             style={{
-               backgroundImage: `
+        <div
+          className="absolute -inset-4 opacity-20 pointer-events-none"
+          style={{
+            backgroundImage: `
                  linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px),
                  linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)
                `,
-               backgroundSize: '24px 24px'
-             }} />
+            backgroundSize: "24px 24px",
+          }}
+        />
 
         {/* VS Code-like title bar */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-800/50">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-800/50 relative z-10">
           <div className="flex items-center gap-3">
             <div className="flex gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
@@ -229,49 +286,55 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
             {title && (
-              <span className="text-gray-300 text-sm font-mono ml-2">
+              <span className={`text-sm font-mono ml-2 ${langStyle.accent}`}>
                 {title}.{language}
               </span>
             )}
           </div>
           {language && (
-            <span className="text-xs px-2 py-1 rounded bg-gray-700 text-gray-300 uppercase font-mono">
-              {language === 'cpp' ? 'C++' : language}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">{langStyle.icon}</span>
+              <span className="text-xs px-2 py-1 rounded bg-gray-700 text-gray-300 uppercase font-mono">
+                {language === "cpp" ? "C++" : language}
+              </span>
+            </div>
           )}
         </div>
 
         {/* Line numbers and code content */}
-        <div className="flex h-[calc(100%-50px)]">
+        <div className="flex h-[calc(100%-50px)] relative z-10">
           {/* Line numbers */}
           <div className="w-12 bg-gray-800/30 border-r border-gray-700 flex flex-col text-gray-500 text-xs font-mono">
-            {code && code.split('\n').map((_, index) => (
-              <div key={index} className="px-2 py-0.5 text-right leading-5">
-                {index + 1}
-              </div>
-            ))}
+            {code &&
+              code.split("\n").map((_, index) => (
+                <div key={index} className="px-2 py-0.5 text-right leading-5">
+                  {index + 1}
+                </div>
+              ))}
           </div>
-          
+
           {/* Code content */}
           <div className="flex-1 relative overflow-hidden">
             {/* Inner grid pattern */}
-            <div className="absolute inset-0 opacity-10"
-                 style={{
-                   backgroundImage: `
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage: `
                      linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px),
                      linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)
                    `,
-                   backgroundSize: '20px 20px'
-                 }} />
-            
+                backgroundSize: "20px 20px",
+              }}
+            />
+
             {/* Code */}
             {code ? (
               <div className="relative z-10 p-4 h-full overflow-auto">
                 <pre className="text-xs sm:text-sm font-mono leading-5 text-gray-300">
-                  <code 
+                  <code
                     className="block"
-                    dangerouslySetInnerHTML={{ 
-                      __html: highlightCode(code, language) 
+                    dangerouslySetInnerHTML={{
+                      __html: highlightCode(code, language),
                     }}
                   />
                 </pre>
@@ -285,22 +348,32 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         </div>
 
         {/* Language accent line */}
-        <div 
+        <div
           className={`absolute bottom-0 left-0 right-0 h-0.5 opacity-70 group-hover:opacity-100 transition-opacity duration-500`}
           style={{
-            background: language === 'java' ? '#f97316' : 
-                       language === 'cpp' ? '#3b82f6' : 
-                       language === 'python' ? '#10b981' : '#6b7280'
+            background:
+              language === "java"
+                ? "#f97316"
+                : language === "cpp"
+                ? "#3b82f6"
+                : language === "python"
+                ? "#10b981"
+                : "#6b7280",
           }}
         />
 
         {/* Hover glow effect */}
-        <div 
-          className="absolute -inset-1 opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500 -z-10 rounded-2xl"
+        <div
+          className={`absolute -inset-1 opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500 -z-10 rounded-2xl`}
           style={{
-            background: language === 'java' ? '#f97316' : 
-                       language === 'cpp' ? '#3b82f6' : 
-                       language === 'python' ? '#10b981' : '#6b7280'
+            background:
+              language === "java"
+                ? "#f97316"
+                : language === "cpp"
+                ? "#3b82f6"
+                : language === "python"
+                ? "#10b981"
+                : "#6b7280",
           }}
         />
       </div>
@@ -310,7 +383,6 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = "Card";
 
-type CardRef = RefObject<HTMLDivElement>;
 interface Slot {
   x: number;
   y: number;
@@ -378,17 +450,17 @@ const CardSwap: React.FC<CardSwapProps> = ({
     () => Children.toArray(children) as ReactElement<CardProps>[],
     [children]
   );
-  const refs = useMemo<CardRef[]>(
-    () => childArr.map(() => React.createRef<HTMLDivElement>()),
-    [childArr.length]
-  );
 
+  const refs = useMemo(
+    () => childArr.map(() => React.createRef<HTMLDivElement>()),
+    [childArr] // Include the actual array, not just its length
+  );
   const order = useRef<number[]>(
     Array.from({ length: childArr.length }, (_, i) => i)
   );
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
-  const intervalRef = useRef<number>();
+  const intervalRef = useRef<number | undefined>(undefined);
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -485,7 +557,21 @@ const CardSwap: React.FC<CardSwapProps> = ({
       };
     }
     return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+  }, [
+    cardDistance,
+    verticalDistance,
+    delay,
+    pauseOnHover,
+    skewAmount,
+    easing,
+    config.durDrop,
+    config.durMove,
+    config.durReturn,
+    config.ease,
+    config.promoteOverlap,
+    config.returnDelay,
+    refs,
+  ]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)

@@ -54,13 +54,19 @@ export const ContainerScroll = ({
   );
 };
 
-export const Header = ({ translate, titleComponent }: any) => {
+interface HeaderProps {
+  translate: MotionValue<number> | number;
+  titleComponent: React.ReactNode;
+  className?: string;
+}
+
+export const Header = ({ translate, titleComponent, className = '' }: HeaderProps) => {
   return (
     <motion.div
       style={{
-        translateY: translate,
+        translateY: translate, // This now accepts both MotionValue and number
       }}
-      className="div max-w-7xl mx-auto text-center"
+      className={`max-w-7xl mx-auto text-center ${className}`}
     >
       {titleComponent}
     </motion.div>

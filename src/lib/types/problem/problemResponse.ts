@@ -1,4 +1,4 @@
-export type ProblemResponse = {
+export interface ProblemResponse  {
     id: number;
     best_memory_usage: number;
     best_time_execution: number;
@@ -7,13 +7,21 @@ export type ProblemResponse = {
     difficulty: "EASY" | "MEDIUM" | "HARD";
     star: "ONE" | "TWO" | "THREE";
     title: string;
-    test_cases: {
-        input: string;
-        expectedOutput: string;
-    }[];
+    test_cases: TestCase[];
+    hints: Hint[];
     tag_names: string[];
+    author: string;
 }
 
+export interface TestCase {
+    stdin: string;
+    expected_outputs: string;
+}
+
+export interface Hint {
+    hint: string;
+    isLocked: boolean;
+}
 
 // {
 //   "id": 0,
@@ -26,11 +34,18 @@ export type ProblemResponse = {
 //   "title": "string",
 //   "test_cases": [
 //     {
-//       "input": "string",
-//       "expectedOutput": "string"
+//       "stdin": "string",
+//       "expected_outputs": "string"
 //     }
 //   ],
 //   "tag_names": [
 //     "string"
-//   ]
+//   ],
+//   "hints": [
+//     {
+//       "hint": "string",
+//       "isLocked": true
+//     }
+//   ],
+//   "author": "string"
 // }

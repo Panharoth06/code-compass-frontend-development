@@ -118,7 +118,7 @@ export default function ContactUsPage() {
               Get in <span className="text-[#CCF301]">Touch</span>
             </h2>
             <p className={`text-base sm:text-lg lg:text-xl ${themeClasses.textSecondary} max-w-2xl mx-auto px-2`} style={{ fontFamily: 'Barlow, sans-serif' }}>
-              Have questions about CodeCompass? Need technical support? We're here to help you on your coding journey.
+              Have questions about CodeCompass? Need technical support? We&aposre here to help you on your coding journey.
             </p>
           </div>
 

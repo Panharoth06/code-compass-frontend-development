@@ -150,7 +150,7 @@ export default function CodeCompassFeatures() {
                   </div>
                   <span className="font-bold text-lg">Crazy Idea</span>
                 </div>
-                <p className="font-medium text-lg">What if we're all connected to one omega-consciousness?</p>
+                <p className="font-medium text-lg">What if we&apos;re all connected to one omega-consciousness?</p>
               </div>
               
               <div className={`rounded-3xl p-6 border ${

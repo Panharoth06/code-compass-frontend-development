@@ -176,15 +176,15 @@ const Footer = ({ isDarkMode = true }) => {
                   { Icon: Globe, href: '#', label: 'Website', color: '#CCF301' }
                 ].map(({ Icon, href, label, color }, index) => (
                   <Link
-                    key={label}
+                    key={index}
                     href={href}
                     className={`group relative w-9 h-9 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center transition-all duration-500 hover:scale-110 hover:-translate-y-1 border ${isDarkMode ? 'border-white/10' : 'border-gray-200'} hover:border-[#CCF301]/30 overflow-hidden`}
                     aria-label={label}
                   >
                     <Icon className={`h-4 w-4 relative z-10 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} group-hover:scale-110`} 
                           style={{ color: `var(--hover-color, ${isDarkMode ? '#9CA3AF' : '#6B7280'})` }}
-                          onMouseEnter={(e) => e.target.style.setProperty('--hover-color', color)}
-                          onMouseLeave={(e) => e.target.style.removeProperty('--hover-color')} />
+                          onMouseEnter={(e) => (e.target as HTMLElement).style.setProperty('--hover-color', color)}
+                          onMouseLeave={(e) => (e.target as HTMLElement).style.removeProperty('--hover-color')} />
                   </Link>
                 ))}
               </div>
@@ -232,7 +232,7 @@ const Footer = ({ isDarkMode = true }) => {
               <div className="flex items-center space-x-6">
                 {['Terms', 'Privacy', 'Cookies'].map((item, index) => (
                   <Link
-                    key={item}
+                    key={index}
                     href={`/${item.toLowerCase()}`}
                     className={`group relative ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} transition-all duration-500 text-xs font-medium hover:scale-105`}
                   >

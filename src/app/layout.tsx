@@ -4,9 +4,10 @@ import "./globals.css";
 import StoreProvider from "./StoreProvider";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import SessionProviderWrapper from "./SessionProviderWrapper";
 
 const barlow = Barlow({
-  weight: '400',
+  weight: "400",
   variable: "--font-barlow",
   subsets: ["latin"],
 });
@@ -18,19 +19,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={barlow.className}>
       <body className={`${barlow.variable} antialiased`}>
-        <StoreProvider>
-          <Navbar />
-          <main>
-            {children}
-          </main>
-          <Footer />
-        </StoreProvider>
+        <SessionProviderWrapper>
+          <StoreProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </StoreProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );

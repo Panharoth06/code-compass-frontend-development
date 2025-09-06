@@ -1,7 +1,19 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef, useCallback } from "react"
-import { Search, Filter, ArrowUpDown, BookOpen, Calendar, Star, Trophy, Menu, X, ChevronRight } from "lucide-react"
+import React, { useState, useEffect, useRef, useCallback, ChangeEvent, JSX} from "react";
+import {
+  Search,
+  Filter,
+  ArrowUpDown,
+  BookOpen,
+  Calendar,
+  Star,
+  Trophy,
+  Menu,
+  X,
+  ChevronRight,
+} from "lucide-react";
+import { ButtonProps } from "@/lib/types/ButtonProps";
 
 const mockData = [
   {
@@ -92,117 +104,189 @@ const mockData = [
     stars: "THREE",
     tags: ["array", "two-pointers", "dynamic-programming"],
   },
-]
+];
 
 // Modern UI Components with Light/Dark Mode Support and Barlow Font
-const Card = ({ children, className = "", hover = true }: { children: React.ReactNode, className?: string, hover?: boolean }) => (
-  <div className={`rounded-xl border border-gray-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm ${hover ? 'hover:border-[#CCF301]/50 hover:shadow-xl hover:shadow-[#CCF301]/10 transition-all duration-300' : ''} ${className}`}>
+const Card = ({
+  children,
+  className = "",
+  hover = true,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  hover?: boolean;
+}) => (
+  <div
+    className={`rounded-xl border border-gray-200 dark:border-slate-700/50 bg-white/80 dark:bg-slate-800/50 backdrop-blur-sm ${
+      hover
+        ? "hover:border-[#CCF301]/50 hover:shadow-xl hover:shadow-[#CCF301]/10 transition-all duration-300"
+        : ""
+    } ${className}`}
+  >
     {children}
   </div>
-)
+);
 
-const CardHeader = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <div className={`p-4 sm:p-6 pb-3 ${className}`}>{children}</div>
-)
+const CardHeader = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => <div className={`p-4 sm:p-6 pb-3 ${className}`}>{children}</div>;
 
-const CardTitle = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <h5 className={`text-base font-semibold text-gray-900 dark:text-slate-100 leading-tight ${className}`}>{children}</h5>
-)
+const CardTitle = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <h5
+    className={`text-base font-semibold text-gray-900 dark:text-slate-100 leading-tight ${className}`}
+  >
+    {children}
+  </h5>
+);
 
-const CardContent = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-  <div className={`px-4 sm:px-6 pb-4 sm:pb-6 pt-0 ${className}`}>{children}</div>
-)
+const CardContent = ({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <div className={`px-4 sm:px-6 pb-4 sm:pb-6 pt-0 ${className}`}>
+    {children}
+  </div>
+);
 
-const Button = ({ children, variant = "default", size = "default", className = "", onClick, disabled = false, ...props }: { 
-  children: React.ReactNode, 
-  variant?: "default" | "outline" | "ghost" | "secondary", 
-  size?: "default" | "sm" | "icon" | "lg", 
-  className?: string,
-  onClick?: (e: React.MouseEvent) => void,
-  disabled?: boolean,
-  [key: string]: any 
+const Button: React.FC<ButtonProps> = ({
+  children,
+  variant = "default",
+  size = "default",
+  className = "",
+  onClick,
+  disabled = false,
+  ...props
 }) => {
-  const baseClasses = "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CCF301]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50 touch-manipulation"
+  const baseClasses =
+    "inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#CCF301]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50 touch-manipulation";
   const variants = {
-    default: "bg-[#CCF301] text-gray-900 hover:bg-[#CCF301]/90 shadow-lg shadow-[#CCF301]/25 hover:shadow-[#CCF301]/30",
-    outline: "border border-gray-300 dark:border-slate-600 bg-transparent text-gray-700 dark:text-slate-300 hover:bg-[#CCF301]/10 hover:text-[#CCF301] hover:border-[#CCF301]/50",
-    ghost: "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10",
-    secondary: "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-600"
-  }
+    default:
+      "bg-[#CCF301] text-gray-900 hover:bg-[#CCF301]/90 shadow-lg shadow-[#CCF301]/25 hover:shadow-[#CCF301]/30",
+    outline:
+      "border border-gray-300 dark:border-slate-600 bg-transparent text-gray-700 dark:text-slate-300 hover:bg-[#CCF301]/10 hover:text-[#CCF301] hover:border-[#CCF301]/50",
+    ghost:
+      "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10",
+    secondary:
+      "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 hover:bg-gray-200 dark:hover:bg-slate-600",
+  };
   const sizes = {
     default: "h-10 px-4 py-2 text-sm sm:text-base",
     sm: "h-8 px-3 text-xs sm:text-sm",
     icon: "h-10 w-10 min-h-10 min-w-10",
-    lg: "h-12 px-6 text-sm sm:text-base"
-  }
-  
+    lg: "h-12 px-6 text-sm sm:text-base",
+  };
+
   return (
-    <button 
-      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`} 
+    <button
+      className={`${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`}
       onClick={onClick}
       disabled={disabled}
       {...props}
     >
       {children}
     </button>
-  )
-}
+  );
+};
 
-const Input = ({ className = "", ...props }: { className?: string, [key: string]: any }) => (
+
+const Input = ({
+  className = "",
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & {
+  className?: string;
+}) => (
   <input
     className={`flex h-10 w-full rounded-lg border border-gray-300 dark:border-slate-600 bg-white/50 dark:bg-slate-800/50 px-3 py-2 text-sm text-gray-900 dark:text-slate-100 placeholder:text-gray-500 dark:placeholder:text-slate-400 focus:border-[#CCF301] focus:outline-none focus:ring-2 focus:ring-[#CCF301]/20 transition-all duration-200 ${className}`}
     {...props}
   />
-)
+);
 
-const Badge = ({ children, variant = "default", className = "" }: { children: React.ReactNode, variant?: "default" | "secondary" | "outline" | "success" | "warning" | "danger", className?: string }) => {
-  const baseClasses = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors"
+const Badge = ({
+  children,
+  variant = "default",
+  className = "",
+}: {
+  children: React.ReactNode;
+  variant?:
+    | "default"
+    | "secondary"
+    | "outline"
+    | "success"
+    | "warning"
+    | "danger";
+  className?: string;
+}) => {
+  const baseClasses =
+    "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors";
   const variantClasses = {
     default: "bg-[#CCF301]/15 text-[#CCF301] border border-[#CCF301]/20",
-    secondary: "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-600/50",
+    secondary:
+      "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-300 border border-gray-200 dark:border-slate-600/50",
     outline: "border border-current text-gray-600 dark:text-slate-400",
-    success: "bg-green-500/15 text-green-600 dark:text-green-400 border border-green-500/20",
-    warning: "bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/20",
-    danger: "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/20"
-  }
-  
+    success:
+      "bg-green-500/15 text-green-600 dark:text-green-400 border border-green-500/20",
+    warning:
+      "bg-orange-500/15 text-orange-600 dark:text-orange-400 border border-orange-500/20",
+    danger:
+      "bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/20",
+  };
+
   return (
     <span className={`${baseClasses} ${variantClasses[variant]} ${className}`}>
       {children}
     </span>
-  )
-}
+  );
+};
 
-const topicFilters = ["All Topics", "Arrays", "Strings", "Trees", "Dynamic Programming"]
+const topicFilters = [
+  "All Topics",
+  "Arrays",
+  "Strings",
+  "Trees",
+  "Dynamic Programming",
+];
 
 const getDifficultyConfig = (difficulty: string) => {
   switch (difficulty) {
     case "EASY":
-      return { 
-        color: "text-green-600 dark:text-green-400", 
-        bg: "bg-green-500/15 border-green-500/20", 
-      }
+      return {
+        color: "text-green-600 dark:text-green-400",
+        bg: "bg-green-500/15 border-green-500/20",
+      };
     case "MEDIUM":
-      return { 
-        color: "text-orange-600 dark:text-orange-400", 
-        bg: "bg-orange-500/15 border-orange-500/20", 
-      }
+      return {
+        color: "text-orange-600 dark:text-orange-400",
+        bg: "bg-orange-500/15 border-orange-500/20",
+      };
     case "HARD":
-      return { 
-        color: "text-red-600 dark:text-red-400", 
-        bg: "bg-red-500/15 border-red-500/20", 
-      }
+      return {
+        color: "text-red-600 dark:text-red-400",
+        bg: "bg-red-500/15 border-red-500/20",
+      };
     default:
-      return { 
-        color: "text-gray-600 dark:text-slate-400", 
-        bg: "bg-gray-500/15 dark:bg-slate-500/15 border-gray-500/20 dark:border-slate-500/20", 
-      }
+      return {
+        color: "text-gray-600 dark:text-slate-400",
+        bg: "bg-gray-500/15 dark:bg-slate-500/15 border-gray-500/20 dark:border-slate-500/20",
+      };
   }
-}
+};
 
 // Fixed star display to only show 3 stars max
 const getStarsDisplay = (stars: string) => {
-  const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3 // Max 3 stars
+  const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
   return (
     <div className="flex items-center gap-1">
       {Array.from({ length: 3 }, (_, i) => (
@@ -216,62 +300,68 @@ const getStarsDisplay = (stars: string) => {
         />
       ))}
     </div>
-  )
-}
+  );
+};
 
 // Sidebar Component - Extracted for reusability
-const Sidebar = ({ 
-  sidebarWidth, 
-  isMobile, 
-  isCollapsed, 
-  mobileMenuOpen, 
-  toggleCollapse, 
-  setMobileMenuOpen, 
-  sidebarRef, 
-  dragRef, 
-  isDragging, 
-  handleMouseDown, 
-  currentView, 
-  setCurrentView 
+const Sidebar = ({
+  sidebarWidth,
+  isMobile,
+  isCollapsed,
+  mobileMenuOpen,
+  toggleCollapse,
+  setMobileMenuOpen,
+  sidebarRef,
+  dragRef,
+  isDragging,
+  handleMouseDown,
+  currentView,
+  setCurrentView,
 }: {
-  sidebarWidth: number
-  isMobile: boolean
-  isCollapsed: boolean
-  mobileMenuOpen: boolean
-  toggleCollapse: () => void
-  setMobileMenuOpen: (open: boolean) => void
-  sidebarRef: React.RefObject<HTMLDivElement>
-  dragRef: React.RefObject<HTMLDivElement>
-  isDragging: boolean
-  handleMouseDown: (e: React.MouseEvent) => void
-  currentView: string
-  setCurrentView: (view: "problems" | "studyplan") => void
+  sidebarWidth: number;
+  isMobile: boolean;
+  isCollapsed: boolean;
+  mobileMenuOpen: boolean;
+  toggleCollapse: () => void;
+  setMobileMenuOpen: (open: boolean) => void;
+  sidebarRef: React.RefObject<HTMLDivElement | null>;
+  dragRef: React.RefObject<HTMLDivElement | null>;
+  isDragging: boolean;
+  handleMouseDown: (e: React.MouseEvent) => void;
+  currentView: string;
+  setCurrentView: (view: "problems" | "studyplan") => void;
 }) => {
   return (
-    <div 
+    <div
       ref={sidebarRef}
       className={`${
-        isMobile 
+        isMobile
           ? `fixed left-0 top-0 z-50 transform transition-transform duration-300 ${
-              mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+              mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
             } w-80`
-          : 'relative z-40'
+          : "relative z-40"
       } bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border-r border-gray-200 dark:border-slate-700/50 transition-all duration-300 ease-in-out group`}
-      style={!isMobile ? { 
-        width: `${sidebarWidth}px`,
-        height: '100vh',
-        minHeight: '100vh',
-        borderRadius: '25px'
-      } : {
-        height: '100vh',
-        minHeight: '100vh'
-      }}
+      style={
+        !isMobile
+          ? {
+              width: `${sidebarWidth}px`,
+              height: "100vh",
+              minHeight: "100vh",
+              borderRadius: "25px",
+            }
+          : {
+              height: "100vh",
+              minHeight: "100vh",
+            }
+      }
     >
       {/* Resize Handle - Desktop Only */}
       {!isMobile && (
         <div
           ref={dragRef}
-          className={`absolute right-0 top-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-[#CCF301]/50 transition-colors duration-200 group-hover:opacity-100 opacity-0 ${isDragging ? 'bg-[#CCF301] opacity-100' : ''}`}
+          className={`absolute right-0 top-0 w-1 h-full cursor-col-resize bg-transparent hover:bg-[#CCF301]/50 transition-colors duration-200 group-hover:opacity-100 opacity-0 ${
+            isDragging ? "bg-[#CCF301] opacity-100" : ""
+          }`}
           onMouseDown={handleMouseDown}
         >
           <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-8 bg-gray-300 dark:bg-slate-600 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -284,14 +374,22 @@ const Sidebar = ({
         {/* Fixed header section */}
         <div className="flex-shrink-0 p-4 sm:p-6 pb-4">
           {/* Logo */}
-          <div className={`flex items-center gap-3 mb-6 ${isCollapsed && !isMobile ? 'justify-center' : ''}`}>
+          <div
+            className={`flex items-center gap-3 mb-6 ${
+              isCollapsed && !isMobile ? "justify-center" : ""
+            }`}
+          >
             <div className="w-10 h-10 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center flex-shrink-0">
               <BookOpen className="w-6 h-6 text-gray-900" />
             </div>
             {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
               <div className="min-w-0">
-                <h5 className="text-lg font-bold text-[#CCF301] truncate">CodeCompass</h5>
-                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Problem Library</p>
+                <h5 className="text-lg font-bold text-[#CCF301] truncate">
+                  CodeCompass
+                </h5>
+                <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
+                  Problem Library
+                </p>
               </div>
             )}
           </div>
@@ -300,13 +398,25 @@ const Sidebar = ({
           <button
             onClick={toggleCollapse}
             className={`${
-              isMobile 
-                ? 'absolute right-4 top-4' 
-                : 'absolute bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-slate-700 -right-4 top-6'
+              isMobile
+                ? "absolute right-4 top-4"
+                : "absolute bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-full shadow-lg hover:bg-gray-50 dark:hover:bg-slate-700 -right-4 top-6"
             } transition-all duration-200 w-8 h-8 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-[#CCF301] z-20`}
-            title={isMobile ? "Close menu" : (isCollapsed ? "Expand sidebar" : "Collapse sidebar")}
+            title={
+              isMobile
+                ? "Close menu"
+                : isCollapsed
+                ? "Expand sidebar"
+                : "Collapse sidebar"
+            }
           >
-            {isMobile ? <X className="w-5 h-5" /> : (isCollapsed ? <ChevronRight className="w-4 h-4" /> : <X className="w-4 h-4" />)}
+            {isMobile ? (
+              <X className="w-5 h-5" />
+            ) : isCollapsed ? (
+              <ChevronRight className="w-4 h-4" />
+            ) : (
+              <X className="w-4 h-4" />
+            )}
           </button>
 
           {/* Stats Cards */}
@@ -315,8 +425,12 @@ const Sidebar = ({
               <Card hover={false} className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="min-w-0">
-                    <p className="text-2xl font-bold text-[#CCF301]">{mockData.length}</p>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">Total Problems</p>
+                    <p className="text-2xl font-bold text-[#CCF301]">
+                      {mockData.length}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 truncate">
+                      Total Problems
+                    </p>
                   </div>
                   <Trophy className="w-8 h-8 text-[#CCF301] flex-shrink-0" />
                 </div>
@@ -328,66 +442,81 @@ const Sidebar = ({
         {/* Scrollable navigation section */}
         <div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4 sm:pb-6">
           <div className="space-y-2">
-            <div className={`flex items-center gap-3 p-3 ${
-              currentView === "problems" 
-                ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]" 
-                : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
-            } rounded-xl font-medium transition-all duration-300 cursor-pointer ${
-              isCollapsed && !isMobile ? 'justify-center' : ''
-            }`} onClick={() => {
-              setCurrentView("problems")
-              if (isMobile) setMobileMenuOpen(false)
-            }}>
+            <div
+              className={`flex items-center gap-3 p-3 ${
+                currentView === "problems"
+                  ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]"
+                  : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
+              } rounded-xl font-medium transition-all duration-300 cursor-pointer ${
+                isCollapsed && !isMobile ? "justify-center" : ""
+              }`}
+              onClick={() => {
+                setCurrentView("problems");
+                if (isMobile) setMobileMenuOpen(false);
+              }}
+            >
               <BookOpen className="w-5 h-5 flex-shrink-0" />
-              {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Problem Library</span>}
-              {(!isCollapsed || isMobile) && sidebarWidth > 200 && <ChevronRight className="w-4 h-4 ml-auto flex-shrink-0" />}
+              {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
+                <span className="whitespace-nowrap truncate">
+                  Problem Library
+                </span>
+              )}
+              {(!isCollapsed || isMobile) && sidebarWidth > 200 && (
+                <ChevronRight className="w-4 h-4 ml-auto flex-shrink-0" />
+              )}
             </div>
-            
-            <div className={`flex items-center gap-3 p-3 ${
-              currentView === "studyplan" 
-                ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]" 
-                : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
-            } transition-all duration-200 cursor-pointer rounded-xl ${
-              isCollapsed && !isMobile ? 'justify-center' : ''
-            }`} onClick={() => {
-              setCurrentView("studyplan")
-              if (isMobile) setMobileMenuOpen(false)
-            }} title="Study Plan">
+
+            <div
+              className={`flex items-center gap-3 p-3 ${
+                currentView === "studyplan"
+                  ? "bg-[#CCF301]/10 border border-[#CCF301]/20 text-[#CCF301]"
+                  : "text-gray-600 dark:text-slate-400 hover:text-[#CCF301] hover:bg-[#CCF301]/10"
+              } transition-all duration-200 cursor-pointer rounded-xl ${
+                isCollapsed && !isMobile ? "justify-center" : ""
+              }`}
+              onClick={() => {
+                setCurrentView("studyplan");
+                if (isMobile) setMobileMenuOpen(false);
+              }}
+              title="Study Plan"
+            >
               <Calendar className="w-5 h-5 flex-shrink-0" />
-              {(!isCollapsed || isMobile) && sidebarWidth > 120 && <span className="whitespace-nowrap truncate">Study Plan</span>}
+              {(!isCollapsed || isMobile) && sidebarWidth > 120 && (
+                <span className="whitespace-nowrap truncate">Study Plan</span>
+              )}
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 // Study Plan Component - Now includes sidebar
-const StudyPlan = ({ 
-  sidebarWidth, 
-  isMobile, 
-  isCollapsed, 
-  mobileMenuOpen, 
-  toggleCollapse, 
-  setMobileMenuOpen, 
-  sidebarRef, 
-  dragRef, 
-  isDragging, 
-  handleMouseDown, 
-  onBack 
-}: { 
-  sidebarWidth: number
-  isMobile: boolean
-  isCollapsed: boolean
-  mobileMenuOpen: boolean
-  toggleCollapse: () => void
-  setMobileMenuOpen: (open: boolean) => void
-  sidebarRef: React.RefObject<HTMLDivElement>
-  dragRef: React.RefObject<HTMLDivElement>
-  isDragging: boolean
-  handleMouseDown: (e: React.MouseEvent) => void
-  onBack: () => void 
+const StudyPlan = ({
+  sidebarWidth,
+  isMobile,
+  isCollapsed,
+  mobileMenuOpen,
+  toggleCollapse,
+  setMobileMenuOpen,
+  sidebarRef,
+  dragRef,
+  isDragging,
+  handleMouseDown,
+  onBack,
+}: {
+  sidebarWidth: number;
+  isMobile: boolean;
+  isCollapsed: boolean;
+  mobileMenuOpen: boolean;
+  toggleCollapse: () => void;
+  setMobileMenuOpen: (open: boolean) => void;
+  sidebarRef: React.RefObject<HTMLDivElement | null>;
+  dragRef: React.RefObject<HTMLDivElement | null>;
+  isDragging: boolean;
+  handleMouseDown: (e: React.MouseEvent) => void;
+  onBack: () => void;
 }) => {
   const studyPlans = [
     {
@@ -398,42 +527,45 @@ const StudyPlan = ({
       problems: "75 Problems",
       level: "Advanced",
       gradient: "from-blue-500 to-blue-600",
-      icon: "💻"
+      icon: "💻",
     },
     {
       id: "java",
-      title: "Java Excellence", 
+      title: "Java Excellence",
       description: "Enterprise Java development with top interview questions",
       subtitle: "Object-Oriented Programming",
       problems: "85 Problems",
       level: "Intermediate",
       gradient: "from-orange-500 to-red-500",
-      icon: "☕"
+      icon: "☕",
     },
     {
       id: "javascript",
       title: "JavaScript Pro",
       description: "Modern JavaScript and web development essentials",
-      subtitle: "Frontend & Backend Development", 
+      subtitle: "Frontend & Backend Development",
       problems: "90 Problems",
       level: "Intermediate",
       gradient: "from-yellow-500 to-yellow-600",
-      icon: "🚀"
+      icon: "🚀",
     },
     {
       id: "python",
       title: "Python Expert",
       description: "Data structures, algorithms, and Python mastery",
       subtitle: "AI/ML & Data Science Ready",
-      problems: "80 Problems", 
+      problems: "80 Problems",
       level: "Mixed",
       gradient: "from-green-500 to-blue-500",
-      icon: "🐍"
-    }
-  ]
+      icon: "🐍",
+    },
+  ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden" style={{ fontFamily: 'Barlow, sans-serif' }}>
+    <div
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden"
+      style={{ fontFamily: "Barlow, sans-serif" }}
+    >
       {/* Animated background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -inset-10 opacity-20 dark:opacity-30">
@@ -445,7 +577,7 @@ const StudyPlan = ({
 
       {/* Mobile Overlay */}
       {isMobile && mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -468,11 +600,18 @@ const StudyPlan = ({
       />
 
       {/* Main Content */}
-      <div className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
-        isMobile ? 'w-full' : ''
-      }`} style={!isMobile ? { 
-        width: `calc(100% - ${sidebarWidth}px)`
-      } : {}}>
+      <div
+        className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
+          isMobile ? "w-full" : ""
+        }`}
+        style={
+          !isMobile
+            ? {
+                width: `calc(100% - ${sidebarWidth}px)`,
+              }
+            : {}
+        }
+      >
         <div className="p-4 sm:p-6 lg:p-8">
           {/* Mobile Header */}
           {isMobile && (
@@ -489,31 +628,48 @@ const StudyPlan = ({
                 <div className="w-8 h-8 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-lg flex items-center justify-center">
                   <BookOpen className="w-5 h-5 text-gray-900" />
                 </div>
-                <h5 className="text-lg font-bold text-[#CCF301]">CodeCompass</h5>
+                <h5 className="text-lg font-bold text-[#CCF301]">
+                  CodeCompass
+                </h5>
               </div>
               <div className="w-10 h-10"></div>
             </div>
           )}
 
           <div className="mb-8">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Study Plan</h3>
-            <p className="text-gray-600 dark:text-slate-400">Choose your programming language path</p>
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
+              Study Plan
+            </h3>
+            <p className="text-gray-600 dark:text-slate-400">
+              Choose your programming language path
+            </p>
           </div>
 
           <div className="mb-8">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-6">Featured</h4>
+            <h4 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-6">
+              Featured
+            </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {studyPlans.map((plan) => (
-                <Card key={plan.id} className="group cursor-pointer h-64 relative overflow-hidden">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-90`} />
+                <Card
+                  key={plan.id}
+                  className="group cursor-pointer h-64 relative overflow-hidden"
+                >
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${plan.gradient} opacity-90`}
+                  />
                   <div className="relative z-10 h-full flex flex-col justify-between p-6 text-white">
                     <div>
                       <div className="text-3xl mb-3">{plan.icon}</div>
                       <h5 className="font-bold text-lg mb-2">{plan.title}</h5>
-                      <p className="text-white/90 text-sm mb-1">{plan.subtitle}</p>
+                      <p className="text-white/90 text-sm mb-1">
+                        {plan.subtitle}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-white/80 text-sm mb-3">{plan.description}</p>
+                      <p className="text-white/80 text-sm mb-3">
+                        {plan.description}
+                      </p>
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-white/90">{plan.problems}</span>
                         <span className="text-white/90">•</span>
@@ -528,144 +684,162 @@ const StudyPlan = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default function Problemset() {
-  const [activeFilter, setActiveFilter] = useState("All Topics")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [currentView, setCurrentView] = useState<"problems" | "studyplan">("problems")
-  const [sidebarWidth, setSidebarWidth] = useState(288) // 72 * 4 = 288px (w-72)
-  const [isDragging, setIsDragging] = useState(false)
-  const [isDark, setIsDark] = useState(true)
-  const [isCollapsed, setIsCollapsed] = useState(false)
-  const [isMobile, setIsMobile] = useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const sidebarRef = useRef<HTMLDivElement>(null)
-  const dragRef = useRef<HTMLDivElement>(null)
+export default function Problemset(): JSX.Element {
+  const [activeFilter, setActiveFilter] = useState("All Topics");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const minWidth = 64 // w-16
-  const maxWidth = 400
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+  const [currentView, setCurrentView] = useState<"problems" | "studyplan">(
+    "problems"
+  );
+  const [sidebarWidth, setSidebarWidth] = useState(288); // 72 * 4 = 288px (w-72)
+  const [isDragging, setIsDragging] = useState(false);
+  // const [isDark, setIsDark] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<HTMLDivElement>(null);
+
+  const minWidth = 64; // w-16
+  const maxWidth = 400;
 
   useEffect(() => {
     // Check for mobile device
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024)
+      setIsMobile(window.innerWidth < 1024);
       if (window.innerWidth < 1024) {
-        setIsCollapsed(true)
-        setSidebarWidth(64)
+        setIsCollapsed(true);
+        setSidebarWidth(64);
       }
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     // Check for saved theme preference or default to dark mode
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme) {
-      setIsDark(savedTheme === 'dark')
-      document.documentElement.classList.toggle('dark', savedTheme === 'dark')
-    } else {
-      document.documentElement.classList.add('dark')
-    }
+    // const savedTheme = localStorage.getItem("theme");
+    // if (savedTheme) {
+    //   setIsDark(savedTheme === "dark");
+    //   document.documentElement.classList.toggle("dark", savedTheme === "dark");
+    // } else {
+    //   document.documentElement.classList.add("dark");
+    // }
 
     // Load saved sidebar width
-    const savedWidth = localStorage.getItem('sidebarWidth')
+    const savedWidth = localStorage.getItem("sidebarWidth");
     if (savedWidth && !isMobile) {
-      setSidebarWidth(parseInt(savedWidth))
+      setSidebarWidth(parseInt(savedWidth));
     }
 
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [isMobile]);
 
-  const toggleTheme = () => {
-    const newTheme = !isDark
-    setIsDark(newTheme)
-    document.documentElement.classList.toggle('dark', newTheme)
-    localStorage.setItem('theme', newTheme ? 'dark' : 'light')
-  }
+  // const toggleTheme = () => {
+  //   const newTheme = !isDark;
+  //   setIsDark(newTheme);
+  //   document.documentElement.classList.toggle("dark", newTheme);
+  //   localStorage.setItemet("theme", newTheme ? "dark" : "light");
+  // };
 
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (isMobile) return
-    e.preventDefault()
-    setIsDragging(true)
-  }, [isMobile])
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (isMobile) return;
+      e.preventDefault();
+      setIsDragging(true);
+    },
+    [isMobile]
+  );
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isDragging || isMobile) return
-    
-    const newWidth = e.clientX
-    if (newWidth >= minWidth && newWidth <= maxWidth) {
-      setSidebarWidth(newWidth)
-      setIsCollapsed(newWidth <= 80) // Auto-collapse when very narrow
-    }
-  }, [isDragging, isMobile])
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!isDragging || isMobile) return;
+
+      const newWidth = e.clientX;
+      if (newWidth >= minWidth && newWidth <= maxWidth) {
+        setSidebarWidth(newWidth);
+        setIsCollapsed(newWidth <= 80); // Auto-collapse when very narrow
+      }
+    },
+    [isDragging, isMobile]
+  );
 
   const handleMouseUp = useCallback(() => {
     if (isDragging) {
-      setIsDragging(false)
-      localStorage.setItem('sidebarWidth', sidebarWidth.toString())
+      setIsDragging(false);
+      localStorage.setItem("sidebarWidth", sidebarWidth.toString());
     }
-  }, [isDragging, sidebarWidth])
+  }, [isDragging, sidebarWidth]);
 
   useEffect(() => {
     if (isDragging && !isMobile) {
-      document.addEventListener('mousemove', handleMouseMove)
-      document.addEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = 'col-resize'
-      document.body.style.userSelect = 'none'
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
     } else {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = ''
-      document.body.style.userSelect = ''
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-      document.body.style.cursor = ''
-      document.body.style.userSelect = ''
-    }
-  }, [isDragging, handleMouseMove, handleMouseUp, isMobile])
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+  }, [isDragging, handleMouseMove, handleMouseUp, isMobile]);
 
   const toggleCollapse = () => {
     if (isMobile) {
-      setMobileMenuOpen(!mobileMenuOpen)
-      return
+      setMobileMenuOpen(!mobileMenuOpen);
+      return;
     }
-    
+
     if (isCollapsed) {
-      setSidebarWidth(288)
-      setIsCollapsed(false)
+      setSidebarWidth(288);
+      setIsCollapsed(false);
     } else {
-      setSidebarWidth(64)
-      setIsCollapsed(true)
+      setSidebarWidth(64);
+      setIsCollapsed(true);
     }
-  }
+  };
 
   const filteredData = mockData
     .sort((a, b) => a.id - b.id)
     .filter((problem) => {
-      const matchesSearch = problem.title.toLowerCase().includes(searchQuery.toLowerCase())
+      const matchesSearch = problem.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
       const matchesTopic =
         activeFilter === "All Topics" ||
         problem.tags.some((tag) => {
-          const normalizedTag = tag.toLowerCase().replace(/-/g, " ")
-          const normalizedFilter = activeFilter.toLowerCase()
-          return normalizedTag.includes(normalizedFilter) || normalizedFilter.includes(normalizedTag)
-        })
+          const normalizedTag = tag.toLowerCase().replace(/-/g, " ");
+          const normalizedFilter = activeFilter.toLowerCase();
+          return (
+            normalizedTag.includes(normalizedFilter) ||
+            normalizedFilter.includes(normalizedTag)
+          );
+        });
 
-      return matchesSearch && matchesTopic
-    })
-
-  const solvedCount = 0 // Since we removed solved status
+      return matchesSearch && matchesTopic;
+    });
 
   if (currentView === "studyplan") {
     return (
       <>
-        <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-        <StudyPlan 
+        <link
+      style={{ fontFamily: "Barlow, sans-serif" }}
+          rel="stylesheet"
+        />
+        <StudyPlan
           sidebarWidth={sidebarWidth}
           isMobile={isMobile}
           isCollapsed={isCollapsed}
@@ -676,18 +850,24 @@ export default function Problemset() {
           dragRef={dragRef}
           isDragging={isDragging}
           handleMouseDown={handleMouseDown}
-          onBack={() => setCurrentView("problems")} 
+          onBack={() => setCurrentView("problems")}
         />
       </>
-    )
+    );
   }
 
   return (
     <>
       {/* Google Fonts - Barlow */}
-      <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-      
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden" style={{ fontFamily: 'Barlow, sans-serif' }}>
+      <link
+      style={{ fontFamily: "Barlow, sans-serif" }}
+        rel="stylesheet"
+      />
+
+      <div
+        className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden"
+        style={{ fontFamily: "Barlow, sans-serif" }}
+      >
         {/* Animated background */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -inset-10 opacity-20 dark:opacity-30">
@@ -699,7 +879,7 @@ export default function Problemset() {
 
         {/* Mobile Overlay */}
         {isMobile && mobileMenuOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-40 lg:hidden"
             onClick={() => setMobileMenuOpen(false)}
           />
@@ -722,11 +902,18 @@ export default function Problemset() {
         />
 
         {/* Main Content */}
-        <div className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
-          isMobile ? 'w-full' : ''
-        }`} style={!isMobile ? { 
-          width: `calc(100% - ${sidebarWidth}px)`
-        } : {}}>
+        <div
+          className={`flex-1 transition-all duration-300 ease-in-out min-h-screen ${
+            isMobile ? "w-full" : ""
+          }`}
+          style={
+            !isMobile
+              ? {
+                  width: `calc(100% - ${sidebarWidth}px)`,
+                }
+              : {}
+          }
+        >
           <div className="p-4 sm:p-6 lg:p-8">
             {/* Mobile Header */}
             {isMobile && (
@@ -743,7 +930,9 @@ export default function Problemset() {
                   <div className="w-8 h-8 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-lg flex items-center justify-center">
                     <BookOpen className="w-5 h-5 text-gray-900" />
                   </div>
-                  <h5 className="text-lg font-bold text-[#CCF301]">CodeCompass</h5>
+                  <h5 className="text-lg font-bold text-[#CCF301]">
+                    CodeCompass
+                  </h5>
                 </div>
                 <div className="w-10 h-10"></div>
               </div>
@@ -751,8 +940,12 @@ export default function Problemset() {
 
             {/* Header - Made smaller and responsive */}
             <div className="mb-6 sm:mb-8">
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">Problem Library</h3>
-              <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400">Master coding interviews with curated problems</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
+                Problem Library
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400">
+                Master coding interviews with curated problems
+              </p>
             </div>
 
             {/* Course Cards */}
@@ -770,7 +963,10 @@ export default function Problemset() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Master system design concepts for technical interviews and real-world applications</p>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">
+                    Master system design concepts for technical interviews and
+                    real-world applications
+                  </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
                     <span>12 Problems</span>
                     <span>•</span>
@@ -792,7 +988,9 @@ export default function Problemset() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Essential DSA concepts with hands-on coding practice</p>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">
+                    Essential DSA concepts with hands-on coding practice
+                  </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
                     <span>25 Problems</span>
                     <span>•</span>
@@ -814,7 +1012,9 @@ export default function Problemset() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">Most frequently asked questions from top tech companies</p>
+                  <p className="text-gray-600 dark:text-slate-400 text-xs sm:text-sm mb-4">
+                    Most frequently asked questions from top tech companies
+                  </p>
                   <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-slate-500">
                     <span>50 Problems</span>
                     <span>•</span>
@@ -830,13 +1030,15 @@ export default function Problemset() {
                 <div className="flex flex-col gap-4 sm:gap-6">
                   {/* Search */}
                   <div className="w-full">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Search Problems</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                      Search Problems
+                    </label>
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400 w-4 h-4" />
                       <Input
                         placeholder="Search by title..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={handleSearchChange}
                         className="pl-10"
                       />
                     </div>
@@ -844,12 +1046,16 @@ export default function Problemset() {
 
                   {/* Topic Filter */}
                   <div className="w-full">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Topic Category</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">
+                      Topic Category
+                    </label>
                     <div className="flex flex-wrap gap-2">
                       {topicFilters.map((filter) => (
                         <Button
                           key={filter}
-                          variant={activeFilter === filter ? "default" : "outline"}
+                          variant={
+                            activeFilter === filter ? "default" : "outline"
+                          }
                           size="sm"
                           onClick={() => setActiveFilter(filter)}
                           className="transition-all duration-200 whitespace-nowrap text-xs sm:text-sm"
@@ -862,10 +1068,20 @@ export default function Problemset() {
 
                   {/* Action Buttons */}
                   <div className="flex gap-2 justify-end">
-                    <Button variant="outline" size="icon" title="Advanced Filters" className="flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      title="Advanced Filters"
+                      className="flex-shrink-0"
+                    >
                       <Filter className="w-4 h-4" />
                     </Button>
-                    <Button variant="outline" size="icon" title="Sort Options" className="flex-shrink-0">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      title="Sort Options"
+                      className="flex-shrink-0"
+                    >
                       <ArrowUpDown className="w-4 h-4" />
                     </Button>
                   </div>
@@ -880,21 +1096,33 @@ export default function Problemset() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-gray-200 dark:border-slate-700/50 bg-gray-50 dark:bg-slate-800/50">
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">#</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Problem</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Stars</th>
-                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">Difficulty</th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
+                        #
+                      </th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
+                        Problem
+                      </th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
+                        Stars
+                      </th>
+                      <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
+                        Difficulty
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredData.map((problem) => {
-                      const difficultyConfig = getDifficultyConfig(problem.difficulty)
+                      const difficultyConfig = getDifficultyConfig(
+                        problem.difficulty
+                      );
                       return (
                         <tr
                           key={problem.id}
                           className="border-b border-gray-200 dark:border-slate-700/30 hover:bg-gray-50 dark:hover:bg-slate-700/20 transition-all duration-200 cursor-pointer group"
                         >
-                          <td className="p-3 sm:p-4 text-gray-600 dark:text-slate-400 font-mono text-sm">{problem.id}</td>
+                          <td className="p-3 sm:p-4 text-gray-600 dark:text-slate-400 font-mono text-sm">
+                            {problem.id}
+                          </td>
                           <td className="p-3 sm:p-4">
                             <div className="min-w-0">
                               <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
@@ -902,7 +1130,11 @@ export default function Problemset() {
                               </div>
                               <div className="flex flex-wrap gap-1 mt-2">
                                 {problem.tags.slice(0, 3).map((tag, index) => (
-                                  <Badge key={index} variant="secondary" className="text-xs">
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
                                     {tag}
                                   </Badge>
                                 ))}
@@ -918,12 +1150,14 @@ export default function Problemset() {
                             {getStarsDisplay(problem.stars)}
                           </td>
                           <td className="p-3 sm:p-4">
-                            <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
+                            <Badge
+                              className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
+                            >
                               {problem.difficulty}
                             </Badge>
                           </td>
                         </tr>
-                      )
+                      );
                     })}
                   </tbody>
                 </table>
@@ -933,7 +1167,9 @@ export default function Problemset() {
               <div className="block sm:hidden">
                 <div className="divide-y divide-gray-200 dark:divide-slate-700/50">
                   {filteredData.map((problem) => {
-                    const difficultyConfig = getDifficultyConfig(problem.difficulty)
+                    const difficultyConfig = getDifficultyConfig(
+                      problem.difficulty
+                    );
                     return (
                       <div
                         key={problem.id}
@@ -941,7 +1177,9 @@ export default function Problemset() {
                       >
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">#{problem.id}</span>
+                            <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">
+                              #{problem.id}
+                            </span>
                             <div className="min-w-0 flex-1">
                               <h6 className="text-gray-900 dark:text-slate-100 font-medium text-sm truncate">
                                 {problem.title}
@@ -952,13 +1190,19 @@ export default function Problemset() {
                             {getStarsDisplay(problem.stars)}
                           </div>
                         </div>
-                        
+
                         <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <Badge className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}>
+                          <Badge
+                            className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
+                          >
                             {problem.difficulty}
                           </Badge>
                           {problem.tags.slice(0, 2).map((tag, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="text-xs"
+                            >
                               {tag}
                             </Badge>
                           ))}
@@ -969,7 +1213,7 @@ export default function Problemset() {
                           )}
                         </div>
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </div>
@@ -992,5 +1236,5 @@ export default function Problemset() {
         </div>
       </div>
     </>
-  )
+  ) as JSX.Element;
 }
