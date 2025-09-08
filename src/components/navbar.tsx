@@ -23,6 +23,8 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
+import { signIn } from "next-auth/react";
+import { Button } from "./ui/button";
 
 // Uiverse Toggle Component
 const UiverseToggle = () => {
@@ -95,7 +97,7 @@ const UiverseToggle = () => {
           background-color: var(--light);
         }
 
-        .uiverse-toggle .slider::before {useState
+        .uiverse-toggle .slider::before {
           content: "";
           position: absolute;
           top: 5px;
@@ -407,9 +409,7 @@ const Navbar = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <LogIn className="h-4 w-4" />
-                  <Link href={"/login"}>
-                    <span>Login</span>
-                  </Link>
+                  <span onClick={() => signIn("keycloak")}>Login</span>
                   <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
                 </motion.button>
 
@@ -419,8 +419,9 @@ const Navbar = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   <User className="h-4 w-4" />
-                  <Link href={"/signup"}></Link>
-                  <span>Sign Up</span>
+                  <Link href={"/signup"}>
+                    <span>Sign Up</span>
+                  </Link>
 
                   {/* Animated background shimmer */}
                   <motion.div
@@ -573,7 +574,7 @@ const Navbar = () => {
                       whileTap={{ scale: 0.98 }}
                     >
                       <LogIn className="h-5 w-5" />
-                      <span>Login</span>
+                      <span onClick={() => signIn("keycloak")}>Login</span>
                       <motion.div
                         className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100"
                         transition={{ duration: 0.2 }}
@@ -587,7 +588,9 @@ const Navbar = () => {
                       whileTap={{ scale: 0.98 }}
                     >
                       <User className="h-5 w-5" />
-                      <span>Sign Up</span>
+                      <Link href={"/signup"}>
+                        <span>Sign Up</span>
+                      </Link>
 
                       {/* Animated background shimmer for mobile */}
                       <motion.div
