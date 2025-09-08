@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import OrbitingAnimation from '../orbiting/orbiting';
-import OrbitingContent from '../orbiting/orbitingContent';
+
+import OrbitingAnimation from '@/components/homePage/orbiting/orbiting'
+import OrbitingContent from '@/components/homePage/orbiting/orbitingContent'
 
 const CodeCompassOrbiting = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);

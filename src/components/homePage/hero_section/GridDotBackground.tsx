@@ -15,7 +15,6 @@ export default function GridBackground({
   gridSize = 40,
   gridOpacity = 0.15,
   fadeEdges = true,
-  fadeDistance = "200px"
 }: GridBackgroundProps) {
   const [isDark, setIsDark] = useState(true);
 
@@ -53,7 +52,6 @@ export default function GridBackground({
     ? `rgba(255, 255, 255, ${gridOpacity})` 
     : `rgba(0, 0, 0, ${gridOpacity})`;
 
-  const backgroundColor = isDark ? 'black' : 'white';
 
   const backgroundStyle: React.CSSProperties = {
     backgroundImage: `

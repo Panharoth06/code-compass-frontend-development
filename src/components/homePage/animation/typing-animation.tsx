@@ -24,7 +24,6 @@ export default function TypingAnimation({
 }: TypingAnimationProps) {
   const [displayText, setDisplayText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
-  const [isClearing, setIsClearing] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const hasCalledOnComplete = useRef(false);
 
@@ -40,7 +39,6 @@ export default function TypingAnimation({
         } else {
           // Typing complete
           setIsComplete(true);
-          setIsClearing(false);
           
           // Call onComplete only once
           if (!hasCalledOnComplete.current) {
@@ -51,7 +49,6 @@ export default function TypingAnimation({
           if (loop) {
             // Wait, then start clearing character by character
             timeoutRef.current = setTimeout(() => {
-              setIsClearing(true);
               currentIndex = text.length;
               clearNextChar();
             }, pauseDuration);
@@ -67,7 +64,6 @@ export default function TypingAnimation({
         } else {
           // Clearing complete, restart typing
           setIsComplete(false);
-          setIsClearing(false);
           currentIndex = 0;
           timeoutRef.current = setTimeout(typeNextChar, 250); // Small pause before retyping
         }
@@ -84,7 +80,7 @@ export default function TypingAnimation({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [text, speed, delay, loop, pauseDuration]);
+  }, [text, speed, delay, loop, pauseDuration, onComplete]);
 
   const showCursor = !isComplete || loop;
 
