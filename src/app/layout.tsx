@@ -8,6 +8,7 @@ import SessionProviderWrapper from "./SessionProviderWrapper";
 
 const barlow = Barlow({
   weight: "400",
+  weight: "400",
   variable: "--font-barlow",
   subsets: ["latin"],
 });
@@ -34,3 +35,4 @@ export default function RootLayout({
     </html>
   );
 }
+
