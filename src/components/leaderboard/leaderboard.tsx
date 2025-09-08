@@ -1,19 +1,19 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { Moon, Sun, Trophy, Code, Flame, Crown, Medal, Award, Star, Zap, Target } from "lucide-react"
+import { Trophy, Code, Flame, Crown, Medal, Award, Star, Zap } from "lucide-react"
 
 export default function ModernCodeCompassLeaderboard() {
-  const [isDarkMode, setIsDarkMode] = useState(true)
+  const [isDarkMode] = useState(true)
 
   useEffect(() => {
     document.documentElement.classList.add('dark')
   }, [])
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-    document.documentElement.classList.toggle('dark')
-  }
+  // const toggleTheme = () => {
+  //   setIsDarkMode(!isDarkMode)
+  //   document.documentElement.classList.toggle('dark')
+  // }
 
   const leaderboardData = [
     { rank: 2, name: "Algorithm Ace", stars: 2847, problems: 156, country: "🇰🇭", avatar: "AA" },
@@ -47,7 +47,7 @@ export default function ModernCodeCompassLeaderboard() {
     ]
   }
 
-  const getRankIcon = (rank) => {
+  const getRankIcon = (rank: number) => {
     switch(rank) {
       case 1: return <Crown className="w-5 h-5 text-yellow-500" />
       case 2: return <Medal className="w-5 h-5 text-gray-400" />
@@ -141,7 +141,7 @@ export default function ModernCodeCompassLeaderboard() {
               Programming Languages
             </h3>
             <div className="space-y-4">
-              {programmingStats.languages.map((lang, idx) => (
+              {programmingStats.languages.map((lang) => (
                 <div key={lang.name} className={`flex justify-between items-center p-4 rounded-xl border transition-all duration-300 hover:scale-105 ${
                   isDarkMode 
                     ? 'bg-white/5 border-white/10 hover:bg-white/10' 
@@ -225,7 +225,7 @@ export default function ModernCodeCompassLeaderboard() {
                   <p className={`text-base lg:text-lg italic leading-relaxed max-w-2xl ${
                     isDarkMode ? 'text-gray-300' : 'text-gray-700'
                   }`}>
-                    "{topUser.quote}"
+                    &quot;{topUser.quote}&quot;
                   </p>
                   
                   {/* Champion Stats */}
@@ -275,7 +275,7 @@ export default function ModernCodeCompassLeaderboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {leaderboardData.map((user, idx) => (
+                    {leaderboardData.map((user) => (
                       <tr 
                         key={user.rank} 
                         className={`border-b transition-all duration-300 hover:scale-[1.01] cursor-pointer group ${

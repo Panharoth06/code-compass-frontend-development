@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export const LogoScroller = () => {
   return (
     <>
@@ -27,35 +29,35 @@ export const LogoScroller = () => {
               key={i}
             >
               <div className="flex items-center justify-center w-28 sm:w-32 md:w-36 lg:w-40 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 1" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 2" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 3" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 4" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 5" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
@@ -95,35 +97,35 @@ export const LogoScrollerReverse = () => {
               key={i}
             >
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 6" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 7" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 8" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 9" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
                 />
               </div>
               <div className="flex items-center justify-center w-24 sm:w-28 md:w-32 lg:w-36 h-12 sm:h-14 md:h-16 lg:h-18">
-                <img 
+                <Image 
                   src="/image/iSTAD_Full.png" 
                   alt="Logo 10" 
                   className="h-10 sm:h-12 md:h-14 lg:h-16 w-auto object-contain opacity-70 hover:opacity-90 transition-opacity duration-300 filter dark:brightness-110 brightness-90"
