@@ -286,16 +286,17 @@ function twoSum(nums, target) {
       </section>
 
       {/* Mission Section */}
-      <section className=" bg-gray-50 text-black dark:bg-gray-900 dark:text-white  py-16 mb-16 text-center">
-        <h3 className="text-4xl md:text-5xl font-bold text-[#D7FC4A] mb-4">
+      <section className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white py-16 mb-16 text-center px-6">
+        <h3 className="text-3xl md:text-5xl font-bold text-[#D7FC4A] mb-6">
           Our Mission
         </h3>
-        <p className="text-lg text-gray-400 mb-10 max-w-3xl mx-auto">
+        <p className="text-base md:text-lg text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
           Providing world-class algorithmic training and interview preparation
           through challenging problems, competitive programming, and
           comprehensive system design education.
         </p>
-        <div className="flex flex-col md:flex-row justify-center items-center md:items-stretch space-y-8 md:space-y-0 md:space-x-8">
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {[
             {
               icon: "< >",
@@ -315,13 +316,17 @@ function twoSum(nums, target) {
           ].map((item, i) => (
             <div
               key={i}
-              className="flex flex-col items-center p-8 rounded-lg border border-gray-700 w-full md:w-1/3 transition-all duration-300 hover:shadow-[0_0_30px_0_rgba(180,255,0,0.8)]"
+              className="flex flex-col items-center p-8 rounded-lg border border-gray-700 transition-all duration-300 hover:shadow-[0_0_30px_0_rgba(180,255,0,0.8)]"
             >
-              <div className="p-4 bg-gray-800 rounded-full mb-4 text-2xl">
+              <div className="p-5 bg-gray-800 rounded-full mb-6 text-3xl">
                 {item.icon}
               </div>
-              <h4 className="text-xl font-semibold mb-2">{item.title}</h4>
-              <p className="text-sm text-gray-400">{item.desc}</p>
+              <h4 className="text-lg md:text-xl font-semibold mb-3">
+                {item.title}
+              </h4>
+              <p className="text-sm md:text-base text-gray-400 leading-relaxed">
+                {item.desc}
+              </p>
             </div>
           ))}
         </div>
