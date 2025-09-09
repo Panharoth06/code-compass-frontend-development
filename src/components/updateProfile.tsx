@@ -91,14 +91,14 @@ export default function ProfileImage() {
       </div>
 
       {/* Basic Info card full white background */}
-      <div className="relative -mt-16 ">
+      <div className="relative py-4 -mt-15">
         <div
-          className="bg-gray-200 p-6 rounded-lg shadow text-black w-full max-w-md 
+          className="bg-gray-200 p-6   rounded-lg py-10 shadow text-black w-full max-w-sm
   transition-transform transform hover:scale-105 duration-300 ease-in-out 
   shadow-[0_0_20px_0_rgba(107,114,128,0.5)] 
   hover:shadow-[0_0_30px_0_rgba(107,114,128,0.8)] mx-auto"
         >
-          <h5 className="text-xl font-bold mb-6 text-gray-800 border-b border-gray-200 pb-3">
+          <h5 className="text-xl font-bold mb-6 text-gray-800 border-b border-gray-200 ">
             Basic Info
           </h5>
 
@@ -110,7 +110,7 @@ export default function ProfileImage() {
             <InfoRow label="Password" value="••••••••" />
           </div>
 
-          <h5 className="text-lg font-semibold mt-6 mb-4 text-gray-800 border-b border-gray-200 pb-2">
+          <h5 className="text-lg font-semibold mt-6 mb-4 text-gray-800 border-b border-gray-200 ">
             Social Accounts
           </h5>
 
