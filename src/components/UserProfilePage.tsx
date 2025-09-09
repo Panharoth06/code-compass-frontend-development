@@ -11,6 +11,13 @@ import {
   Eye,
   Camera,
 } from "lucide-react";
+import Image from "next/image";
+
+import cpp from '../../public/img/cpp.png';
+import js from '../../public/img/js.png';
+import javabadges from '../../public/img/javaBadges.png';
+import pythonbadges from '../../public/img/pythonBadges.png';
+import cppbadges from '../../public/img/cppBadges.png';
 
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState("Recent AC");
@@ -52,19 +59,21 @@ const ProfileDashboard = () => {
   const maxSubmissions = Math.max(...monthlyData.map((d) => d.submissions));
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-6">
+    <section className="min-h-screen bg-gray-900 text-white p-6">
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Profile Info */}
-        <div className="lg:col-span-1 space-y-6">
+        <section className="lg:col-span-1 space-y-6">
           {/* Profile Card */}
           <div className="bg-gray-800 rounded-lg p-6">
             <div className="flex items-center space-x-4 mb-4">
               {/* Profile Image with upload */}
               <div className="relative w-16 h-16">
-                <img
+                <Image
                   src={profileImage || "/default-avatar.png"}
                   alt="Profile"
-                  className="w-16 h-16 rounded-full object-cover border-2 border-gray-500 shadow-md"
+                  width={64}
+                  height={64}
+                  className="rounded-full object-cover border-2 border-gray-500 shadow-md"
                 />
                 <label className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50 text-white opacity-0 hover:opacity-100 transition-opacity rounded-full cursor-pointer">
                   <Camera size={16} />
@@ -97,7 +106,7 @@ const ProfileDashboard = () => {
           </div>
 
           {/* Community Stats */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <section className="bg-gray-800 rounded-lg p-6">
             <h5 className="text-lg font-semibold mb-4">Community Stats</h5>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -105,39 +114,32 @@ const ProfileDashboard = () => {
                   <Eye size={16} className="mr-2" />
                   <span>Views</span>
                 </div>
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">7</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <Calendar size={16} className="mr-2" />
                   <span>Solution</span>
                 </div>
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">2</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <MessageCircle size={16} className="mr-2" />
                   <span>Discuss</span>
                 </div>
-                <span className="font-semibold">0</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <Star size={16} className="mr-2 " />
-                  <span>Reputation</span>
-                </div>
-                <span className="font-semibold">0</span>
+                <span className="font-semibold">8</span>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* Languages */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <section className="bg-gray-800 rounded-lg p-6">
             <h5 className="text-lg font-semibold mb-4">Languages</h5>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img className="w-10" src="/img/cpp.png" alt="C++" />
+                  <Image className="w-10" src={cpp} width={40} height={40} alt="C++" />
                   <span className="ml-2">C++</span>
                 </div>
                 <span className="text-gray-400 text-sm">
@@ -146,7 +148,7 @@ const ProfileDashboard = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <img className="w-10" src="/img/js.png" alt="JavaScript" />
+                  <Image className="w-10" width={40} height={40} src={js} alt="JavaScript" />
                   <span className="ml-2">JavaScript</span>
                 </div>
                 <span className="text-gray-400 text-sm">
@@ -154,10 +156,10 @@ const ProfileDashboard = () => {
                 </span>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* Skills */}
-          <div className="bg-gray-800 rounded-lg p-6">
+          <section className="bg-gray-800 rounded-lg p-6">
             <h5 className="text-lg font-semibold mb-4">Skills</h5>
             <div className="space-y-3">
               <div>
@@ -185,11 +187,11 @@ const ProfileDashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </section>
+        </section>
 
         {/* Right Column - Main Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <section className="lg:col-span-2 space-y-6">
           {/* Progress Circle and Badges */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Progress Circle */}
@@ -235,24 +237,24 @@ const ProfileDashboard = () => {
                   </defs>
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl font-bold">0/365</span>
+                  <span className="text-2xl font-bold">24/118</span>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 text-center text-xs">
                 <div>
                   <div className="w-3 h-3 bg-green-500 rounded-full mx-auto mb-1"></div>
                   <div className="text-gray-400">Easy</div>
-                  <div className="font-semibold">42%</div>
+                  <div className="font-semibold">14</div>
                 </div>
                 <div>
                   <div className="w-3 h-3 bg-yellow-500 rounded-full mx-auto mb-1"></div>
                   <div className="text-gray-400">Med</div>
-                  <div className="font-semibold">27%</div>
+                  <div className="font-semibold">6</div>
                 </div>
                 <div>
                   <div className="w-3 h-3 bg-red-500 rounded-full mx-auto mb-1"></div>
                   <div className="text-gray-400">Hard</div>
-                  <div className="font-semibold">18%</div>
+                  <div className="font-semibold">4</div>
                 </div>
               </div>
             </div>
@@ -263,32 +265,25 @@ const ProfileDashboard = () => {
                 Total Badges
               </h5>
               <div className="text-4xl font-bold mb-4 text-center">3</div>
-              <div className="space-y-2">
-                <p className="text-sm font-semibold text-gray-400">
-                  Locked Badges
-                </p>
-                <p className="text-sm">Aug LeetCompass Challenge</p>
-              </div>
+              <p className="">Achievements collected</p>
             </div>
           </div>
 
           <div className="bg-gray-800 rounded-lg p-6">
-            <h5 className="text-sm font-semibold mb-3 flex items-center">
+            <h5 className=" font-semibold mb-3 flex items-center">
               <Trophy size={20} className="mr-2" />
               My Badges
             </h5>
             <div className="flex justify-center items-center gap-6">
-              <img className="w-32" src="/img/c++.png" alt="C++" />
-              <img className="w-32" src="/img/java.png" alt="Java" />
-              <img className="w-32" src="/img/python.png" alt="Python" />
+              <Image className="w-32" width={128} height={128} src={cppbadges} alt="C++" />
+              <Image className="w-32" width={128} height={128} src={javabadges} alt="Java" />
+              <Image className="w-32" width={128} height={128} src={pythonbadges} alt="Python" />
             </div>
           </div>
 
           {/* Submissions Chart */}
-          <div className="bg-gray-800 rounded-lg p-6">
-            <h5 className="text-lg font-semibold mb-4">
-              233 Submission in 2025
-            </h5>
+          <section className="bg-gray-800 rounded-lg p-6">
+            <h5 className="text-lg font-semibold mb-4">233 Submissions</h5>
             <div className="flex items-end justify-between h-40 mb-4">
               {monthlyData.map((data) => (
                 <div
@@ -319,10 +314,10 @@ const ProfileDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
           {/* Bottom Tabs */}
-          <div className="bg-gray-800 rounded-lg">
+          <section className="bg-gray-800 rounded-lg">
             <div className="flex border-b border-gray-700">
               {["Recent AC", "Solutions", "Discuss"].map((tab) => (
                 <button
@@ -352,10 +347,10 @@ const ProfileDashboard = () => {
                 No Recent Submissions
               </div>
             </div>
-          </div>
-        </div>
+          </section>
+        </section>
       </div>
-    </div>
+    </section>
   );
 };
 

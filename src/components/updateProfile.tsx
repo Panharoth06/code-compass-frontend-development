@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Camera, X, Edit3 } from "lucide-react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 function InfoRow({
   label,
@@ -67,8 +68,10 @@ export default function ProfileImage() {
           {/* Profile Image */}
           <div className="relative group">
             <div className="w-32 h-32 relative">
-              <img
+              <Image
                 src={image || defaultAvatar}
+                height={128}
+                width={128}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
               />
@@ -93,10 +96,7 @@ export default function ProfileImage() {
       {/* Basic Info card full white background */}
       <div className="relative -mt-16 ">
         <div
-          className="bg-gray-200 p-6 rounded-lg shadow text-black w-full max-w-md 
-  transition-transform transform hover:scale-105 duration-300 ease-in-out 
-  shadow-[0_0_20px_0_rgba(107,114,128,0.5)] 
-  hover:shadow-[0_0_30px_0_rgba(107,114,128,0.8)] mx-auto"
+          className="bg-gray-200 p-6 rounded-lg text-black w-full max-w-md transition-transform transform hover:scale-105 duration-300 ease-in-out shadow-[0_0_20px_0_rgba(107,114,128,0.5)] hover:shadow-[0_0_30px_0_rgba(107,114,128,0.8)] mx-auto"
         >
           <h5 className="text-xl font-bold mb-6 text-gray-800 border-b border-gray-200 pb-3">
             Basic Info
@@ -141,19 +141,25 @@ export default function ProfileImage() {
               <div className="relative">
                 <div className="w-32 h-32 rounded-full border-4 border-gray-200 bg-gray-100 flex items-center justify-center overflow-hidden shadow-lg">
                   {tempImage ? (
-                    <img
+                    <Image
+                      height={128}
+                      width={128}
                       src={tempImage}
                       alt="Preview"
                       className="w-full h-full object-cover"
                     />
                   ) : image ? (
-                    <img
+                    <Image
+                      height={128}
+                      width={128}
                       src={image}
                       alt="Current"
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <img
+                    <Image
+                      height={128}
+                      width={128}
                       src={defaultAvatar}
                       alt="Default"
                       className="w-full h-full object-cover"
