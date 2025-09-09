@@ -13,11 +13,11 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-import cpp from '../../public/img/cpp.png';
-import js from '../../public/img/js.png';
-import javabadges from '../../public/img/javaBadges.png';
-import pythonbadges from '../../public/img/pythonBadges.png';
-import cppbadges from '../../public/img/cppBadges.png';
+// import cpp from '../../img/cpp.png';
+// import js from '../../public/img/js.png';
+// import javabadges from '../../public/img/javaBadges.png';
+// import pythonbadges from '../../public/img/pythonBadges.png';
+// import cppbadges from '../../public/img/cppBadges.png';
 
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState("Recent AC");
@@ -139,7 +139,7 @@ const ProfileDashboard = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Image className="w-10" src={cpp} width={40} height={40} alt="C++" />
+                  <Image className="w-10" src='/img/cpp.png' width={40} height={40} alt="C++" />
                   <span className="ml-2">C++</span>
                 </div>
                 <span className="text-gray-400 text-sm">
@@ -148,7 +148,7 @@ const ProfileDashboard = () => {
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                  <Image className="w-10" width={40} height={40} src={js} alt="JavaScript" />
+                  <Image className="w-10" width={40} height={40} src='/img/js.png' alt="JavaScript" />
                   <span className="ml-2">JavaScript</span>
                 </div>
                 <span className="text-gray-400 text-sm">
@@ -275,9 +275,9 @@ const ProfileDashboard = () => {
               My Badges
             </h5>
             <div className="flex justify-center items-center gap-6">
-              <Image className="w-32" width={128} height={128} src={cppbadges} alt="C++" />
-              <Image className="w-32" width={128} height={128} src={javabadges} alt="Java" />
-              <Image className="w-32" width={128} height={128} src={pythonbadges} alt="Python" />
+              <Image width={128} height={128} src='/img/cppBadges.png' alt="C++" />
+              <Image width={128} height={128} src='/img/javaBadges.png' alt="Java" />
+              <Image width={128} height={128} src='/img/pythonBadges.png' alt="Python" />
             </div>
           </div>
 

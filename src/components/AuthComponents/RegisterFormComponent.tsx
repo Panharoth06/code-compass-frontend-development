@@ -5,8 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "@/components/ui/input";
-import { GnederOption } from "./GenderOption";
+import { GenderOption } from "./GenderOption";
 import { useSignupMutation } from "@/lib/services/signUp/signUp";
+import { Button } from "../ui/button";
+import {useRouter} from "next/navigation";
 
 const formSchema = z
   .object({
@@ -83,22 +85,25 @@ const RegisterForm = () => {
     console.log("Loading...");
   }
 
+  const router = useRouter();
+
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow mx-auto">
+    <div className="w-full max-w-md p-8 space-y-6 rounded shadow mx-auto">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          {/* first name */}
+          <div className="flex gap-2"> 
+            {/* first name */}
           <FormField
             control={form.control}
             name="first_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">First Name</FormLabel>
+                <FormLabel className="text-white">First Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="First Name"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
@@ -111,17 +116,19 @@ const RegisterForm = () => {
             name="last_name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Last Name</FormLabel>
+                <FormLabel className="text-white">Last Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Last Name"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
             )}
           />
+          </div>
+          
 
           {/* username */}
           <FormField
@@ -129,12 +136,12 @@ const RegisterForm = () => {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Username</FormLabel>
+                <FormLabel className="text-white">Username</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Username"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
@@ -147,13 +154,13 @@ const RegisterForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Email</FormLabel>
+                <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="codecompass@example.com"
                     type="email"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
@@ -166,13 +173,13 @@ const RegisterForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Password</FormLabel>
+                <FormLabel className="text-white">Password</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="CodeComass@123"
                     type="password"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
@@ -185,13 +192,13 @@ const RegisterForm = () => {
             name="confirmed_password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Confirm Password</FormLabel>
+                <FormLabel className="text-white">Confirm Password</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="CodeComass@123"
                     type="password"
                     {...field}
-                    className="w-full text-black rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    className="w-full text-white rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 selection:bg-blue-500 selection:text-white"
                   />
                 </FormControl>
               </FormItem>
@@ -201,15 +208,24 @@ const RegisterForm = () => {
           {/* gender option] */}
 
           <div className="w-full">
-            <GnederOption />
+            <GenderOption />
           </div>
 
-          <button
+          <div className="flex gap-2 justify-center">
+            <Button
+            type="button" 
+            className="bg-gray-800/50 text-gray-100 border-gray-600 hover:bg-gray-700/50 hover:text-white py-2 px-4 rounded-md cursor-pointer"
+            onClick={() => router.back()}
+            > go back </Button>
+          <Button
             type="submit"
-            className="bg-black/90 text-white py-2 px-4 rounded-md hover:bg-black/85 cursor-pointer"
+            className="bg-gray-800/50 text-gray-100 border-gray-600 hover:bg-gray-700/50 hover:text-white py-2 px-4 rounded-md cursor-pointer"
           >
             Sign up
-          </button>
+          </Button>
+
+          </div>
+
         </form>
       </Form>
     </div>

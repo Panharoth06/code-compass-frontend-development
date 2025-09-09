@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
+import StoreProvider from "../StoreProvider";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import SessionProviderWrapper from "../SessionProviderWrapper";
 
 const barlow = Barlow({
   weight: "400",
@@ -19,8 +23,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={barlow.className}>
       <body className={`${barlow.variable} antialiased`}>
-        <main>{children}</main>
+        <SessionProviderWrapper>
+          <StoreProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </StoreProvider>
+        </SessionProviderWrapper>
       </body>
     </html>
   );
 }
+
