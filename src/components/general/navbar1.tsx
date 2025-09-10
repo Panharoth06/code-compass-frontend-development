@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 import { Menu } from "lucide-react";
 
 import {
@@ -29,7 +31,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
-import Aurora from "../Backgrounds/Aurora/Aurora";
+import { usePathname } from "next/navigation";
 
 interface MenuItem {
   title: string;
@@ -94,6 +96,8 @@ const Navbar1 = ({
     signup: { title: "Sign up", url: "#" },
   },
 }: Navbar1Props) => {
+  const pathName = usePathname();
+  if (pathName === "/problemsets") return null;
   return (
     <section className="py-4">
       <div className="container">
@@ -103,7 +107,7 @@ const Navbar1 = ({
             {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-2">
               <Image
-                src={logo.src}
+                src={logo.src || "/placeholder.svg"}
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
                 width={logo.width}
@@ -144,7 +148,7 @@ const Navbar1 = ({
             {/* Logo */}
             <Link href={logo.url} className="flex items-center gap-2">
               <Image
-                src={logo.url}
+                src={logo.src || "/placeholder.svg"}
                 className="max-h-8 dark:invert"
                 alt={logo.alt}
                 width={logo.width}
@@ -162,7 +166,7 @@ const Navbar1 = ({
                   <SheetTitle>
                     <Link href={logo.url} className="flex items-center gap-2">
                       <Image
-                        src={logo.src}
+                        src={logo.src || "/placeholder.svg"}
                         className="max-h-8 dark:invert"
                         alt={logo.alt}
                         width={logo.width}

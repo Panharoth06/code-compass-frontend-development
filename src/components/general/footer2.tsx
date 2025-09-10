@@ -1,8 +1,7 @@
-// src/components/footer2.tsx
+// src/components/general/footer2.tsx
 "use client";
-
-import React from "react";
 import Link from "next/link";
+import Image from "next/image"; // Added Next.js Image import
 import { Logo, LogoImage, LogoText } from "@/components/general/logo";
 
 interface MenuItem {
@@ -30,7 +29,13 @@ const SocialIcons = () => {
       {icons.map((icon, idx) => (
         <Link key={idx} href="#">
           <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800 hover:bg-gray-700 transition">
-            <img src={icon.src} alt={icon.alt} className="w-5 h-5" />
+            <Image
+              src={icon.src || "/placeholder.svg"}
+              alt={icon.alt}
+              width={20}
+              height={20}
+              className="w-5 h-5"
+            />
           </div>
         </Link>
       ))}
@@ -54,19 +59,21 @@ const Footer2 = ({
     { title: "Careers", links: [{ text: "LinkedIn", url: "#" }] },
     { title: "Contact", links: [{ text: "Contact", url: "#" }] },
   ],
-  copyright = "© 2023 CodeCompass. All rights reserved.",
+  copyright = "© 2025 CodeCompass. All rights reserved.",
   bottomLinks = [
     { text: "Terms and Conditions", url: "#" },
     { text: "Privacy Policy", url: "#" },
   ],
 }: Footer2Props) => {
   return (
-    <section className="py-32 bg-neutral-900 text-white">
+    <section className="py-16 bg-neutral-900 text-white">
+      {/* reduced from py-32 to py-16 */}
       <div className="container mx-auto px-6">
         <footer>
           <div className="grid grid-cols-2 lg:grid-cols-12 justify-between items-center gap-8">
             {/* Logo */}
-            <div className="col-span-2 mb-8 lg:mb-0">
+            <div className="col-span-2 mb-4 lg:mb-0">
+              {/* reduced mb */}
               <div className="flex items-center gap-2 lg:justify-start">
                 <Logo url={logo.url}>
                   <LogoImage
@@ -83,7 +90,8 @@ const Footer2 = ({
             {/* Menu Titles */}
             <div className="col-span-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-8 gap-4">
               {menuItems.map((section, sectionIdx) => (
-                <div key={sectionIdx} className="mb-4 lg:mb-0">
+                <div key={sectionIdx} className="mb-2 lg:mb-0">
+                  {/* reduced mb */}
                   <p className="font-bold whitespace-nowrap">{section.title}</p>
                 </div>
               ))}
@@ -97,7 +105,8 @@ const Footer2 = ({
           </div>
 
           {/* Bottom Links */}
-          <div className="text-muted-foreground mt-24 flex flex-col justify-between gap-4 border-t pt-8 text-sm font-medium md:flex-row md:items-center">
+          <div className="text-muted-foreground mt-12 flex flex-col justify-between gap-2 border-t pt-4 text-sm font-medium md:flex-row md:items-center">
+            {/* mt-24 -> mt-12, pt-8 -> pt-4 */}
             <ul className="flex gap-4">
               {bottomLinks.map((link, linkIdx) => (
                 <li key={linkIdx} className="hover:text-primary underline">
