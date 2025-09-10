@@ -61,7 +61,7 @@ jobs:
             export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
             export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
             
-            cd postgres/
+            cd front/
             # Stop old containers
             docker compose down
             
