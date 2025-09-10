@@ -1,0 +1,27 @@
+services:
+  nextjs:
+    image: ${DOCKER_USERNAME}/next-code-compass:latest
+    container_name: next-code-compass
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+
+      # Public Next.js environment variables
+      NEXT_PUBLIC_BASE_URL_CODE_COMPASS: ${NEXT_PUBLIC_BASE_URL_CODE_COMPASS}
+
+      # Private envs (OIDC / Auth / Backend)
+      BASE_URL_CODE_COMPASS: ${BASE_URL_CODE_COMPASS}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_ISSUER: ${OIDC_ISSUER}
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    driver: bridge
