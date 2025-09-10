@@ -13,7 +13,7 @@ import {
   type ExecutionResult,
   type TestCaseResult,
 } from "@/lib/code-executor";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { TestCase } from "@/types/testcase";
 import Image from "next/image";
 
@@ -52,23 +52,22 @@ const sampleProblem = {
   onlineUsers: 1517,
 };
 
-export default function ProblemsetComponents() {
-  const [code, setCode] = useState(`class Solution {
+export default function ProblemDetailsComponents() {
+  const [code, setCode] = useState<string>(`class Solution {
 public:
     vector<int> getNoZeroIntegers(int n) {
         for (int a = 1; a < n; a++) {
             int b = n - a;
-            if (to_string(a).find('0') == string::npos && 
+            if (to_string(a).find('0') == string::npos &&
                 to_string(b).find('0') == string::npos) {
                 return {a, b};
             }
         }
-        return {1, n-1}; // fallback
+        return {1, n-1};
     }
 };`);
-  const [language, setLanguage] = useState("cpp");
 
-  //  Use the proper type here
+  const [language, setLanguage] = useState<string>("cpp");
   const [testCases, setTestCases] = useState<TestCase[]>([
     {
       id: "case-1",
@@ -90,46 +89,46 @@ public:
   const [executionResult, setExecutionResult] =
     useState<ExecutionResult | null>(null);
   const [showOutput, setShowOutput] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detect mobile
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    // Update code template based on language
     switch (newLanguage) {
       case "javascript":
-        setCode(`/**
- * @param {number} n
- * @return {number[]}
- */
-var getNoZeroIntegers = function(n) {
+        setCode(`var getNoZeroIntegers = function(n) {
     for (let a = 1; a < n; a++) {
         let b = n - a;
-        if (!a.toString().includes('0') && !b.toString().includes('0')) {
-            return [a, b];
-        }
+        if (!a.toString().includes('0') && !b.toString().includes('0')) return [a, b];
     }
-    return [1, n-1]; // fallback
+    return [1, n-1];
 };`);
         break;
       case "python":
         setCode(`class Solution:
-    def getNoZeroIntegers(self, n: int) -> List[int]:
+    def getNoZeroIntegers(self, n: int):
         for a in range(1, n):
             b = n - a
             if '0' not in str(a) and '0' not in str(b):
                 return [a, b]
-        return [1, n-1]  # fallback`);
+        return [1, n-1]`);
         break;
       case "java":
         setCode(`class Solution {
     public int[] getNoZeroIntegers(int n) {
-        for (int a = 1; a < n; a++) {
+        for(int a=1; a<n; a++){
             int b = n - a;
-            if (!String.valueOf(a).contains("0") && 
-                !String.valueOf(b).contains("0")) {
-                return new int[]{a, b};
-            }
+            if(!String.valueOf(a).contains("0") && !String.valueOf(b).contains("0"))
+                return new int[]{a,b};
         }
-        return new int[]{1, n-1}; // fallback
+        return new int[]{1,n-1};
     }
 }`);
         break;
@@ -137,14 +136,12 @@ var getNoZeroIntegers = function(n) {
         setCode(`class Solution {
 public:
     vector<int> getNoZeroIntegers(int n) {
-        for (int a = 1; a < n; a++) {
-            int b = n - a;
-            if (to_string(a).find('0') == string::npos && 
-                to_string(b).find('0') == string::npos) {
-                return {a, b};
-            }
+        for(int a=1; a<n; a++){
+            int b=n-a;
+            if(to_string(a).find('0')==string::npos && to_string(b).find('0')==string::npos)
+                return {a,b};
         }
-        return {1, n-1}; // fallback
+        return {1,n-1};
     }
 };`);
         break;
@@ -154,7 +151,6 @@ public:
   const handleRunCode = async () => {
     setIsRunning(true);
     setShowOutput(true);
-
     try {
       const result = await codeExecutor.executeCode(code, language);
       setExecutionResult(result);
@@ -172,24 +168,21 @@ public:
 
   const handleRunTests = async () => {
     setIsRunning(true);
-
     try {
       const results = await codeExecutor.runTestCases(
         code,
         language,
         testCases
       );
-
-      //  Update test case statuses safely
-      const updatedTestCases: TestCase[] = testCases.map((testCase, index) => ({
-        ...testCase,
-        status: results[index].passed ? "passed" : "failed",
-      }));
-
       setTestResults(results);
-      setTestCases(updatedTestCases);
+      setTestCases(
+        testCases.map((c, i) => ({
+          ...c,
+          status: results[i].passed ? "passed" : "failed",
+        }))
+      );
     } catch (error) {
-      console.error("Test execution failed:", error);
+      console.error(error);
     } finally {
       setIsRunning(false);
     }
@@ -197,12 +190,11 @@ public:
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-
     try {
       const result = await codeExecutor.submitSolution(code, language);
-      console.log("Submission result:", result);
+      console.log(result);
     } catch (error) {
-      console.error("Submission failed:", error);
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
@@ -211,34 +203,32 @@ public:
   return (
     <div className="flex flex-col h-full min-h-0 bg-background">
       {/* Header */}
-      <header className="border-b border-border px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="relative w-12 h-12 rounded-lg overflow-hidden">
-              <Image
-                src="/CodeCompassDM.png"
-                alt="Logo"
-                fill
-                className="object-contain"
-              />
-            </div>
-            <div>
-              <h6 className="font-semibold text-foreground">CodeCompass</h6>
-              <p className="text-xs text-muted-foreground">
-                Interactive Code Editor
-              </p>
-            </div>
+      <header className="border-b border-border px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">
+            <Image
+              src="/CodeCompassDM.png"
+              alt="Logo"
+              fill
+              className="object-contain"
+            />
+          </div>
+          <div>
+            <h6 className="font-semibold text-foreground text-sm sm:text-base">
+              CodeCompass
+            </h6>
+            <p className="text-xs text-muted-foreground">
+              Interactive Code Editor
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
           <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-2" />
-            Settings
+            <Settings className="w-4 h-4 mr-1 sm:mr-2" /> Settings
           </Button>
           <Button variant="outline" size="sm">
-            <Share className="w-4 h-4 mr-2" />
-            Share
+            <Share className="w-4 h-4 mr-1 sm:mr-2" /> Share
           </Button>
           <Button
             size="sm"
@@ -246,7 +236,7 @@ public:
             onClick={handleRunCode}
             disabled={isRunning}
           >
-            <Play className="w-4 h-4 mr-2" />
+            <Play className="w-4 h-4 mr-1 sm:mr-2" />{" "}
             {isRunning ? "Running..." : "Run"}
           </Button>
           <Button
@@ -255,7 +245,7 @@ public:
             onClick={handleSubmit}
             disabled={isSubmitting}
           >
-            <Send className="w-4 h-4 mr-2" />
+            <Send className="w-4 h-4 mr-1 sm:mr-2" />{" "}
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
           <ProfileDropdown />
@@ -263,20 +253,27 @@ public:
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <PanelGroup direction="horizontal">
-          {/* Left Panel - Problem Description */}
-          <Panel defaultSize={40} minSize={30}>
+      <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+        <PanelGroup direction={isMobile ? "vertical" : "horizontal"}>
+          {/* Problem Description */}
+          <Panel defaultSize={isMobile ? 30 : 40} minSize={isMobile ? 20 : 30}>
             <ProblemDescription problem={sampleProblem} />
           </Panel>
 
-          <PanelResizeHandle className="w-2 bg-border hover:bg-accent transition-colors" />
+          <PanelResizeHandle
+            className={`bg-border hover:bg-accent transition-colors ${
+              isMobile ? "h-2 w-full" : "w-2 h-full"
+            }`}
+          />
 
-          {/* Right Panel - Code Editor and Output */}
-          <Panel defaultSize={60} minSize={40}>
+          {/* Code + Output */}
+          <Panel defaultSize={isMobile ? 70 : 60} minSize={isMobile ? 50 : 40}>
             <PanelGroup direction="vertical">
               {/* Code Editor */}
-              <Panel defaultSize={70} minSize={50}>
+              <Panel
+                defaultSize={isMobile ? 65 : 70}
+                minSize={isMobile ? 40 : 50}
+              >
                 <div className="h-full flex flex-col">
                   <div className="p-4 border-b border-border flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -292,9 +289,6 @@ public:
                         </span>
                       </div>
                       <span className="font-medium">Code Editor</span>
-                      <span className="text-sm text-muted-foreground">
-                        Write and execute your code
-                      </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="sm">
@@ -313,10 +307,10 @@ public:
                     </div>
                   </div>
 
-                  <div className="flex-1">
+                  <div className="flex-1 min-h-[200px]">
                     <MonacoEditor
                       value={code}
-                      onChange={(value) => setCode(value || "")}
+                      onChange={(v) => setCode(v || "")}
                       language={language}
                     />
                   </div>
@@ -325,39 +319,25 @@ public:
 
               <PanelResizeHandle className="h-2 bg-border hover:bg-accent transition-colors" />
 
-              {/* Bottom Panel - Test Cases/Output */}
-              <Panel defaultSize={30} minSize={20}>
+              {/* Test Cases / Output */}
+              <Panel
+                defaultSize={isMobile ? 35 : 30}
+                minSize={isMobile ? 20 : 20}
+              >
                 {showOutput ? (
-                  <div className="h-full flex flex-col">
-                    <div className="border-b border-border">
-                      <div className="flex">
-                        <button
-                          onClick={() => setShowOutput(false)}
-                          className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground"
-                        >
-                          Test Cases
-                        </button>
-                        <button className="px-4 py-2 text-sm font-medium border-b-2 border-blue-600 text-blue-600">
-                          Output
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <CodeOutput
-                        result={executionResult}
-                        isRunning={isRunning}
-                        onClear={() => {
-                          setExecutionResult(null);
-                          setShowOutput(false);
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <CodeOutput
+                    result={executionResult}
+                    isRunning={isRunning}
+                    onClear={() => {
+                      setExecutionResult(null);
+                      setShowOutput(false);
+                    }}
+                  />
                 ) : (
                   <TestCasesPanel
                     testCases={testCases}
                     testResults={testResults}
-                    onTestCasesChange={(cases) => setTestCases(cases)}
+                    onTestCasesChange={setTestCases}
                     onRunTests={handleRunTests}
                     isRunning={isRunning}
                   />

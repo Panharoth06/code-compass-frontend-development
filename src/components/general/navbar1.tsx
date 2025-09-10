@@ -75,8 +75,8 @@ const Navbar1 = ({
   menu = [
     { title: "Home", url: "/" },
     {
-      title: "Problemsets",
-      url: "/problemsets",
+      title: "Problem Details",
+      url: "/problemdetails",
     },
     {
       title: "Leaderboard",
@@ -97,7 +97,7 @@ const Navbar1 = ({
   },
 }: Navbar1Props) => {
   const pathName = usePathname();
-  if (pathName === "/problemsets") return null;
+  if (pathName === "/problemdetails") return null;
   return (
     <section className="py-4">
       <div className="container">
