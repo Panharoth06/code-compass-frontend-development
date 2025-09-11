@@ -4,7 +4,7 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section with Gradient Background */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-lime-300 via-emerald-400 to-teal-500 px-6 py-16 lg:px-8 lg:py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#ccf301] via-[#ccf301]/90 to-[#fbffe8] px-6 py-16 lg:px-8 lg:py-20 ">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16 items-center">
             {/* Left Content */}
@@ -111,19 +111,19 @@ export default function PrivacyPolicyPage() {
         </div>
 
         <div className="absolute bottom-0 left-0 w-full overflow-hidden">
-          <svg className="relative block w-full h-20" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          {/* <svg className="relative block w-full h-20" viewBox="0 0 1200 120" preserveAspectRatio="none">
             <path
               d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
               fill="#1f2937"
             ></path>
-          </svg>
+          </svg> */}
         </div>
       </section>
 
       {/* Dark Content Section */}
-      <section className="bg-gray-900 px-6 py-16 lg:px-8 lg:py-24">
+      <section className="dark:bg-gray-900 px-6 py-16 lg:px-8 lg:py-24 bg-[#fdfff4]">
         <div className="mx-auto max-w-4xl">
-          <div className="bg-gray-800 p-8 rounded-2xl shadow-lg">
+          <div className="dark:bg-gray-800/50 p-8 rounded-2xl shadow-lg bg-[#f9fce8]">
             <h3 className="mr-2 text-2xl">Our Commitment to Your Privacy</h3>
             <p className="text-lg leading-relaxed text-gray-300 mb-8">
               At <span className="text-[#b4ff00]">CodeCompass</span> , we are committed to protecting your privacy and ensuring the security of your personal

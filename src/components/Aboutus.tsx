@@ -11,12 +11,12 @@ export default function Page() {
 
   const coreTeam = [
     { name: "Team Leader", role: "Team Leader", image: "/team-leader.jpg" },
-    { name: "Member 1", role: "Frontend Developer", image: "/team-member-1.jpg" },
-    { name: "Member 2", role: "UI/UX Designer", image: "/team-member-2.jpg" },
-    { name: "Member 3", role: "Backend Developer", image: "/team-member-3.jpg" },
-    { name: "Member 4", role: "QA Tester", image: "/team-member-4.jpg" },
-    { name: "Member 5", role: "Project Manager", image: "/team-member-5.jpg" },
-    { name: "Member 6", role: "Support Engineer", image: "/team-member-6.jpg" },
+    { name: "Member 1", role: "Full-Stack Web Developer", image: "/team-member-1.jpg" },
+    { name: "Member 2", role: "Full-Stack Web Developer", image: "/team-member-2.jpg" },
+    { name: "Member 3", role: "Full-Stack Web Developer", image: "/team-member-3.jpg" },
+    { name: "Member 4", role: "Full-Stack Web Developer", image: "/team-member-4.jpg" },
+    { name: "Member 5", role: "Full-Stack Web Developer", image: "/team-member-5.jpg" },
+    { name: "Member 6", role: "Full-Stack Web Developer", image: "/team-member-6.jpg" },
   ];
 
   return (

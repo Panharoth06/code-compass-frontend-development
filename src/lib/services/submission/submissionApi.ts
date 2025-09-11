@@ -2,8 +2,8 @@ import { Judge0Response } from "@/lib/types/jugde0/jugde0Response";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
-export const judge0Api = createApi ({
-    reducerPath: "judge0Api",
+export const submissionApi = createApi ({
+    reducerPath: "submissionApi",
     baseQuery: fetchBaseQuery(
         {
             baseUrl: process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS
@@ -16,4 +16,4 @@ export const judge0Api = createApi ({
     }),
 });
 
-export const { useGetSubmissionQuery } = judge0Api;
+export const { useGetSubmissionQuery } = submissionApi;

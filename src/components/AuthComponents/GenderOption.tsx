@@ -26,7 +26,7 @@ export function GenderOption() {
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
-              className="w-full justify-between bg-gray-800/50 text-gray-200 border-gray-600 hover:bg-gray-700/50 hover:text-white focus:ring-2 focus:ring-blue-500 transition-colors"
+              className="backdrop-blur-[2px] w-full flex items-center justify-between bg-white/5 hover:bg-white/10 hover:text-white text-white border border-white/10 rounded-full transition-colors text-base sm:text-lg"
             >
               {field.value || "Select gender"}
               <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -34,29 +34,29 @@ export function GenderOption() {
               </svg>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-full bg-gray-800 text-gray-200 border-gray-600" align="start">
-            <DropdownMenuLabel className="text-gray-200">Gender</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-gray-600" />
+          <DropdownMenuContent className="w-full text-gray-200 bg-black/70 backdrop:blur-3xl border-gray-600" align="start">
+            <DropdownMenuLabel className="text-gray-200 bg-black/50 rounded text-base">Gender</DropdownMenuLabel>
+            <DropdownMenuSeparator className="bg-black/50 hover:bg-white/10 hover:text-white text-white transition-colors text-sm sm:text-base backdrop:blur-[2px]" />
             <DropdownMenuRadioGroup
               value={field.value}
               onValueChange={field.onChange}
-              className="w-full"
+              className="w-full text-white py-3 px-4 bg-black/50 rounded transition-colors text-sm sm:text-base"
             >
               <DropdownMenuRadioItem 
                 value="MALE" 
-                className="hover:bg-gray-700 focus:bg-gray-700 text-gray-200"
+                className=" text-gray-200 text-base"
               >
                 Male
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem 
                 value="FEMALE" 
-                className="hover:bg-gray-700 focus:bg-gray-700 text-gray-200"
+                className=" text-gray-200 text-base"
               >
                 Female
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem 
                 value="OTHER" 
-                className="hover:bg-gray-700 focus:bg-gray-700 text-gray-200"
+                className=" text-gray-200 text-base"
               >
                 Other
               </DropdownMenuRadioItem>

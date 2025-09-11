@@ -6,18 +6,18 @@ import codeEditorImage from "../../../public/image/image.png"
 
 export function HeroScrollDemo() {
   return (
-    <div className="flex flex-col overflow-hidden min-h-screen transition-all duration-500 font-['Barlow',sans-serif] ">
+    <div className="flex flex-col overflow-hidden lg:min-h-screen transition-all duration-150 font-baralow">
       <ContainerScroll
         titleComponent={
           <>
-            <h2 className="text-4xl font-semibold text-black dark:text-white">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-black dark:text-white">
               Interactive Code Editor <br />
             </h2>
           </>
         }
       >
         <div
-          className="mx-auto rounded-2xl h-full w-full flex items-center justify-center text-white text-2xl font-bold shadow-2xl"
+          className="mx-auto rounded-2xl h-full w-full flex items-center justify-center text-white text-2xl font-bold"
           style={{ height: '100%', width: '100%' }}
         >
           <div className="text-center">

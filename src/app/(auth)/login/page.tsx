@@ -30,7 +30,7 @@ export default function AuthDebug() {
         <p><strong>User:</strong> {session.user?.email || session.user?.name || 'Unknown'}</p>
         <p><strong>Access Token:</strong> {session.access_token ? '✅ Present' : '❌ Missing'}</p>
         <p><strong>Session Error:</strong> {session.error || 'None'}</p>
-        <p>{session.access_token}</p>
+        <p>{session.id_token}</p>
       </div>
       <button 
         onClick={() => signOut()}

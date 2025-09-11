@@ -23,7 +23,8 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import AuthButtons from "./AuthComponents/AuthButton";
 
 // Uiverse Toggle Component
 const UiverseToggle = () => {
@@ -37,6 +38,8 @@ const UiverseToggle = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle("dark");
   };
+
+  const { data: session } = useSession()
 
   return (
     <div className="uiverse-toggle">
@@ -174,6 +177,8 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+
+  
 
   const { scrollY } = useScroll();
 
@@ -401,35 +406,7 @@ const Navbar = () => {
               {/* Enhanced Desktop Actions */}
               <div className="hidden lg:flex items-center space-x-3">
                 <UiverseToggle />
-
-                <motion.button
-                  className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-gray-300 hover:text-[#CCF301] hover:bg-[#CCF301]/10 rounded-xl transition-all duration-200 font-medium relative group"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <LogIn className="h-4 w-4" />
-                  <span onClick={() => signIn("keycloak")}>Login</span>
-                  <div className="absolute inset-0 bg-[#CCF301]/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-200 -z-10"></div>
-                </motion.button>
-
-                <motion.button
-                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-gray-900 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:shadow-[#CCF301]/25 relative overflow-hidden"
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <User className="h-4 w-4" />
-                  <Link href={"/signup"}>
-                    <span>Sign Up</span>
-                  </Link>
-
-                  {/* Animated background shimmer */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-                    initial={{ x: "-100%" }}
-                    whileHover={{ x: "100%" }}
-                    transition={{ duration: 0.6 }}
-                  />
-                </motion.button>
+                <AuthButtons/>
               </div>
 
               {/* Mobile Menu Button */}

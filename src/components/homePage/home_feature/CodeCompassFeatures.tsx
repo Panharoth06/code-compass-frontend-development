@@ -36,7 +36,7 @@ export default function CodeCompassFeatures() {
   }, []);
 
   return (
-    <div className="min-h-screen transition-all duration-500 font-['Barlow',sans-serif]">
+    <div className="min-h-screen transition-all duration-500">
       <div className="container mx-auto px-6 py-20">
         {/* Main Title */}
         <div className="text-center mb-20">

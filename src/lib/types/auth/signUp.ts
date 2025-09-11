@@ -14,6 +14,18 @@ export type SignUpResponse = {
     email: string
 }
 
+export interface ErrorResponse {
+  message: string;
+  code: number;
+  timeStamp: string;
+  details: string;
+}
+
+export interface SerializedError {
+  status: number;
+  data: ErrorResponse;
+}
+
 // {
 //   "first_name": "string",
 //   "last_name": "string",

@@ -1,18 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { judge0Api } from "./services/judge0/judge0";
+import { submissionApi } from "./services/submission/submissionApi";
 import { problemApi } from "./services/problem/problem";
 import { signUpApi } from "./services/signUp/signUp";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
-      [judge0Api.reducerPath]: judge0Api.reducer,
+      [submissionApi.reducerPath]: submissionApi.reducer,
       [problemApi.reducerPath]: problemApi.reducer,
       [signUpApi.reducerPath]: signUpApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat([
-        judge0Api.middleware,
+        submissionApi.middleware,
         problemApi.middleware,
         signUpApi.middleware,
       ]),

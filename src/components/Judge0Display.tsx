@@ -1,6 +1,6 @@
 'use client'
 
-import { useGetSubmissionQuery } from '@/lib/services/judge0/judge0';
+import { useGetSubmissionQuery } from '@/lib/services/submission/submissionApi';
 
 const Judge0Display = () => {
     const {data, error, isLoading} = useGetSubmissionQuery("543ffd69-6b90-4f74-ae89-34cd64524d3b");

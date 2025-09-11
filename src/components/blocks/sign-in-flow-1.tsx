@@ -8,6 +8,10 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
 import * as THREE from "three";
 import RegisterForm from "../AuthComponents/RegisterFormComponent";
+import { Toaster } from "react-hot-toast";
+import Keycloak from "next-auth/providers/keycloak";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Uniforms = {
   [key: string]: {
@@ -360,7 +364,6 @@ const Shader: React.FC<ShaderProps> = ({ source, uniforms, maxFps = 60 }) => {
 
 export const SignInPage = ({ className }: SignInPageProps) => {
   const [step, setStep] = useState<"email" | "code" | "success">("email");
-  const [code, setCode] = useState(["", "", "", "", "", ""]);
   const codeInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [initialCanvasVisible, setInitialCanvasVisible] = useState(true);
   const [reverseCanvasVisible, setReverseCanvasVisible] = useState(false);
@@ -381,38 +384,12 @@ export const SignInPage = ({ className }: SignInPageProps) => {
     }
   }, [step]);
 
-  const handleCodeChange = (index: number, value: string) => {
-    if (value.length <= 1) {
-      const newCode = [...code];
-      newCode[index] = value;
-      setCode(newCode);
+  const router = useRouter();
 
-      // Focus next input if value is entered
-      if (value && index < 5) {
-        codeInputRefs.current[index + 1]?.focus();
-      }
+  const keycloakUrl =
+    "https://keyy.devith.it.com/realms/code-compass/protocol/openid-connect/auth";
 
-      // Check if code is complete
-      if (index === 5 && value) {
-        const isComplete = newCode.every((digit) => digit.length === 1);
-        if (isComplete) {
-          // First show the new reverse canvas
-          setReverseCanvasVisible(true);
-
-          // Then hide the original canvas after a small delay
-          setTimeout(() => {
-            setInitialCanvasVisible(false);
-          }, 50);
-
-          // Transition to success screen after animation
-          setTimeout(() => {
-            setStep("success");
-          }, 2000);
-        }
-      }
-    }
-  };
-
+    
   return (
     <div
       className={cn(
@@ -458,32 +435,49 @@ export const SignInPage = ({ className }: SignInPageProps) => {
       </div>
 
       {/* Content Layer */}
-      <div className="relative z-10 flex flex-col w-full max-w-4xl px-4">
+      <div
+        className="relative z-10 flex flex-col w-full max-w-6xl px-6 py-6
+  rounded-3xl
+  border border-white/10
+  bg-white/5
+  backdrop-blur-[1px]
+  shadow-xl
+  transition hover:border-white/20 shadow-white/10"
+      >
         {/* Main content container */}
-        <div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
+        <div className="flex flex-col lg:flex-row gap-8 justify-center items-center">
           {/* Left side (social login) */}
           <div className="flex flex-1 justify-center items-center w-full max-w-sm lg:max-w-md">
-            <div className="w-full max-w-sm">
+            <div className="w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key="email-step"
-                  initial={{ opacity: 0, x: -100 }}
+                  initial={{ opacity: 0, x: -150 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  exit={{ opacity: 0, x: -150 }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
                   className="space-y-6 text-center"
                 >
                   <div className="space-y-2">
-                    <h1 className="text-3xl sm:text-4xl font-bold leading-tight tracking-tight text-white">
+                    <h1 className="text-3xl sm:text-5xl font-bold leading-tight tracking-tight text-white">
                       Welcome Developer
                     </h1>
                     <p className="text-lg sm:text-2xl text-white/70 font-light">
-                      Start Your Journey With CodeCompass
+                      Start To Code Your Life's Compass
                     </p>
                   </div>
 
                   <div className="space-y-4">
-                    <button className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors text-sm sm:text-base">
+                    <button
+                      onClick={() => { window.location.href =  
+                          `${keycloakUrl}?client_id=nextjs` +
+                          `&redirect_uri=${encodeURIComponent(
+                            "http://localhost:3000"
+                          )}` +
+                          `&response_type=code&scope=openid&kc_idp_hint=google`;
+                      }}
+                      className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors text-sm sm:text-base"
+                    >
                       <svg
                         className="w-5 h-5 flex-shrink-0"
                         viewBox="0 0 24 24"
@@ -493,7 +487,16 @@ export const SignInPage = ({ className }: SignInPageProps) => {
                       </svg>
                       <span>Sign in with Google</span>
                     </button>
-                    <button className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors text-sm sm:text-base">
+                    <button
+                      onClick={() => { window.location.href =
+                          `${keycloakUrl}?client_id=nextjs` +
+                          `&redirect_uri=${encodeURIComponent(
+                            "http://localhost:3000"
+                          )}` +
+                          `&response_type=code&scope=openid&kc_idp_hint=github`;
+                      }}
+                      className="backdrop-blur-[2px] w-full flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-full py-3 px-4 transition-colors text-sm sm:text-base"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         x="0px"
@@ -520,14 +523,14 @@ export const SignInPage = ({ className }: SignInPageProps) => {
 
           {/* Right side (form) */}
           <div className="flex flex-1 justify-center items-center w-full max-w-sm lg:max-w-md">
-            <div className="w-full max-w-sm">
+            <div className="w-full">
               <AnimatePresence mode="wait">
                 <motion.div
                   key="email-step"
-                  initial={{ opacity: 0, x: 100 }}
+                  initial={{ opacity: 0, x: 150 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 100 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  exit={{ opacity: 0, x: 150 }}
+                  transition={{ duration: 0.9, ease: "easeOut" }}
                   className="space-y-6 text-center"
                 >
                   <RegisterForm />
@@ -537,6 +540,7 @@ export const SignInPage = ({ className }: SignInPageProps) => {
           </div>
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };

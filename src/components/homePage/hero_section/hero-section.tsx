@@ -11,7 +11,7 @@ import PathAnimation from "@/components/homePage/animation/svg-path-drawing-text
 export default function HeroSection() {
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden font-barlow bg-white dark:bg-black">
+    <section className="relative min-h-[500px] md:min-h-[700px] lg:min-h-screen flex items-center overflow-hidden font-barlow bg-white dark:bg-black dark:shadow-2xl dark:shadow-black dark:backdrop-blur-md">
       {/* Background */}
       <div className="absolute inset-0">
         <GridDotBackground
@@ -34,7 +34,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right side - Cards */}
-        <div className="relative flex justify-center lg:justify-end w-full max-w-lg h-[400px] lg:h-[500px]">
+        <div className="hidden relative lg:flex justify-center lg:justify-end w-full max-w-lg h-[400px] lg:h-[500px]">
           <CardSwap
             cardDistance={60}
             verticalDistance={70}
