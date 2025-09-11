@@ -76,6 +76,7 @@ h6 {
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
   --primary: #ccf301;
+  --primary: #ccf301;
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -109,6 +110,7 @@ h6 {
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
+  --primary: #ccf301;
   --primary: #ccf301;
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
@@ -146,6 +148,9 @@ h6 {
 }
 
 /* custome utilities classes */
+.container-default {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-20;
+}
 
 .text-body-content {
   @apply font-semibold text-[16px];
@@ -153,17 +158,21 @@ h6 {
 
 .text-sub-header {
   @apply font-normal text-[24px];
+  @apply font-normal text-[24px];
 }
 
 .text-conten-bold {
+  @apply font-bold text-[16px];
   @apply font-bold text-[16px];
 }
 
 .text-caption {
   @apply font-medium text-[12px];
+  @apply font-medium text-[12px];
 }
 
 .text-small {
+  @apply font-medium text-[14px];
   @apply font-medium text-[14px];
 }
 
