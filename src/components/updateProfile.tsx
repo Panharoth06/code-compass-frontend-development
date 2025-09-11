@@ -96,7 +96,7 @@ export default function ProfileImage() {
       {/* Basic Info card full white background */}
       <div className="relative py-4 -mt-15">
         <div
-          className="bg-gray-200 p-6   rounded-lg py-10 shadow text-black w-full max-w-sm
+          className="bg-gray-200 p-6   rounded-lg py-10 text-black w-full max-w-sm
   transition-transform transform hover:scale-105 duration-300 ease-in-out 
   shadow-[0_0_20px_0_rgba(107,114,128,0.5)] 
   hover:shadow-[0_0_30px_0_rgba(107,114,128,0.8)] mx-auto"

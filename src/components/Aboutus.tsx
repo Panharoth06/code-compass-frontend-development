@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
+// import { FaFacebookF, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 // =================== Data ===================
 const stats = [
@@ -149,20 +149,20 @@ function TeamCard({
           <p className="text-white font-semibold text-sm text-center mb-1">
             {name}
           </p>
-          <p className="text-[#CCF301] text-xs mb-2 line-clamp-2 text-center">
+          <p className="text-primary text-xs mb-2 line-clamp-2 text-center">
             {role}
           </p>
           <p className="text-white text-xs mb-3 line-clamp-4 px-2 text-center leading-relaxed">
             {bio}
           </p>
           <div className="flex gap-2 justify-center">
-            <a className="w-6 h-6 rounded-full border border-[#CCF301] flex items-center justify-center hover:bg-[#CCF301] hover:text-black transition">
+            <a className="w-6 h-6 rounded-full border border-primary flex items-center justify-center hover:bg-primary hover:text-black transition">
               <FacebookIcon />
             </a>
-            <a className="w-6 h-6 rounded-full border border-[#CCF301] flex items-center justify-center hover:bg-[#CCF301] hover:text-black transition">
+            <a className="w-6 h-6 rounded-full border border-primary flex items-center justify-center hover:bg-primary hover:text-black transition">
               <LinkedInIcon />
             </a>
-            <a className="w-6 h-6 rounded-full border border-[#CCF301] flex items-center justify-center hover:bg-[#CCF301] hover:text-black transition">
+            <a className="w-6 h-6 rounded-full border border-primary flex items-center justify-center hover:bg-primary hover:text-black transition">
               <GitHubIcon />
             </a>
           </div>
@@ -335,7 +335,7 @@ function twoSum(nums, target) {
       {/* Team Section */}
       <section className="bg-gray-50 text-black dark:bg-gray-900 dark:text-white py-16 mb-16">
         <div className="text-center mb-10">
-          <h3 className="text-3xl font-bold text-[#CCF301]">Meet Our Team</h3>
+          <h3 className="text-3xl font-bold text-primary">Meet Our Team</h3>
           <p className="mt-2 text-gray-300 max-w-2xl mx-auto">
             The brilliant minds behind CodeCompass – mentors and innovators
             dedicated to revolutionizing coding education.
