@@ -2,7 +2,7 @@ import ProblemDetailsComponents from "@/components/problemdetailComponents/Probl
 
 export default function ProblemsetsPage() {
   return (
-    <div className="h-screen max-w-7xl">
+    <div className="h-screen">
       <ProblemDetailsComponents />
     </div>
   );

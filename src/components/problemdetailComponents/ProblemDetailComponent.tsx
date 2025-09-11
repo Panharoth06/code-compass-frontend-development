@@ -7,7 +7,7 @@ import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/
 import { ProblemDescription } from "@/components/problemdetailComponents/problemsImpl/problem-description";
 import { TestCasesPanel } from "@/components/problemdetailComponents/problemsImpl/test-cases-panel";
 import { CodeOutput } from "@/components/problemdetailComponents/problemsImpl/code-output";
-import { ProfileDropdown } from "@/components/problemdetailComponents/problemsImpl/profile-dropdown";
+// import { ProfileDropdown } from "@/components/problemdetailComponents/problemsImpl/profile-dropdown";
 import {
   codeExecutor,
   type ExecutionResult,
@@ -16,13 +16,13 @@ import {
 import { useState, useEffect } from "react";
 import type { TestCase } from "@/types/testcase";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const sampleProblem = {
   id: 1317,
   title: "Convert Integer to the Sum of Two No-Zero Integers",
   difficulty: "Easy" as const,
   topics: ["Math", "Greedy", "Number Theory"],
-  companies: ["Google", "Amazon", "Microsoft", "Apple"],
   description: `<p><strong>No-Zero integer</strong> is a positive integer that <strong>does not contain any 0</strong> in its decimal representation.</p>
     <p>Given an integer <code>n</code>, return <em>a list of two integers</em> <code>[a, b]</code> <em>where:</em></p>
     <ul>
@@ -32,53 +32,33 @@ const sampleProblem = {
     <p>The test cases are generated so that there is at least one valid solution. If there are many valid solutions, you can return any of them.</p>`,
   examples: [
     {
-      input: "n = 2",
-      output: "[1,1]",
+      input: "2",
+      output: "1 1",
       explanation:
         "Let a = 1 and b = 1. Both a and b are no-zero integers, and a + b = 2 = n, so return [1,1].",
     },
     {
-      input: "n = 11",
-      output: "[2,9]",
+      input: "11",
+      output: "2 9",
       explanation:
         "Let a = 2 and b = 9. Both a and b are no-zero integers, and a + b = 11 = n, so return [2,9].",
     },
   ],
-  constraints: ["2 <= n <= 10^4"],
-  likes: 806,
-  dislikes: 213,
-  submissions: 125000,
-  acceptanceRate: "57.8%",
-  onlineUsers: 1517,
 };
 
 export default function ProblemDetailsComponents() {
-  const [code, setCode] = useState<string>(`class Solution {
-public:
-    vector<int> getNoZeroIntegers(int n) {
-        for (int a = 1; a < n; a++) {
-            int b = n - a;
-            if (to_string(a).find('0') == string::npos &&
-                to_string(b).find('0') == string::npos) {
-                return {a, b};
-            }
-        }
-        return {1, n-1};
-    }
-};`);
-
   const [language, setLanguage] = useState<string>("cpp");
   const [testCases, setTestCases] = useState<TestCase[]>([
     {
       id: "case-1",
       inputs: { n: "2" },
-      expectedOutput: "[1,1]",
+      expectedOutput: "1 1",
       status: "pending",
     },
     {
       id: "case-2",
-      inputs: { n: "11" },
-      expectedOutput: "[2,9]",
+      inputs:  {n: "11"} ,
+      expectedOutput: " 2 9",
       status: "pending",
     },
   ]);
@@ -99,53 +79,51 @@ public:
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const codeTemplates: Record<string, string> = {
+    javascript: `function solve() {
+
+  // code your life's compass here
+
+}
+  
+solve();`,
+    python: `def main():
+    print("Hello, CodeCompass!")
+
+if __name__ == "__main__":
+    main()
+`,
+    java: `import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class CodeCompass
+{
+    public static void main(String[] args) throws java.lang.Exception
+    {
+        // code your life's compass here
+
+    }
+}`,
+
+    cpp: `#include <iostream>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    // code your life's compass here
+
+    return 0;
+}`,
+  };
+  const [code, setCode] = useState<string>(codeTemplates["cpp"]);
+
   const handleLanguageChange = (newLanguage: string) => {
     setLanguage(newLanguage);
-    switch (newLanguage) {
-      case "javascript":
-        setCode(`var getNoZeroIntegers = function(n) {
-    for (let a = 1; a < n; a++) {
-        let b = n - a;
-        if (!a.toString().includes('0') && !b.toString().includes('0')) return [a, b];
-    }
-    return [1, n-1];
-};`);
-        break;
-      case "python":
-        setCode(`class Solution:
-    def getNoZeroIntegers(self, n: int):
-        for a in range(1, n):
-            b = n - a
-            if '0' not in str(a) and '0' not in str(b):
-                return [a, b]
-        return [1, n-1]`);
-        break;
-      case "java":
-        setCode(`class Solution {
-    public int[] getNoZeroIntegers(int n) {
-        for(int a=1; a<n; a++){
-            int b = n - a;
-            if(!String.valueOf(a).contains("0") && !String.valueOf(b).contains("0"))
-                return new int[]{a,b};
-        }
-        return new int[]{1,n-1};
-    }
-}`);
-        break;
-      case "cpp":
-        setCode(`class Solution {
-public:
-    vector<int> getNoZeroIntegers(int n) {
-        for(int a=1; a<n; a++){
-            int b=n-a;
-            if(to_string(a).find('0')==string::npos && to_string(b).find('0')==string::npos)
-                return {a,b};
-        }
-        return {1,n-1};
-    }
-};`);
-        break;
-    }
+    setCode(codeTemplates[newLanguage] || "// Language not supported yet");
   };
 
   const handleRunCode = async () => {
@@ -200,6 +178,8 @@ public:
     }
   };
 
+  const router = useRouter();
+
   return (
     <div className="flex flex-col h-full min-h-0 bg-background">
       {/* Header */}
@@ -210,23 +190,18 @@ public:
               src="/CodeCompassDM.png"
               alt="Logo"
               fill
-              className="object-contain"
+              className="object-contain bg-black p-1"
+              onClick={() => router.push("problemset")}
             />
           </div>
           <div>
             <h6 className="font-semibold text-foreground text-sm sm:text-base">
               CodeCompass
             </h6>
-            <p className="text-xs text-muted-foreground">
-              Interactive Code Editor
-            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
-          <Button variant="outline" size="sm">
-            <Settings className="w-4 h-4 mr-1 sm:mr-2" /> Settings
-          </Button>
           <Button variant="outline" size="sm">
             <Share className="w-4 h-4 mr-1 sm:mr-2" /> Share
           </Button>
@@ -248,7 +223,7 @@ public:
             <Send className="w-4 h-4 mr-1 sm:mr-2" />{" "}
             {isSubmitting ? "Submitting..." : "Submit"}
           </Button>
-          <ProfileDropdown />
+          {/* <ProfileDropdown /> */}
         </div>
       </header>
 
@@ -291,9 +266,14 @@ public:
                       <span className="font-medium">Code Editor</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setCode(codeTemplates[language])}
+                      >
                         <RotateCcw className="w-4 h-4" />
                       </Button>
+
                       <select
                         className="bg-background border border-border rounded px-2 py-1 text-sm"
                         value={language}
@@ -312,6 +292,7 @@ public:
                       value={code}
                       onChange={(v) => setCode(v || "")}
                       language={language}
+                      showThemeSelector={true}
                     />
                   </div>
                 </div>

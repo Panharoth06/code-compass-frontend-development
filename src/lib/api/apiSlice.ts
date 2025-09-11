@@ -86,7 +86,6 @@ export const apiSlice = createApi({
       query: (id) => `/problems/${id}`,
       providesTags: (result, error, id) => [{ type: "Problem", id }],
     }),
-
     submitSolution: builder.mutation<
       Submission,
       { problemId: number; code: string; language: string }

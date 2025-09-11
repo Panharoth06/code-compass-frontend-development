@@ -3,15 +3,12 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Heart,
-  MessageCircle,
-  Star,
   Copy,
   Lightbulb,
   Check,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, Editor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useToast } from "@/hooks/use-toast";
 
@@ -26,15 +23,8 @@ interface Problem {
   title: string;
   difficulty: "Easy" | "Medium" | "Hard";
   topics: string[];
-  companies: string[];
   description: string; // HTML string
   examples: Example[];
-  constraints: string[];
-  likes: number;
-  dislikes: number;
-  submissions: number;
-  acceptanceRate: string;
-  onlineUsers: number;
 }
 
 interface ProblemDescriptionProps {
@@ -42,8 +32,6 @@ interface ProblemDescriptionProps {
 }
 
 export function ProblemDescription({ problem }: ProblemDescriptionProps) {
-  const [liked, setLiked] = useState(false);
-  const [bookmarked, setBookmarked] = useState(false);
   const [copiedStates, setCopiedStates] = useState<{ [key: string]: boolean }>(
     {}
   );
@@ -95,13 +83,13 @@ export function ProblemDescription({ problem }: ProblemDescriptionProps) {
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case "Easy":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+        return "bg-green-600 text-white dark:bg-green-900 dark:text-green-200 text-base";
       case "Medium":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 text-base";
       case "Hard":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 text-base";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 text-base";
     }
   };
 
@@ -122,20 +110,14 @@ export function ProblemDescription({ problem }: ProblemDescriptionProps) {
               </Badge>
               <Badge
                 variant="outline"
-                className="cursor-pointer hover:bg-accent"
+                className="cursor-pointer hover:bg-accent text-base"
               >
                 <Lightbulb className="w-3 h-3 mr-1" />
                 Topics
               </Badge>
               <Badge
                 variant="outline"
-                className="cursor-pointer hover:bg-accent"
-              >
-                Companies
-              </Badge>
-              <Badge
-                variant="outline"
-                className="cursor-pointer hover:bg-accent"
+                className="cursor-pointer hover:bg-accent text-base"
               >
                 Hint
               </Badge>
@@ -237,172 +219,6 @@ export function ProblemDescription({ problem }: ProblemDescriptionProps) {
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Constraints with hover copy */}
-          {problem.constraints.length > 0 && (
-            <div className="space-y-3 relative group">
-              <div className="flex items-center justify-between">
-                <h6 className="font-semibold text-foreground">Constraints:</h6>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() =>
-                      copyToClipboard(
-                        problem.constraints.join("\n"),
-                        "constraints"
-                      )
-                    }
-                    className="text-muted-foreground hover:text-foreground"
-                    aria-label="Copy constraints"
-                  >
-                    {copiedStates.constraints ? (
-                      <Check className="w-4 h-4" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-              <ul className="space-y-1">
-                {problem.constraints.map((constraint, index) => (
-                  <li
-                    key={index}
-                    className="font-mono text-sm text-muted-foreground flex items-start"
-                  >
-                    <span className="mr-2">•</span>
-                    <span>{constraint}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {/* Topics / Companies / actions */}
-          <div className="space-y-4 pt-4 border-t border-border">
-            <div>
-              <h6 className="font-semibold text-foreground mb-2">Topics</h6>
-              <div className="flex flex-wrap gap-2">
-                {problem.topics.map((topic) => (
-                  <Badge
-                    key={topic}
-                    variant="secondary"
-                    className="text-xs hover:bg-accent cursor-pointer"
-                  >
-                    {topic}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <h6 className="font-semibold text-foreground mb-2">Companies</h6>
-              <div className="flex flex-wrap gap-2">
-                {problem.companies.map((company) => (
-                  <Badge
-                    key={company}
-                    variant="outline"
-                    className="text-xs hover:bg-accent cursor-pointer"
-                  >
-                    {company}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-border space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setLiked(!liked)}
-                  className={
-                    liked
-                      ? "text-green-600 hover:text-green-700"
-                      : "text-muted-foreground hover:text-foreground"
-                  }
-                >
-                  <Heart
-                    className={`w-4 h-4 mr-1 ${liked ? "fill-current" : ""}`}
-                  />
-                  {problem.likes.toLocaleString()}
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <MessageCircle className="w-4 h-4 mr-1" />
-                  {problem.dislikes}
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setBookmarked(!bookmarked)}
-                  className={
-                    bookmarked
-                      ? "text-yellow-600 hover:text-yellow-700"
-                      : "text-muted-foreground hover:text-foreground"
-                  }
-                >
-                  <Star
-                    className={`w-4 h-4 ${bookmarked ? "fill-current" : ""}`}
-                  />
-                </Button>
-
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-muted-foreground hover:text-foreground"
-                  onClick={() =>
-                    copyToClipboard(
-                      `${problem.id}. ${
-                        problem.title
-                      }\n\n${problem.description.replace(
-                        /<[^>]*>/g,
-                        ""
-                      )}\n\nExamples:\n${problem.examples
-                        .map(
-                          (ex, i) =>
-                            `Example ${i + 1}:\nInput: ${ex.input}\nOutput: ${
-                              ex.output
-                            }`
-                        )
-                        .join(
-                          "\n\n"
-                        )}\n\nConstraints:\n${problem.constraints.join("\n")}`,
-                      "full-problem"
-                    )
-                  }
-                  aria-label="Copy entire problem"
-                >
-                  {copiedStates["full-problem"] ? (
-                    <Check className="w-4 h-4" />
-                  ) : (
-                    <Copy className="w-4 h-4" />
-                  )}
-                </Button>
-              </div>
-
-              <div className="text-sm text-muted-foreground">
-                <span className="inline-flex items-center">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                  {problem.onlineUsers.toLocaleString()} Online
-                </span>
-              </div>
-            </div>
-
-            <div className="text-sm text-muted-foreground space-y-1">
-              <div>
-                Accepted: {problem.submissions.toLocaleString()} submissions
-              </div>
-              <div>Acceptance Rate: {problem.acceptanceRate}</div>
-            </div>
           </div>
         </div>
       </div>

@@ -42,7 +42,7 @@ export function TestCasesPanel({
                   : "border-border"
               }`}
             >
-              <p className="text-sm font-medium">
+              <p className="text-base font-medium">
                 Inputs: {JSON.stringify(testCase.inputs)}
               </p>
               {result && (
@@ -51,7 +51,7 @@ export function TestCasesPanel({
                   {testCase.expectedOutput}
                 </p>
               )}
-              <p className="text-xs">
+              <p className="text-small">
                 Status:{" "}
                 <span
                   className={

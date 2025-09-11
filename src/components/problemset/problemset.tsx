@@ -520,7 +520,7 @@ const StudyPlan = ({
 }) => {
   const studyPlans = [
     {
-      id: "cpp",
+      id: "1",
       title: "C++ Mastery",
       description: "Master C++ programming with 75 curated problems",
       subtitle: "System Programming & Performance",
@@ -530,7 +530,7 @@ const StudyPlan = ({
       icon: "💻",
     },
     {
-      id: "java",
+      id: "2",
       title: "Java Excellence",
       description: "Enterprise Java development with top interview questions",
       subtitle: "Object-Oriented Programming",
@@ -540,7 +540,7 @@ const StudyPlan = ({
       icon: "☕",
     },
     {
-      id: "javascript",
+      id: "3",
       title: "JavaScript Pro",
       description: "Modern JavaScript and web development essentials",
       subtitle: "Frontend & Backend Development",
@@ -550,7 +550,7 @@ const StudyPlan = ({
       icon: "🚀",
     },
     {
-      id: "python",
+      id: "4",
       title: "Python Expert",
       description: "Data structures, algorithms, and Python mastery",
       subtitle: "AI/ML & Data Science Ready",
@@ -1178,6 +1178,7 @@ export default function Problemset(): JSX.Element {
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3 min-w-0 flex-1">
                             <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">
+{/* submit id here */}
                               #{problem.id}
                             </span>
                             <div className="min-w-0 flex-1">
