@@ -30,7 +30,7 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/fiber": "^9.3.0",
-    "@reduxjs/toolkit": "^2.8.2",
+    "@reduxjs/toolkit": "^2.9.0",
     "@tiptap/extension-highlight": "^3.3.0",
     "@tiptap/extension-horizontal-rule": "^3.3.0",
     "@tiptap/extension-image": "^3.3.0",
