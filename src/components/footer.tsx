@@ -14,7 +14,7 @@ import {
   Globe
 } from 'lucide-react';
 
-const Footer = ({ isDarkMode = true }) => {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const navigationLinks = [
@@ -27,10 +27,7 @@ const Footer = ({ isDarkMode = true }) => {
   ];
 
   return (
-    <footer className={`font-barlow relative ${isDarkMode 
-      ? 'bg-gradient-to-b from-[#0B121F] via-[#0B121F] via-70% to-[#CCF301]/15' 
-      : ''
-    } ${isDarkMode ? 'text-white' : 'text-gray-900'} overflow-hidden`}>
+    <footer className="font-barlow relative bg-gradient-to-b from-[#0B121F] via-[#0B121F] via-70% to-[#CCF301]/15 text-white overflow-hidden">
       
       {/* Modern geometric background patterns */}
       <div className="absolute inset-0 opacity-5">
@@ -40,10 +37,7 @@ const Footer = ({ isDarkMode = true }) => {
       </div>
 
       {/* Glass morphism overlay */}
-      <div className={`absolute inset-0 ${isDarkMode 
-        ? 'bg-gradient-to-t from-black/20 via-transparent to-transparent' 
-        : 'bg-gradient-to-t from-white/30 via-transparent to-transparent'
-      } backdrop-blur-sm`}></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent backdrop-blur-sm"></div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="py-12">
@@ -62,13 +56,13 @@ const Footer = ({ isDarkMode = true }) => {
                     className="w-12 h-12 object-contain filter drop-shadow-sm"
                   />
                 </div>
-                <span className={`text-xl font-bold bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 bg-clip-text text-transparent`}>
+                <span className="text-xl font-bold bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 bg-clip-text text-transparent">
                   CodeCompass
                 </span>
               </div>
               
               {/* Separator */}
-              <div className={`w-px h-8 ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+              <div className="w-px h-8 bg-gray-700"></div>
               
               {/* Official School Logo */}
               <div className="group flex items-center space-x-3 hover:scale-105 transition-all duration-300">
@@ -81,13 +75,13 @@ const Footer = ({ isDarkMode = true }) => {
                     className="w-12 h-12 object-contain filter drop-shadow-sm"
                   />
                 </div>
-                <span className={`text-lg font-semibold ${isDarkMode ? 'text-white/90' : 'text-gray-700'}`}>
+                <span className="text-lg font-semibold text-white/90">
                   ISTAD
                 </span>
               </div>
             </div>
             
-            <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-base max-w-xl mx-auto leading-relaxed`}>
+            <p className="text-gray-400 text-base max-w-xl mx-auto leading-relaxed">
               Where challenges meet growth. Empowering developers through interactive problem-solving.
             </p>
           </div>
@@ -97,7 +91,7 @@ const Footer = ({ isDarkMode = true }) => {
             
             {/* Navigation Links */}
             <div className="space-y-4">
-              <h5 className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-4 relative`}>
+              <h5 className="font-semibold text-base text-white mb-4 relative">
                 <span className="relative z-10">Navigation</span>
                 <div className="absolute bottom-0 left-0 w-6 h-0.5 bg-gradient-to-r from-[#CCF301] to-transparent rounded-full"></div>
               </h5>
@@ -106,7 +100,7 @@ const Footer = ({ isDarkMode = true }) => {
                   <Link
                     key={link.name}
                     href={link.href}
-                    className={`group relative flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-500 overflow-hidden ${isDarkMode ? 'hover:bg-gradient-to-r hover:from-[#CCF301]/5 hover:to-[#CCF301]/10' : 'hover:bg-gradient-to-r hover:from-[#CCF301]/5 hover:to-[#CCF301]/10'} hover:shadow-md hover:shadow-[#CCF301]/10 hover:scale-[1.02]`}
+                    className="group relative flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-500 overflow-hidden hover:bg-gradient-to-r hover:from-[#CCF301]/5 hover:to-[#CCF301]/10 hover:shadow-md hover:shadow-[#CCF301]/10 hover:scale-[1.02]"
                     style={{ animationDelay: `${index * 30}ms` }}
                   >
                     {/* Animated background */}
@@ -115,12 +109,12 @@ const Footer = ({ isDarkMode = true }) => {
                     {/* Content */}
                     <div className="relative z-10 flex items-center space-x-2">
                       <div className="w-1 h-1 rounded-full bg-[#CCF301] opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                      <span className={`text-xs font-medium transition-all duration-300 ${isDarkMode ? 'text-gray-400 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'}`}>
+                      <span className="text-xs font-medium transition-all duration-300 text-gray-400 group-hover:text-white">
                         {link.name}
                       </span>
                     </div>
                     
-                    <ArrowUpRight className={`h-3 w-3 transition-all duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${isDarkMode ? 'text-[#CCF301]' : 'text-[#CCF301]'}`} />
+                    <ArrowUpRight className="h-3 w-3 transition-all duration-300 transform opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 text-[#CCF301]" />
                   </Link>
                 ))}
               </div>
@@ -128,7 +122,7 @@ const Footer = ({ isDarkMode = true }) => {
 
             {/* Contact Information */}
             <div className="space-y-4">
-              <h5 className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-4 relative`}>
+              <h5 className="font-semibold text-base text-white mb-4 relative">
                 <span className="relative z-10">Contact</span>
                 <div className="absolute bottom-0 left-0 w-6 h-0.5 bg-gradient-to-r from-[#CCF301] to-transparent rounded-full"></div>
               </h5>
@@ -142,7 +136,7 @@ const Footer = ({ isDarkMode = true }) => {
                   <Link
                     key={index}
                     href={href}
-                    className={`group relative flex items-start space-x-3 px-3 py-2 rounded-lg transition-all duration-500 overflow-hidden hover:scale-[1.01] ${isDarkMode ? 'hover:bg-gradient-to-br hover:from-[#CCF301]/5 hover:via-[#CCF301]/10 hover:to-[#CCF301]/5' : 'hover:bg-gradient-to-br hover:from-[#CCF301]/5 hover:via-[#CCF301]/10 hover:to-[#CCF301]/5'} hover:shadow-lg hover:shadow-[#CCF301]/20`}
+                    className="group relative flex items-start space-x-3 px-3 py-2 rounded-lg transition-all duration-500 overflow-hidden hover:scale-[1.01] hover:bg-gradient-to-br hover:from-[#CCF301]/5 hover:via-[#CCF301]/10 hover:to-[#CCF301]/5 hover:shadow-lg hover:shadow-[#CCF301]/20"
                   >
                     {/* Icon container - smaller size */}
                     <div className="relative z-10 min-w-8 w-8 h-8 rounded-lg bg-gradient-to-br from-[#CCF301]/10 via-[#CCF301]/20 to-[#CCF301]/5 flex items-center justify-center group-hover:scale-110 transition-all duration-500 border border-[#CCF301]/10 group-hover:border-[#CCF301]/30 flex-shrink-0">
@@ -151,7 +145,7 @@ const Footer = ({ isDarkMode = true }) => {
                     
                     {/* Text - smaller font */}
                     <div className="relative z-10 flex-1 min-w-0">
-                      <span className={`text-xs font-medium leading-relaxed transition-all duration-300 ${isDarkMode ? 'text-gray-400 group-hover:text-white' : 'text-gray-600 group-hover:text-gray-900'} block break-words`} style={{ whiteSpace: 'pre-line' }}>
+                      <span className="text-xs font-medium leading-relaxed transition-all duration-300 text-gray-400 group-hover:text-white block break-words" style={{ whiteSpace: 'pre-line' }}>
                         {text}
                       </span>
                     </div>
@@ -162,7 +156,7 @@ const Footer = ({ isDarkMode = true }) => {
 
             {/* Social & Newsletter */}
             <div className="space-y-4">
-              <h5 className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'} mb-4 relative`}>
+              <h5 className="font-semibold text-base text-white mb-4 relative">
                 <span className="relative z-10">Connect</span>
                 <div className="absolute bottom-0 left-0 w-6 h-0.5 bg-gradient-to-r from-[#CCF301] to-transparent rounded-full"></div>
               </h5>
@@ -178,11 +172,11 @@ const Footer = ({ isDarkMode = true }) => {
                   <Link
                     key={index}
                     href={href}
-                    className={`group relative w-9 h-9 rounded-lg ${isDarkMode ? 'bg-white/5' : 'bg-gray-100'} flex items-center justify-center transition-all duration-500 hover:scale-110 hover:-translate-y-1 border ${isDarkMode ? 'border-white/10' : 'border-gray-200'} hover:border-[#CCF301]/30 overflow-hidden`}
+                    className="group relative w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center transition-all duration-500 hover:scale-110 hover:-translate-y-1 border border-white/10 hover:border-[#CCF301]/30 overflow-hidden"
                     aria-label={label}
                   >
-                    <Icon className={`h-4 w-4 relative z-10 transition-all duration-300 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} group-hover:scale-110`} 
-                          style={{ color: `var(--hover-color, ${isDarkMode ? '#9CA3AF' : '#6B7280'})` }}
+                    <Icon className="h-4 w-4 relative z-10 transition-all duration-300 text-gray-400 group-hover:scale-110" 
+                          style={{ color: `var(--hover-color, #9CA3AF)` }}
                           onMouseEnter={(e) => (e.target as HTMLElement).style.setProperty('--hover-color', color)}
                           onMouseLeave={(e) => (e.target as HTMLElement).style.removeProperty('--hover-color')} />
                   </Link>
@@ -191,7 +185,7 @@ const Footer = ({ isDarkMode = true }) => {
 
               {/* Newsletter - more compact */}
               <div className="space-y-3">
-                <p className={`text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <p className="text-xs font-medium text-gray-300">
                   Stay updated
                 </p>
                 <div className="relative group">
@@ -199,10 +193,7 @@ const Footer = ({ isDarkMode = true }) => {
                     <input
                       type="email"
                       placeholder="Enter email..."
-                      className={`flex-1 px-3 py-2 text-xs bg-transparent ${isDarkMode 
-                        ? 'text-white placeholder-gray-400' 
-                        : 'text-gray-900 placeholder-gray-500'
-                      } focus:outline-none transition-all duration-300`}
+                      className="flex-1 px-3 py-2 text-xs bg-transparent text-white placeholder-gray-400 focus:outline-none transition-all duration-300"
                     />
                     <button className="relative px-4 py-2 bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 text-black text-xs font-semibold transition-all duration-500 hover:from-[#CCF301]/90 hover:to-[#CCF301]/70 hover:scale-105 focus:outline-none group overflow-hidden">
                       <span className="relative z-10">Subscribe</span>
@@ -214,16 +205,16 @@ const Footer = ({ isDarkMode = true }) => {
           </div>
 
           {/* Bottom Section - more compact */}
-          <div className={`border-t ${isDarkMode ? 'border-gray-800/50' : 'border-gray-200'} pt-6`}>
+          <div className="border-t border-gray-800/50 pt-6">
             <div className="flex flex-col lg:flex-row justify-between items-center space-y-3 lg:space-y-0">
               
               <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-4">
-                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} text-xs font-medium`}>
+                <p className="text-gray-400 text-xs font-medium">
                   © {currentYear} CodeCompass — Where challenges meet growth.
                 </p>
                 <div className="flex items-center space-x-1 text-xs">
                   <span className="animate-pulse">🚀</span>
-                  <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'} text-xs`}>
+                  <span className="text-gray-500 text-xs">
                     Built with passion in Cambodia
                   </span>
                 </div>
@@ -234,7 +225,7 @@ const Footer = ({ isDarkMode = true }) => {
                   <Link
                     key={index}
                     href={`/${item.toLowerCase()}`}
-                    className={`group relative ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} transition-all duration-500 text-xs font-medium hover:scale-105`}
+                    className="group relative text-gray-400 transition-all duration-500 text-xs font-medium hover:scale-105"
                   >
                     <span className="relative z-10 group-hover:text-[#CCF301] transition-colors duration-300">
                       {item}
