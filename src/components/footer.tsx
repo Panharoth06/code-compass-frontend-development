@@ -14,6 +14,8 @@ import {
   Globe
 } from 'lucide-react';
 
+import codecompasslogo from "../../public/codecompass-2.png";
+
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -49,7 +51,7 @@ const Footer = () => {
               <div className="group flex items-center space-x-3 hover:scale-105 transition-all duration-300">
                 <div className="relative">
                   <Image
-                    src="/image/logo2.svg"
+                    src={codecompasslogo}
                     alt="CodeCompass Logo"
                     width={48}
                     height={48}

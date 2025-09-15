@@ -206,7 +206,7 @@ const Navbar = () => {
     { name: "Document", href: "/document", icon: FileText },
     { name: "About Us", href: "/about", icon: Users },
     { name: "Contact", href: "/contact", icon: Mail },
-    { name: "Privacy Policy", href: "/privacy", icon: Shield },
+    { name: "Privacy Policy", href: "/privacy-policy", icon: Shield },
   ];
 
   return (
