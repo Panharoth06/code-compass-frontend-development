@@ -63,7 +63,7 @@ export type FormSchema = z.infer<typeof formSchema>;
 
 const RegisterForm: React.FC = () => {
   const router = useRouter();
-  const [signup, { isLoading, isError, error }] = useSignupMutation();
+  const [signup, { isLoading }] = useSignupMutation();
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -88,7 +88,7 @@ const RegisterForm: React.FC = () => {
       signIn("keycloak");
     })
     .catch((err) => {
-      console.error("❌ Registration failed:", err);
+      // console.error("❌ Registration failed:", err);
       
       // Handle different error scenarios based on your backend ErrorResponse structure
       if (err?.status === 400 || err?.status === 409) {
@@ -151,10 +151,10 @@ const clearServerError = (fieldName: keyof FormSchema) => {
 };
 
 // You might also want to clear server errors on field change
-const handleFieldChange = (fieldName: keyof FormSchema, value: any) => {
-  clearServerError(fieldName);
-  form.setValue(fieldName, value);
-};
+// const handleFieldChange = (fieldName: keyof FormSchema, value: any) => {
+//   clearServerError(fieldName);
+//   form.setValue(fieldName, value);
+// };
 
 
   return (

@@ -9,9 +9,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import RegisterForm from "../AuthComponents/RegisterFormComponent";
 import { Toaster } from "react-hot-toast";
-import Keycloak from "next-auth/providers/keycloak";
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 type Uniforms = {
   [key: string]: {
@@ -383,8 +380,6 @@ export const SignInPage = ({ className }: SignInPageProps) => {
       }, 500);
     }
   }, [step]);
-
-  const router = useRouter();
 
   const keycloakUrl =
     "https://keyy.devith.it.com/realms/code-compass/protocol/openid-connect/auth";

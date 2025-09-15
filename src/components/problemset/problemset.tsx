@@ -1,6 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, ChangeEvent, JSX} from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  ChangeEvent,
+  JSX,
+} from "react";
 import {
   Search,
   Filter,
@@ -14,6 +21,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { ButtonProps } from "@/lib/types/ButtonProps";
+import Link from "next/link";
 
 const mockData = [
   {
@@ -200,7 +208,6 @@ const Button: React.FC<ButtonProps> = ({
     </button>
   );
 };
-
 
 const Input = ({
   className = "",
@@ -835,10 +842,7 @@ export default function Problemset(): JSX.Element {
   if (currentView === "studyplan") {
     return (
       <>
-        <link
-      style={{ fontFamily: "Barlow, sans-serif" }}
-          rel="stylesheet"
-        />
+        <link style={{ fontFamily: "Barlow, sans-serif" }} rel="stylesheet" />
         <StudyPlan
           sidebarWidth={sidebarWidth}
           isMobile={isMobile}
@@ -859,10 +863,7 @@ export default function Problemset(): JSX.Element {
   return (
     <>
       {/* Google Fonts - Barlow */}
-      <link
-      style={{ fontFamily: "Barlow, sans-serif" }}
-        rel="stylesheet"
-      />
+      <link style={{ fontFamily: "Barlow, sans-serif" }} rel="stylesheet" />
 
       <div
         className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 text-gray-900 dark:text-slate-100 transition-colors duration-300 flex relative overflow-x-hidden"
@@ -1121,14 +1122,112 @@ export default function Problemset(): JSX.Element {
                           className="border-b border-gray-200 dark:border-slate-700/30 hover:bg-gray-50 dark:hover:bg-slate-700/20 transition-all duration-200 cursor-pointer group"
                         >
                           <td className="p-3 sm:p-4 text-gray-600 dark:text-slate-400 font-mono text-sm">
-                            {problem.id}
+                            <Link
+                              href={`/problemdetails/${problem.id}`}
+                              className="no-underline block"
+                            >
+                              {problem.id}
+                            </Link>
                           </td>
                           <td className="p-3 sm:p-4">
-                            <div className="min-w-0">
-                              <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
-                                {problem.title}
+                            <Link
+                              href={`/problemdetails/${problem.id}`}
+                              className="no-underline block"
+                            >
+                              <div className="min-w-0">
+                                <div className="text-gray-900 dark:text-slate-100 font-medium group-hover:text-[#CCF301] transition-colors duration-200 truncate">
+                                  {problem.title}
+                                </div>
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {problem.tags
+                                    .slice(0, 3)
+                                    .map((tag, index) => (
+                                      <Badge
+                                        key={index}
+                                        variant="secondary"
+                                        className="text-xs"
+                                      >
+                                        {tag}
+                                      </Badge>
+                                    ))}
+                                  {problem.tags.length > 3 && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
+                                      +{problem.tags.length - 3}
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
-                              <div className="flex flex-wrap gap-1 mt-2">
+                            </Link>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <Link
+                              href={`/problemdetails/${problem.id}`}
+                              className="no-underline block"
+                            >
+                              {getStarsDisplay(problem.stars)}
+                            </Link>
+                          </td>
+                          <td className="p-3 sm:p-4">
+                            <Link
+                              href={`/problemdetails/${problem.id}`}
+                              className="no-underline block"
+                            >
+                              <Badge
+                                className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
+                              >
+                                {problem.difficulty}
+                              </Badge>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card View - Enhanced with your design */}
+              <div className="block sm:hidden space-y-2 p-4">
+                {filteredData.map((problem) => {
+                  const difficultyConfig = getDifficultyConfig(
+                    problem.difficulty
+                  );
+
+                  return (
+                    <Card
+                      key={problem.id}
+                      className="p-4 hover:bg-muted/50 transition-colors"
+                    >
+                      <Link
+                        href={`/problemdetails/${problem.id}`}
+                        className="block no-underline"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4 flex-1">
+                            <div className="flex items-center gap-2">
+                              {/* Add status icon if available in your data */}
+                              {/* {getStatusIcon(problem.status)} */}
+                              <span className="font-medium text-sm w-8">
+                                #{problem.id}
+                              </span>
+                            </div>
+
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-medium hover:text-primary transition-colors text-gray-900 dark:text-slate-100">
+                                  {problem.title}
+                                </h3>
+                                {/* Add premium badge if available in your data */}
+                                {/* {problem.isPremium && (
+                      <Badge variant="outline" className="text-xs">
+                        Premium
+                      </Badge>
+                    )} */}
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 {problem.tags.slice(0, 3).map((tag, index) => (
                                   <Badge
                                     key={index}
@@ -1139,84 +1238,33 @@ export default function Problemset(): JSX.Element {
                                   </Badge>
                                 ))}
                                 {problem.tags.length > 3 && (
-                                  <Badge variant="outline" className="text-xs">
-                                    +{problem.tags.length - 3}
-                                  </Badge>
+                                  <span className="text-xs">
+                                    +{problem.tags.length - 3} more
+                                  </span>
                                 )}
                               </div>
                             </div>
-                          </td>
-                          <td className="p-3 sm:p-4">
-                            {getStarsDisplay(problem.stars)}
-                          </td>
-                          <td className="p-3 sm:p-4">
-                            <Badge
-                              className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
-                            >
-                              {problem.difficulty}
-                            </Badge>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                          </div>
 
-              {/* Mobile Card View */}
-              <div className="block sm:hidden">
-                <div className="divide-y divide-gray-200 dark:divide-slate-700/50">
-                  {filteredData.map((problem) => {
-                    const difficultyConfig = getDifficultyConfig(
-                      problem.difficulty
-                    );
-                    return (
-                      <div
-                        key={problem.id}
-                        className="p-4 hover:bg-gray-50 dark:hover:bg-slate-700/20 transition-all duration-200 cursor-pointer"
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <span className="text-gray-600 dark:text-slate-400 font-mono text-sm flex-shrink-0">
-{/* submit id here */}
-                              #{problem.id}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <h6 className="text-gray-900 dark:text-slate-100 font-medium text-sm truncate">
-                                {problem.title}
-                              </h6>
+                          <div className="flex items-center gap-4">
+                            <div className="text-right">
+                              <Badge
+                                className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
+                              >
+                                {problem.difficulty}
+                              </Badge>
+                              <div className="flex justify-end mt-1">
+                                {getStarsDisplay(problem.stars)}
+                              </div>
+                              {/* Add acceptance rate if available in your data */}
+                              {/* <div className="text-xs text-muted-foreground mt-1">{problem.acceptanceRate}%</div> */}
                             </div>
                           </div>
-                          <div className="flex-shrink-0 ml-2">
-                            {getStarsDisplay(problem.stars)}
-                          </div>
                         </div>
-
-                        <div className="flex flex-wrap items-center gap-2 mb-3">
-                          <Badge
-                            className={`${difficultyConfig.color} ${difficultyConfig.bg} border text-xs`}
-                          >
-                            {problem.difficulty}
-                          </Badge>
-                          {problem.tags.slice(0, 2).map((tag, index) => (
-                            <Badge
-                              key={index}
-                              variant="secondary"
-                              className="text-xs"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                          {problem.tags.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
-                              +{problem.tags.length - 2}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                      </Link>
+                    </Card>
+                  );
+                })}
               </div>
             </Card>
 

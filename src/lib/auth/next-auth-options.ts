@@ -47,41 +47,39 @@ const TOKEN_CONFIG = {
 const env = validateEnvironmentVariables();
 
 // Enhanced HTTP client with timeout and retry logic
-const createHttpClient = () => {
-  return {
-    async fetch(url: string, options: RequestInit = {}): Promise<Response> {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(
-        () => controller.abort(),
-        TOKEN_CONFIG.HTTP_TIMEOUT
-      );
+// const createHttpClient = () => {
+//   return {
+//     async fetch(url: string, options: RequestInit = {}): Promise<Response> {
+//       const controller = new AbortController();
+//       const timeoutId = setTimeout(
+//         () => controller.abort(),
+//         TOKEN_CONFIG.HTTP_TIMEOUT
+//       );
 
-      try {
-        const response = await fetch(url, {
-          ...options,
-          signal: controller.signal,
-          headers: {
-            "Content-Type": "application/json",
-            "User-Agent": "NextAuth.js",
-            ...options.headers,
-          },
-        });
-        clearTimeout(timeoutId);
-        return response;
-      } catch (error) {
-        clearTimeout(timeoutId);
-        if (error instanceof Error && error.name === "AbortError") {
-          throw new Error(
-            `Request timeout after ${TOKEN_CONFIG.HTTP_TIMEOUT}ms`
-          );
-        }
-        throw error;
-      }
-    },
-  };
-};
-
-const httpClient = createHttpClient();
+//       try {
+//         const response = await fetch(url, {
+//           ...options,
+//           signal: controller.signal,
+//           headers: {
+//             "Content-Type": "application/json",
+//             "User-Agent": "NextAuth.js",
+//             ...options.headers,
+//           },
+//         });
+//         clearTimeout(timeoutId);
+//         return response;
+//       } catch (error) {
+//         clearTimeout(timeoutId);
+//         if (error instanceof Error && error.name === "AbortError") {
+//           throw new Error(
+//             `Request timeout after ${TOKEN_CONFIG.HTTP_TIMEOUT}ms`
+//           );
+//         }
+//         throw error;
+//       }
+//     },
+//   };
+// };
 
 // Utility function for safe token refresh with retries
 const safeRefreshToken = async (
@@ -317,7 +315,7 @@ export const authOptions: AuthOptions = {
       return baseUrl;
     },
 
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile }) {
       try {
         console.info("Sign in attempt:", {
           userId: user.id,

@@ -1,5 +1,5 @@
 "use client"
-
+/* eslint-disable */
 import { Editor, loader } from "@monaco-editor/react"
 import { useTheme } from "next-themes"
 import { useEffect, useRef, useState } from "react"
@@ -21,7 +21,6 @@ export function MonacoEditor({
   value,
   onChange,
   language,
-  fontSize = 14,
   height = "100%",
   readOnly = false,
   className,
@@ -29,7 +28,7 @@ export function MonacoEditor({
 }: MonacoEditorProps) {
   const { theme: systemTheme } = useTheme()
   const editorRef = useRef<any>(null)
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState<boolean>(false)
   const [editorTheme, setEditorTheme] = useState<EditorTheme>("vs-dark")
   const [isEditorReady, setIsEditorReady] = useState(false)
 
@@ -265,51 +264,37 @@ export function MonacoEditor({
           onMount={handleEditorDidMount}
           theme={editorTheme}
           options={{
-            fontSize: 18,
-            fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace",
-            lineNumbers: "on",
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            automaticLayout: true,
-            tabSize: 2,
-            insertSpaces: true,
-            wordWrap: "on",
-            readOnly,
-            contextmenu: true,
-            selectOnLineNumbers: true,
-            roundedSelection: false,
-            cursorStyle: "line",
-            cursorBlinking: "blink",
-            folding: true,
-            foldingHighlight: true,
-            showFoldingControls: "mouseover",
-            matchBrackets: "always",
-            autoIndent: "full",
-            formatOnPaste: true,
-            formatOnType: true,
-            suggestOnTriggerCharacters: true,
-            acceptSuggestionOnEnter: "on",
-            quickSuggestions: true,
-            parameterHints: { enabled: true },
-            hover: { enabled: true },
-            glyphMargin: false,
-            lineDecorationsWidth: 10,
-            lineNumbersMinChars: 3,
-            renderLineHighlight: "line",
-            scrollbar: {
-              vertical: "visible",
-              horizontal: "visible",
-              useShadows: false,
-              verticalHasArrows: false,
-              horizontalHasArrows: false,
-              horizontalScrollbarSize: 8,
-              verticalScrollbarSize: 8,
-            },
-            bracketPairColorization: { enabled: true },
-            guides: {
-              bracketPairs: true,
-              indentation: true,
-            },
+          value,
+          language: getMonacoLanguage(language),
+          fontSize: 16,
+          fontLigatures: true,
+          fontWeight: "400",
+          fontFamily: "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
+          lineNumbers: "on",
+          minimap: { enabled: false },
+          scrollBeyondLastLine: false,
+          automaticLayout: true,
+          tabSize: 2,
+          insertSpaces: true,
+          wordWrap: "on",
+          readOnly,
+          contextmenu: true,
+          selectOnLineNumbers: true,
+          roundedSelection: false,
+          cursorStyle: "line",
+          cursorBlinking: "blink",
+          folding: true,
+          foldingHighlight: true,
+          showFoldingControls: "always",
+          matchBrackets: "always",
+          autoIndent: "full",
+          formatOnPaste: true,
+          formatOnType: true,
+          suggestOnTriggerCharacters: true,
+          acceptSuggestionOnEnter: "on",
+          quickSuggestions: true,
+          parameterHints: { enabled: true },
+          hover: { enabled: true },
             smoothScrolling: true,
             mouseWheelZoom: true,
           }}

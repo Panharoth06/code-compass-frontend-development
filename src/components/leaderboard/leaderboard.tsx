@@ -10,11 +10,6 @@ export default function ModernCodeCompassLeaderboard() {
     document.documentElement.classList.add('dark')
   }, [])
 
-  // const toggleTheme = () => {
-  //   setIsDarkMode(!isDarkMode)
-  //   document.documentElement.classList.toggle('dark')
-  // }
-
   const leaderboardData = [
     { rank: 2, name: "Algorithm Ace", stars: 2847, problems: 156, country: "🇰🇭", avatar: "AA" },
     { rank: 3, name: "Code Conqueror", stars: 2654, problems: 142, country: "🇰🇭", avatar: "CC" },
@@ -57,23 +52,18 @@ export default function ModernCodeCompassLeaderboard() {
   }
 
   return (
-    <div className={`min-h-screen transition-all duration-500 font-['Barlow',sans-serif] ${
-      isDarkMode 
-        ? 'bg-gradient-to-br from-black via-slate-900 to-black' 
-        : 'bg-gradient-to-br from-gray-50 via-white to-gray-100'
+    <div className={`min-h-screen transition-all duration-200 ${
+      isDarkMode
+        ? 'bg-[rgba(0,0,0,0.9)]'
+        : 'bg-[rgba(255,255,255,0.9)]'
     }`}>
-      
-
-
       <div className="flex flex-col xl:flex-row min-h-screen">
-        
         {/* Left Sidebar */}
         <div className={`w-full xl:w-96 p-6 xl:p-8 border-b xl:border-b-0 xl:border-r transition-all duration-300 ${
           isDarkMode 
             ? 'border-white/10 bg-gradient-to-b from-slate-900/50 to-black/50' 
             : 'border-black/10 bg-gradient-to-b from-white/80 to-gray-50/80'
         } backdrop-blur-xl`}>
-          
           {/* Profile Section */}
           <div className="mb-8">
             <div className="flex items-center gap-5 mb-6">
@@ -100,10 +90,9 @@ export default function ModernCodeCompassLeaderboard() {
                 </p>
               </div>
             </div>
-
             {/* Achievement Badges */}
             <div className="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-3 mb-8">
-              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 hover:scale-105 ${
+              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 ${
                 isDarkMode 
                   ? 'bg-gradient-to-r from-yellow-500/10 to-yellow-600/10 border-yellow-500/20 text-yellow-400' 
                   : 'bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border-yellow-500/30 text-yellow-700'
@@ -111,8 +100,7 @@ export default function ModernCodeCompassLeaderboard() {
                 <Trophy className="w-5 h-5 flex-shrink-0" />
                 <span className="font-semibold text-sm">Top 10 Coders</span>
               </div>
-              
-              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 hover:scale-105 ${
+              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 ${
                 isDarkMode 
                   ? 'bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-blue-500/20 text-blue-400' 
                   : 'bg-gradient-to-r from-blue-500/20 to-blue-600/20 border-blue-500/30 text-blue-700'
@@ -120,8 +108,7 @@ export default function ModernCodeCompassLeaderboard() {
                 <Star className="w-5 h-5 flex-shrink-0" />
                 <span className="font-semibold text-sm">Top 50 Holders</span>
               </div>
-              
-              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 hover:scale-105 ${
+              <div className={`flex items-center gap-3 p-4 rounded-2xl border transition-all duration-300 ${
                 isDarkMode 
                   ? 'bg-gradient-to-r from-red-500/10 to-red-600/10 border-red-500/20 text-red-400' 
                   : 'bg-gradient-to-r from-red-500/20 to-red-600/20 border-red-500/30 text-red-700'
@@ -131,7 +118,6 @@ export default function ModernCodeCompassLeaderboard() {
               </div>
             </div>
           </div>
-
           {/* Programming Languages */}
           <div className="mb-8">
             <h3 className={`text-xl font-bold mb-6 flex items-center gap-2 ${
@@ -142,7 +128,7 @@ export default function ModernCodeCompassLeaderboard() {
             </h3>
             <div className="space-y-4">
               {programmingStats.languages.map((lang) => (
-                <div key={lang.name} className={`flex justify-between items-center p-4 rounded-xl border transition-all duration-300 hover:scale-105 ${
+                <div key={lang.name} className={`flex justify-between items-center p-4 rounded-xl border transition-all duration-300 ${
                   isDarkMode 
                     ? 'bg-white/5 border-white/10 hover:bg-white/10' 
                     : 'bg-black/5 border-black/10 hover:bg-black/10'
@@ -160,14 +146,9 @@ export default function ModernCodeCompassLeaderboard() {
               ))}
             </div>
           </div>
-
-          {/* Skills Section - Desktop Only */}
         </div>
-
         {/* Main Content */}
         <div className="flex-1 p-6 xl:p-8">
-          
-          {/* Header */}
           <div className="text-center mb-10">
             <h1 className={`text-4xl xl:text-6xl font-black mb-4 ${
               isDarkMode ? 'text-white' : 'text-gray-900'
@@ -180,22 +161,18 @@ export default function ModernCodeCompassLeaderboard() {
               Compete, Code, Conquer
             </p>
           </div>
-
           {/* Champion Highlight */}
           <div className="mb-10">
-            <div className={`relative p-8 rounded-3xl border-2 transition-all duration-500 hover:scale-[1.02] cursor-pointer group overflow-hidden ${
+            <div className={`relative p-8 rounded-3xl border-2 transition-all duration-500 cursor-pointer group overflow-hidden ${
               isDarkMode 
                 ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/30 border-[#CCF301]/30 hover:border-[#CCF301]/50' 
                 : 'bg-gradient-to-br from-white/80 to-gray-50/80 border-[#CCF301]/40 hover:border-[#CCF301]/60'
             } backdrop-blur-xl`}>
-              
-              {/* Background Effects */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#CCF301]/5 via-transparent to-[#CCF301]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#CCF301]/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
-              
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#CCF301]/10 rounded-full blur-3xl transition-transform duration-700"></div>
               <div className="relative flex flex-col lg:flex-row items-center gap-8">
                 <div className="relative">
-                  <div className={`w-24 h-24 lg:w-32 lg:h-32 rounded-3xl overflow-hidden border-4 transition-all duration-300 group-hover:scale-110 ${
+                  <div className={`w-24 h-24 lg:w-32 lg:h-32 rounded-3xl overflow-hidden border-4 transition-all duration-300 ${
                     isDarkMode 
                       ? 'border-[#CCF301]/40 shadow-2xl shadow-[#CCF301]/20' 
                       : 'border-[#CCF301]/60 shadow-2xl shadow-[#CCF301]/30'
@@ -209,7 +186,6 @@ export default function ModernCodeCompassLeaderboard() {
                     #1
                   </div>
                 </div>
-                
                 <div className="flex-1 text-center lg:text-left">
                   <div className="flex items-center justify-center lg:justify-start gap-3 mb-3">
                     <h2 className="text-3xl lg:text-4xl font-black text-[#CCF301]">
@@ -227,8 +203,6 @@ export default function ModernCodeCompassLeaderboard() {
                   }`}>
                     &quot;{topUser.quote}&quot;
                   </p>
-                  
-                  {/* Champion Stats */}
                   <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-6">
                     <div className={`px-4 py-2 rounded-xl border ${
                       isDarkMode 
@@ -251,7 +225,6 @@ export default function ModernCodeCompassLeaderboard() {
               </div>
             </div>
           </div>
-
           {/* Desktop Table */}
           <div className="hidden lg:block mb-8">
             <div className={`rounded-2xl border overflow-hidden backdrop-blur-xl ${
@@ -270,7 +243,7 @@ export default function ModernCodeCompassLeaderboard() {
                       <th className="text-left p-6 font-bold text-[#CCF301]">Rank</th>
                       <th className="text-left p-6 font-bold text-[#CCF301]">Coder</th>
                       <th className="text-right p-6 font-bold text-[#CCF301]">Stars</th>
-                      <th className="text-right p-6 font-bold text-[#CCF301]">Problems Solveds</th>
+                      <th className="text-right p-6 font-bold text-[#CCF301]">Problems Solved</th>
                       <th className="text-center p-6 font-bold text-[#CCF301]">Country</th>
                     </tr>
                   </thead>
@@ -278,7 +251,7 @@ export default function ModernCodeCompassLeaderboard() {
                     {leaderboardData.map((user) => (
                       <tr 
                         key={user.rank} 
-                        className={`border-b transition-all duration-300 hover:scale-[1.01] cursor-pointer group ${
+                        className={`border-b transition-all duration-300 cursor-pointer group ${
                           isDarkMode 
                             ? 'border-white/5 hover:bg-white/5' 
                             : 'border-black/5 hover:bg-black/5'
@@ -294,7 +267,7 @@ export default function ModernCodeCompassLeaderboard() {
                         </td>
                         <td className="p-6">
                           <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-[#CCF301]/80 to-[#CCF301]/60 flex items-center justify-center text-black font-bold text-sm transition-transform duration-300 group-hover:scale-110`}>
+                            <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-[#CCF301]/80 to-[#CCF301]/60 flex items-center justify-center text-black font-bold text-sm transition-transform duration-300`}>
                               {user.avatar}
                             </div>
                             <span className="font-semibold group-hover:text-[#CCF301] transition-colors duration-300">
@@ -315,7 +288,7 @@ export default function ModernCodeCompassLeaderboard() {
                           </span>
                         </td>
                         <td className="p-6 text-center">
-                          <div className="w-10 h-10 mx-auto bg-gradient-to-br from-blue-600 to-red-600 rounded-2xl flex items-center justify-center text-xl transition-transform duration-300 group-hover:scale-110">
+                          <div className="w-10 h-10 mx-auto bg-gradient-to-br from-blue-600 to-red-600 rounded-2xl flex items-center justify-center text-xl transition-transform duration-300">
                             {user.country}
                           </div>
                         </td>
@@ -326,13 +299,12 @@ export default function ModernCodeCompassLeaderboard() {
               </div>
             </div>
           </div>
-
           {/* Mobile Cards */}
           <div className="lg:hidden space-y-4 mb-8">
             {leaderboardData.map((user) => (
               <div 
                 key={user.rank} 
-                className={`p-6 rounded-2xl border transition-all duration-300 hover:scale-[1.02] cursor-pointer group ${
+                className={`p-6 rounded-2xl border transition-all duration-300 cursor-pointer group ${
                   isDarkMode 
                     ? 'bg-slate-900/30 border-white/10 hover:bg-slate-800/50' 
                     : 'bg-white/60 border-black/10 hover:bg-white/80'
@@ -346,7 +318,7 @@ export default function ModernCodeCompassLeaderboard() {
                         #{user.rank.toString().padStart(2, '0')}
                       </span>
                     </div>
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-[#CCF301]/80 to-[#CCF301]/60 flex items-center justify-center text-black font-bold text-sm transition-transform duration-300 group-hover:scale-110`}>
+                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br from-[#CCF301]/80 to-[#CCF301]/60 flex items-center justify-center text-black font-bold text-sm transition-transform duration-300`}>
                       {user.avatar}
                     </div>
                     <div>
@@ -357,11 +329,10 @@ export default function ModernCodeCompassLeaderboard() {
                       </span>
                     </div>
                   </div>
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 rounded-xl flex items-center justify-center text-lg transition-transform duration-300 group-hover:scale-110">
+                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 rounded-xl flex items-center justify-center text-lg transition-transform duration-300">
                     {user.country}
                   </div>
                 </div>
-                
                 <div className="grid grid-cols-3 gap-4">
                   <div className="text-center">
                     <div className="text-2xl font-bold text-[#CCF301]">
@@ -380,7 +351,7 @@ export default function ModernCodeCompassLeaderboard() {
                     </div>
                   </div>
                   <div className="text-center flex justify-center">
-                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 rounded-xl flex items-center justify-center text-lg transition-transform duration-300 group-hover:scale-110">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-red-600 rounded-xl flex items-center justify-center text-lg transition-transform duration-300">
                       {user.country}
                     </div>
                   </div>
@@ -388,10 +359,9 @@ export default function ModernCodeCompassLeaderboard() {
               </div>
             ))}
           </div>
-
           {/* View More Button */}
           <div className="text-center">
-            <button className={`px-8 py-4 rounded-2xl border-2 font-bold text-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl ${
+            <button className={`px-8 py-4 rounded-2xl border-2 font-bold text-lg transition-all duration-300 hover:shadow-2xl ${
               isDarkMode 
                 ? 'border-[#CCF301] text-[#CCF301] hover:bg-[#CCF301] hover:text-black hover:shadow-[#CCF301]/30' 
                 : 'border-[#CCF301] text-[#CCF301] hover:bg-[#CCF301] hover:text-black hover:shadow-[#CCF301]/40'

@@ -22,9 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={barlow.className}>
       <body className={`${barlow.variable} antialiased`}>
-        <Suspense fallback={null}>
-          <main>{children}</main>
-        </Suspense>
+        <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
       </body>
     </html>

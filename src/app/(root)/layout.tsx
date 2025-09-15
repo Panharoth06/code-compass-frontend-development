@@ -6,11 +6,6 @@ import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import SessionProviderWrapper from "../SessionProviderWrapper";
 
-const barlow = Barlow({
-  weight: "400",
-  variable: "--font-barlow",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "CodeCompass",
@@ -21,17 +16,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={barlow.className}>
-      <body className={`${barlow.variable} antialiased`}>
-        <SessionProviderWrapper>
-          <StoreProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </StoreProvider>
-        </SessionProviderWrapper>
-      </body>
-    </html>
+    <div className="dark:bg-black bg-white">
+      <SessionProviderWrapper>
+        <StoreProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </StoreProvider>
+      </SessionProviderWrapper>
+    </div>
   );
 }
 

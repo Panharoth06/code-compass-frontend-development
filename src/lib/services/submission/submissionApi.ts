@@ -1,4 +1,4 @@
-import { Judge0Response } from "@/lib/types/jugde0/jugde0Response";
+import { Submission } from "@/lib/types/submission/Submission";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 
@@ -10,10 +10,10 @@ export const submissionApi = createApi ({
         }
     ),
     endpoints: (builder) => ({
-        getSubmission: builder.query<Judge0Response, string>({
-            query: (token: string) => `submissions/${token}`,
+        postSubmission: builder.mutation<Submission, string>({
+            query: (problem_id: string) => `submissions/${problem_id}`,
         }),
     }),
 });
 
-export const { useGetSubmissionQuery } = submissionApi;
+export const { usePostSubmissionMutation } = submissionApi;

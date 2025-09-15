@@ -14,7 +14,7 @@ export default function Home() {
     if (searchParams.has('code') || searchParams.has('session_state')) {
       router.replace('/'); // removes query params
     }
-  }, []);
+  }, [router, searchParams]);
   return (
     <div>
       <Homepage />

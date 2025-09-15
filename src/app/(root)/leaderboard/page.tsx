@@ -1,3 +1,9 @@
+import ModernCodeCompassLeaderboard from "@/components/leaderboard/leaderboard";
+
 export default function page() {
-  return <h3>Hello leaderboard</h3>;
+  return ( 
+    <>
+      <ModernCodeCompassLeaderboard/>
+    </>
+  );
 }

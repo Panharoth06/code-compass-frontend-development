@@ -13,12 +13,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
-// import cpp from '../../img/cpp.png';
-// import js from '../../public/img/js.png';
-// import javabadges from '../../public/img/javaBadges.png';
-// import pythonbadges from '../../public/img/pythonBadges.png';
-// import cppbadges from '../../public/img/cppBadges.png';
-
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState("Recent AC");
   const [profileImage, setProfileImage] = useState<string | null>(null);

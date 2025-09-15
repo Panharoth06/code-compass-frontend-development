@@ -1,26 +1,37 @@
-export interface ProblemResponse  {
-    id: number;
-    best_memory_usage: number;
-    best_time_execution: number;
-    coin: string;
-    description: string;
-    difficulty: "EASY" | "MEDIUM" | "HARD";
-    star: "ONE" | "TWO" | "THREE";
-    title: string;
-    test_cases: TestCase[];
-    hints: Hint[];
-    tag_names: string[];
-    author: string;
+export interface ProblemResponse {
+  id: number;
+  best_memory_usage: number;
+  best_time_execution: number;
+  coin: number;
+  description: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  star: "ONE" | "TWO" | "THREE";
+  title: string;
+  test_cases: TestCase[];
+  hints: Hint[];
+  tag_names: string[];
+  author: string;
 }
 
 export interface TestCase {
-    stdin: string;
-    expected_outputs: string;
+  stdin: string;
+  expected_outputs: string;
+}
+
+export interface TestResult {
+  id: string | number;
+  status: "passed" | "failed" | "error" | "timeout";
+  output?: string;
+  expected?: string;
+  runtime?: string;
+  error?: string;
+  memory?: string;
 }
 
 export interface Hint {
-    hint: string;
-    isLocked: boolean;
+  id: number;
+  description: string;
+  is_locked: boolean;
 }
 
 // {

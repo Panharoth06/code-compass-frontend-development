@@ -26,6 +26,8 @@ import {
 import { signIn, useSession } from "next-auth/react";
 import AuthButtons from "./AuthComponents/AuthButton";
 
+import codecompasslogo from "../../public/codecompass-2.png";
+
 // Uiverse Toggle Component
 const UiverseToggle = () => {
   const [isDark, setIsDark] = useState(true);
@@ -38,8 +40,6 @@ const UiverseToggle = () => {
     setIsDark(!isDark);
     document.documentElement.classList.toggle("dark");
   };
-
-  const { data: session } = useSession()
 
   return (
     <div className="uiverse-toggle">
@@ -223,7 +223,7 @@ const Navbar = () => {
             backdropFilter: isScrolled ? "blur(16px)" : "blur(0px)",
             backgroundColor: isScrolled
               ? "rgba(255, 255, 255, 0.1)"
-              : "rgba(255, 255, 255, 0)",
+              : "",
             boxShadow: isScrolled
               ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
               : "none",
@@ -244,7 +244,7 @@ const Navbar = () => {
             animate={{
               backgroundColor: isScrolled
                 ? "rgba(17, 24, 39, 0.8)"
-                : "rgba(17, 24, 39, 0)",
+                : "",
             }}
             transition={{
               type: "spring",
@@ -273,10 +273,10 @@ const Navbar = () => {
                       transition={{ type: "spring", stiffness: 400 }}
                     >
                       <Image
-                        src="/image/logo2.svg"
+                        src={codecompasslogo}
                         alt="CodeCompass Logo"
-                        width={48}
-                        height={48}
+                        width={55}
+                        height={55}
                         className="w-12 h-12 object-contain"
                         priority
                       />
@@ -291,14 +291,14 @@ const Navbar = () => {
                     </motion.div>
                   </div>
 
-                  <div className="flex flex-col">
+                  {/* <div className="flex flex-col">
                     <motion.span
                       className="text-xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-[#CCF301] transition-colors duration-200"
                       whileHover={{ x: 2 }}
                     >
                       CodeCompass
                     </motion.span>
-                  </div>
+                  </div> */}
                 </Link>
               </motion.div>
 

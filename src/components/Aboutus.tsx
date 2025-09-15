@@ -127,7 +127,6 @@ function TeamCard({
   image,
   bio,
   size = "w-48 h-48",
-  index = 0,
 }: TeamCardProps) {
   return (
     <div className="flex flex-col items-center text-center">
@@ -173,7 +172,7 @@ function TeamCard({
 }
 
 // =================== Main Page ===================
-export default function Page() {
+export default function About() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // Detect system dark mode
@@ -182,11 +181,6 @@ export default function Page() {
     setIsDarkMode(dark);
   }, []);
 
-  const sectionClass = `min-h-screen transition-all duration-500 font-['Barlow',sans-serif] py-12 px-4 md:px-20 ${
-    isDarkMode
-      ? "bg-gradient-to-br from-black via-slate-900 to-black text-white"
-      : "bg-gradient-to-br from-gray-50 via-white to-gray-100 text-black"
-  }`;
 
   return (
     <div>

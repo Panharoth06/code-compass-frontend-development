@@ -13,11 +13,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-        <SessionProviderWrapper>
-          <StoreProvider>
-            <main>{children}</main>
-          </StoreProvider>
-        </SessionProviderWrapper>
+    <SessionProviderWrapper>
+      <StoreProvider>
+        <main>{children}</main>
+      </StoreProvider>
+    </SessionProviderWrapper>
   );
 }
 

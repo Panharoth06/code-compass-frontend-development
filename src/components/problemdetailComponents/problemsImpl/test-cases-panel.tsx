@@ -1,20 +1,18 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
-import type { TestCaseResult } from "@/lib/code-executor";
+// import type { TestCaseResult } from "@/lib/code-executor";
 import type { TestCase } from "@/types/testcase";
 
 interface TestCasesPanelProps {
   testCases: TestCase[];
-  testResults: TestCaseResult[];
+  // testResults: TestCaseResult[];
   onTestCasesChange: (cases: TestCase[]) => void;
   onRunTests: () => void;
   isRunning: boolean;
 }
 
 export function TestCasesPanel({
-  testCases,
-  testResults,
+  // testResults,
   // onTestCasesChange,
   onRunTests,
   isRunning,
@@ -27,7 +25,7 @@ export function TestCasesPanel({
           {isRunning ? "Running..." : "Run Tests"}
         </Button>
       </div>
-      <div className="flex-1 overflow-auto p-4 space-y-2">
+      {/* <div className="flex-1 overflow-auto p-4 space-y-2">
         {testCases.map((testCase) => {
           const result = testResults.find((r) => r.testCaseId === testCase.id);
 
@@ -67,8 +65,8 @@ export function TestCasesPanel({
               </p>
             </div>
           );
-        })}
-      </div>
+        })} */}
+      {/* </div> */}
     </div>
   );
 }
