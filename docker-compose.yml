@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  nextjs:
+    image: ${DOCKER_USERNAME}/next-code-compass:latest
+    container_name: next-code-compass
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - webnet
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+networks:
+  webnet:
+    driver: bridge

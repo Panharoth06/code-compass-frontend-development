@@ -75,7 +75,7 @@ export default function ContactUsPage() {
     setIsSubmitting(true);
     
     setTimeout(() => {
-      alert('Message sent successfully! We\'ll get back to you within 24 hours.');
+      alert("Message sent successfully! We&apos;ll get back to you within 24 hours.");
       setFormData({
         firstName: '',
         lastName: '',
@@ -114,12 +114,13 @@ export default function ContactUsPage() {
           <div className={`text-center mb-8 sm:mb-12 lg:mb-16 transition-all duration-1000 ease-out ${
             animationStage >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight font-mono">
               Get in <span className="text-[#CCF301]">Touch</span>
             </h2>
-            <p className={`text-base sm:text-lg lg:text-xl ${themeClasses.textSecondary} max-w-2xl mx-auto px-2`}>
-              Have questions about CodeCompass? Need technical support? We&aposre here to help you on your coding journey.
-            </p>
+            <p className={`text-base sm:text-lg lg:text-xl ${themeClasses.textSecondary} max-w-2xl mx-auto px-2 font-sans`}>
+  {"Have questions about CodeCompass? Need technical support? We're here to help you on your coding journey."}
+</p>
+
           </div>
 
           <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 lg:mb-16">
@@ -128,15 +129,15 @@ export default function ContactUsPage() {
               animationStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
               <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 transition-all duration-300 hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)]`}>
-                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center" >
-                  <span className="w-2 h-2 bg-[#CCF301] roued-full mr-3"></span>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center font-mono">
+                  <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3"></span>
                   Send us a message
                 </h3>
                 
                 <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
                     <div className="group">
-                      <label htmlFor="firstName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                      <label htmlFor="firstName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301] font-sans`}>
                         First Name
                       </label>
                       <input 
@@ -145,13 +146,12 @@ export default function ContactUsPage() {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base font-sans`}
                         placeholder="Enter your first name"
-                        
                       />
                     </div>
                     <div className="group">
-                      <label htmlFor="lastName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                      <label htmlFor="lastName" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301] font-sans`}>
                         Last Name
                       </label>
                       <input 
@@ -160,15 +160,14 @@ export default function ContactUsPage() {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base font-sans`}
                         placeholder="Enter your last name"
-                      
                       />
                     </div>
                   </div>
                   
                   <div className="group">
-                    <label htmlFor="email" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} style={{ fontFamily: 'Barlow, sans-serif' }}>
+                    <label htmlFor="email" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301] font-sans`}>
                       Email Address
                     </label>
                     <input 
@@ -177,14 +176,13 @@ export default function ContactUsPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base font-sans`}
                       placeholder="your@email.com"
-                     
                     />
                   </div>
                   
                   <div className="group">
-                    <label htmlFor="subject" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} >
+                    <label htmlFor="subject" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301] font-sans`}>
                       Subject
                     </label>
                     <select 
@@ -192,8 +190,7 @@ export default function ContactUsPage() {
                       name="subject"
                       value={formData.subject}
                       onChange={handleInputChange}
-                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base`}
-                      style={{ fontFamily: 'Barlow, sans-serif' }}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 text-sm sm:text-base font-sans`}
                     >
                       <option value="">Select a topic</option>
                       <option value="technical">Technical Support</option>
@@ -206,7 +203,7 @@ export default function ContactUsPage() {
                   </div>
                   
                   <div className="group">
-                    <label htmlFor="message" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301]`} >
+                    <label htmlFor="message" className={`block text-sm font-medium ${themeClasses.textSecondary} mb-2 transition-all duration-200 group-focus-within:text-[#CCF301] font-sans`}>
                       Message
                     </label>
                     <textarea 
@@ -215,19 +212,20 @@ export default function ContactUsPage() {
                       rows={4}
                       value={formData.message}
                       onChange={handleInputChange}
-                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 resize-none text-sm sm:text-base`}
+                      className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 ${themeClasses.inputBg} border ${themeClasses.inputBorder} rounded-lg ${themeClasses.inputText} ${themeClasses.placeholder} focus:outline-none focus:border-[#CCF301] focus:shadow-[0_0_0_3px_rgba(204,243,1,0.1)] transition-all duration-200 resize-none text-sm sm:text-base font-sans`}
                       placeholder="Tell us how we can help you..."
-                      
                     />
                   </div>
                   
-                  <button 
-                    type="submit" 
-                    disabled={isSubmitting}
-                    className="w-full bg-[#CCF301] hover:bg-[#B8E000] text-black font-semibold py-3 px-6 rounded-lg transition-all duration-300 shadow-[0_0_20px_rgba(204,243,1,0.3)] hover:shadow-[0_0_30px_rgba(204,243,1,0.5)] sm:hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm sm:text-base"
-                  >
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </button>
+                  <div className="flex justify-center">
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="bg-[#CCF301] hover:bg-[#B8E000] text-black font-medium py-2.5 px-8 rounded-lg transition-all duration-300 shadow-[0_0_15px_rgba(204,243,1,0.2)] hover:shadow-[0_0_25px_rgba(204,243,1,0.4)] sm:hover:scale-[1.05] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm font-mono"
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -238,7 +236,7 @@ export default function ContactUsPage() {
               <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
                 animationStage >= 3 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
               }`}>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center" >
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center font-mono">
                   <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
                   Quick Contact
                 </h3>
@@ -251,8 +249,8 @@ export default function ContactUsPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} >Email</p>
-                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`}>codecompass.istad.co@gmail.com</p>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base font-mono`}>Email</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm font-sans`}>support@codecompass.com</p>
                     </div>
                   </div>
                   
@@ -263,8 +261,8 @@ export default function ContactUsPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} >Location</p>
-                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`}>San Francisco, CA</p>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base font-mono`}>Location</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm font-sans`}>San Francisco, CA</p>
                     </div>
                   </div>
                   
@@ -275,8 +273,8 @@ export default function ContactUsPage() {
                       </svg>
                     </div>
                     <div>
-                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base`} >Response Time</p>
-                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm`} >Within 24 hours</p>
+                      <p className={`font-medium ${themeClasses.text} text-sm sm:text-base font-mono`}>Response Time</p>
+                      <p className={`${themeClasses.textSecondary} text-xs sm:text-sm font-sans`}>Within 24 hours</p>
                     </div>
                   </div>
                 </div>
@@ -286,15 +284,15 @@ export default function ContactUsPage() {
               <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
                 animationStage >= 4 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
               }`}>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center font-mono">
                   <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
                   Need Help?
                 </h3>
-                <p className={`${themeClasses.textSecondary} mb-3 sm:mb-4 text-sm sm:text-base`} >
+                <p className={`${themeClasses.textSecondary} mb-3 sm:mb-4 text-sm sm:text-base font-sans`}>
                   Check out our FAQ section for quick answers to common questions.
                 </p>
                 <a href="#" className="inline-flex items-center text-[#CCF301] hover:text-[#B8E000] transition-all duration-300 sm:hover:translate-x-2 group text-sm sm:text-base">
-                  <span>View FAQ</span>
+                  <span className="font-mono">View FAQ</span>
                   <svg className="w-4 h-4 ml-2 transition-transform duration-300 group-hover:translate-x-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
                   </svg>
@@ -305,7 +303,7 @@ export default function ContactUsPage() {
               <div className={`${themeClasses.cardBg} backdrop-blur-xl border ${themeClasses.cardBorder} rounded-xl sm:rounded-2xl p-4 sm:p-6 transition-all duration-700 ease-out hover:transform sm:hover:translate-y-[-8px] hover:shadow-[0_25px_50px_-12px_rgba(204,243,1,0.25)] ${
                 animationStage >= 5 ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-8 scale-95'
               }`}>
-                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center font-mono">
                   <span className="w-2 h-2 bg-[#CCF301] rounded-full mr-3 animate-pulse"></span>
                   Follow Us
                 </h3>
@@ -342,99 +340,6 @@ export default function ContactUsPage() {
             </div>
           </div>
         </div>
-
-        {/* Custom CSS for animations */}
-        <style jsx>{`
-          @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&family=Barlow:wght@300;400;500;600&display=swap');
-          
-          @keyframes fadeInUp {
-            from {
-              opacity: 0;
-              transform: translateY(20px) scale(0.95);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
-          }
-          
-          @keyframes float {
-            0%, 100% {
-              transform: translateY(0);
-            }
-            50% {
-              transform: translateY(-10px);
-            }
-          }
-          
-          .animate-float {
-            animation: float 3s ease-in-out infinite;
-          }
-          
-          /* Smooth scrollbar */
-          ::-webkit-scrollbar {
-            width: 6px;
-          }
-          
-          @media (min-width: 640px) {
-            ::-webkit-scrollbar {
-              width: 8px;
-            }
-          }
-          
-          ::-webkit-scrollbar-track {
-            background: ${isDarkMode ? '#1f2937' : '#f3f4f6'};
-            border-radius: 4px;
-          }
-          
-          ::-webkit-scrollbar-thumb {
-            background: #CCF301;
-            border-radius: 4px;
-          }
-          
-          ::-webkit-scrollbar-thumb:hover {
-            background: #B8E000;
-          }
-          
-          /* Mobile optimizations */
-          @media (max-width: 640px) {
-            /* Prevent horizontal scroll */
-            body {
-              overflow-x: hidden;
-            }
-            
-            /* Touch-friendly sizing */
-            input, textarea, select, button {
-              min-height: 44px;
-            }
-            
-            /* Better tap targets */
-            a, button {
-              min-height: 44px;
-              min-width: 44px;
-            }
-            
-            /* Disable hover effects on mobile */
-            @media (hover: none) {
-              .hover\\:scale-\\[1\\.02\\] {
-                transform: none !important;
-              }
-              
-              .hover\\:translate-y-\\[-8px\\] {
-                transform: none !important;
-              }
-              
-              .hover\\:translate-x-2 {
-                transform: none !important;
-              }
-            }
-          }
-          
-          /* Ensure proper touch scrolling */
-          * {
-            -webkit-overflow-scrolling: touch;
-          }
-        `}</style>
       </div>
     </div>
   );
