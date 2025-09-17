@@ -49,7 +49,6 @@ export const validateEnvironmentVariables = () => {
   return process.env as Record<string, string>;
 };
 
-
 // Initialize environment variables
 const env = validateEnvironmentVariables();
 
@@ -264,37 +263,34 @@ export const authOptions: AuthOptions = {
     async redirect({ url, baseUrl }) {
       console.log("NextAuth redirect called:", { url, baseUrl });
 
-      // Handle relative URLs
+      // If it's a relative path, build absolute URL
       if (url.startsWith("/")) {
-        const fullUrl = `${baseUrl}${url}`;
-        console.log("Handling relative URL:", fullUrl);
-        return fullUrl;
+        return `${baseUrl}${url}`;
       }
 
-      // Handle same origin URLs
+      // Only allow redirects that share the same origin
       try {
         const urlObj = new URL(url);
+
+        // Block localhost in production
+        if (
+          process.env.NODE_ENV === "production" &&
+          urlObj.hostname === "localhost"
+        ) {
+          console.warn(
+            "Blocked localhost redirect in production, falling back to baseUrl"
+          );
+          return baseUrl;
+        }
+
         if (urlObj.origin === baseUrl) {
-          console.log("Allowing same origin URL:", url);
           return url;
         }
-      } catch (error) {
-        console.error("Error parsing URL:", error);
+      } catch (err) {
+        console.error("Error parsing URL:", err);
       }
 
-      // Special handling for OAuth callbacks
-      // After successful OAuth, redirect to your custom callback handler
-      if (url === baseUrl || url === `${baseUrl}/`) {
-        const callbackUrl = `${baseUrl}/oauth-callback`;
-        console.log(
-          "Default redirect - sending to OAuth callback:",
-          callbackUrl
-        );
-        return callbackUrl;
-      }
-
-      // Fallback to base URL
-      console.log("Fallback to baseUrl:", baseUrl);
+      // Fallback
       return baseUrl;
     },
 
