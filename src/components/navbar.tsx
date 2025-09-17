@@ -23,7 +23,7 @@ import {
   useScroll,
   useMotionValueEvent,
 } from "framer-motion";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import AuthButtons from "./AuthComponents/AuthButton";
 
 import codecompasslogo from "../../public/codecompass-2.png";

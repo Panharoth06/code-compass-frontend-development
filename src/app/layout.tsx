@@ -4,6 +4,8 @@ import { Barlow } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Suspense } from "react";
 import "./globals.css";
+import SessionProviderWrapper from "./SessionProviderWrapper";
+import StoreProvider from "./StoreProvider";
 
 const barlow = Barlow({
   weight: "400",
@@ -22,7 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={barlow.className}>
       <body className={`${barlow.variable} antialiased`}>
-        <Suspense fallback={null}>{children}</Suspense>
+        <SessionProviderWrapper>
+          <StoreProvider>
+            {" "}
+            <Suspense fallback={null}>{children}</Suspense>
+          </StoreProvider>
+        </SessionProviderWrapper>
         <Analytics />
       </body>
     </html>

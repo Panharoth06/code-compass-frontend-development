@@ -1,19 +1,30 @@
-import { Submission } from "@/lib/types/submission/Submission";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { BatchSubmissionResult, Submission } from "@/lib/types/submission/Submission";
+import { baseApi } from "../baseApi";
 
-
-export const submissionApi = createApi ({
-    reducerPath: "submissionApi",
-    baseQuery: fetchBaseQuery(
-        {
-            baseUrl: process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS
-        }
-    ),
-    endpoints: (builder) => ({
-        postSubmission: builder.mutation<Submission, string>({
-            query: (problem_id: string) => `submissions/${problem_id}`,
-        }),
+export const submissionApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    postBatchSubmissions: builder.mutation<BatchSubmissionResult, { problem_id: string; body: Submission }>({
+      query: ({ problem_id, body }) => ({
+        url: `submissions/batch/${problem_id}`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Submissions", "Users", "Problems"],
     }),
+
+    runBatchSubmissions: builder.mutation<BatchSubmissionResult, Submission >({
+      query: (body) => ({
+        url: `submissions/run/batch`,
+        method: "POST",
+        body,
+      }),
+      invalidatesTags: ["Submissions"],
+    }),
+  }),
 });
 
-export const { usePostSubmissionMutation } = submissionApi;
+
+export const {
+  usePostBatchSubmissionsMutation,
+  useRunBatchSubmissionsMutation,
+} = submissionApi;

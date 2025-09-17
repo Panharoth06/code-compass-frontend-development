@@ -1,11 +1,7 @@
 import { SignUpResponse, SignUpRequest } from "@/lib/types/auth/signUp";
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { baseApi } from "../baseApi";
 
-export const signUpApi = createApi({
-  reducerPath: "signUpApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS,
-  }),
+export const signUpApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     signup: builder.mutation<SignUpResponse, SignUpRequest>({
       query: (data) => ({
@@ -13,6 +9,7 @@ export const signUpApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: () => [{ type: "Auth" }, { type: "Users" }],
     }),
   }),
 });

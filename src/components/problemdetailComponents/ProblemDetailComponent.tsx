@@ -10,6 +10,7 @@ import ProblemDescription from "./problemsImpl/problem-description";
 import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/monaco-editor";
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
 import { TestCase } from "@/lib/types/problem/problemResponse";
+import TestAndOutputPanel from "./problemsImpl/code-output";
 // import TestAndOutputPanel from "./problemsImpl/code-output";
 
 interface ProblemDetailsProps {
@@ -218,7 +219,7 @@ int main() {
           minSize={isMobile ? 25 : 20}     // Ensures output is always accessible
           className="flex flex-col"
         >
-          {/* <TestAndOutputPanel problem={data} code={code} language={language} /> */}
+          <TestAndOutputPanel problem={data} code={code} language={language} />
         </Panel>
       </PanelGroup>
     </Panel>

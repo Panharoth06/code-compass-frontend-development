@@ -45,13 +45,13 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
   const getDifficultyColor = (difficulty: string | undefined) => {
     switch (difficulty) {
       case "Easy":
-        return "bg-green-600 text-white dark:bg-green-900 dark:text-green-200 text-base";
+        return "bg-green-500/15 border-green-500/20 text-green-600 dark:text-green-400 text-base";
       case "Medium":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 text-base";
+        return "bg-orange-500/15 border-orange-500/20 text-orange-600 dark:text-orange-400 text-base";
       case "Hard":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 text-base";
+        return "bg-red-500/15 border-red-500/20 dark:text-red-200 text-base";
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200 text-base";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 text-red-600 dark:text-red-400 text-base";
     }
   };
 

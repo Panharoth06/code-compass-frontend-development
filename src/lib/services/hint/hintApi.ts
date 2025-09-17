@@ -1,25 +1,16 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getSession } from "next-auth/react";
+import {baseApi}  from "../baseApi";
 
-export const hintApi = createApi({
-  reducerPath: "hintApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS,
-    prepareHeaders: async (headers) => {
-      const session = await getSession();
-      if (session?.access_token) {
-        headers.set("Authorization", `Bearer ${session.access_token}`);
-      }
-      headers.set("Content-Type", "application/json");
-      return headers;
-    },
-  }),
+export const hintApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     unlockHint: builder.mutation<string, number>({
       query: (hintId) => ({
-        url: `hints/${hintId}`,
+        url: `hints/${hintId}/unlock`,
         method: 'PATCH',
       }),
+      // Fixed: Added curly braces around the object
+      invalidatesTags: (hintId) => [
+        { type: 'Hints', id: hintId, }
+      ]
     }),
   }),
 });

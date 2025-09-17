@@ -1,4 +1,4 @@
-const BASE_URL = `${process.env.OIDC_ISSUER}/protocol/openid-connect`;
+const BASE_URL = `${process.env.BASE_URL_CODE_COMPASS}`;
 const oidcFetch = async (endpoint: string, body: URLSearchParams) => {
   const response = await fetch(`${BASE_URL}${endpoint}`, {
     method: "POST",
@@ -15,10 +15,7 @@ export const refreshTokenRequest = (refresh_token: string) =>
   oidcFetch(
     "/token",
     new URLSearchParams({
-      grant_type: "refresh_token",
       refresh_token,
-      client_id: process.env.OIDC_CLIENT_ID!,
-      client_secret: process.env.OIDC_CLIENT_SECRET!,
     })
   );
 //handle logout request

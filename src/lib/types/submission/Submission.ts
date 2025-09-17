@@ -13,17 +13,16 @@ export interface SubmissionResult {
     } | undefined;
 }
 
-export interface Submission {
-  source_code: "string",
-  language_id: "string",
-  stdin: [
-    "string"
-  ],
-  expected_outputs: [
-    "string"
-  ]
+export interface BatchSubmissionResult {
+  submissions: SubmissionResult[];
 }
 
+export interface Submission {
+  source_code: string,
+  language_id: string| number,
+  stdin: string[],
+  expected_outputs:string[]
+}
 
 export interface TestResult {
   id: string | number

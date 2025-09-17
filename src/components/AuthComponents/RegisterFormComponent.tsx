@@ -82,8 +82,7 @@ const RegisterForm: React.FC = () => {
   function onSubmit(data: z.infer<typeof formSchema>) {
   signup(data)
     .unwrap()
-    .then((res) => {
-      console.log("✅ Registered successfully:", res);
+    .then(() => {
       toast.success("Registered successfully");
       signIn("keycloak");
     })
