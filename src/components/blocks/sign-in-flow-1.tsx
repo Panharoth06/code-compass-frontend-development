@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 
+
 import * as THREE from "three";
 import RegisterForm from "../AuthComponents/RegisterFormComponent";
 import { Toaster } from "react-hot-toast";
