@@ -11,8 +11,8 @@ const validateEnvironmentVariables = () => {
     OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
     OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
     OIDC_ISSUER: process.env.OIDC_ISSUER,
-    GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    CCP_GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    CCP_GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
@@ -155,8 +155,8 @@ export const authOptions: AuthOptions = {
       },
     }),
     GithubProvider({
-      clientId: env.GITHUB_CLIENT_ID,
-      clientSecret: env.GITHUB_CLIENT_SECRET,
+      clientId: env.CCP_GITHUB_CLIENT_ID,
+      clientSecret: env.CCP_GITHUB_CLIENT_SECRET,
       // GitHub specific configurations
       httpOptions: {
         timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
