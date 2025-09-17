@@ -7,6 +7,12 @@ import GoogleProvider from "next-auth/providers/google";
 
 // Validate required environment variables at startup
 export const validateEnvironmentVariables = () => {
+  // Skip validation during build process (when NEXTAUTH_URL is not available)
+  if (!process.env.NEXTAUTH_URL && process.env.NODE_ENV !== "development") {
+    console.warn("⚠️ Skipping env validation during build process");
+    return process.env as Record<string, string>;
+  }
+
   // Skip validation if explicitly allowed
   if (process.env.SKIP_ENV_VALIDATION === "true") {
     console.warn("⚠️ Skipping environment variable validation (forced)");
@@ -19,7 +25,7 @@ export const validateEnvironmentVariables = () => {
     return process.env as Record<string, string>;
   }
 
-  // Strict validation in production
+  // Strict validation in production (runtime only)
   const requiredVars = {
     OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
     OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
@@ -44,6 +50,8 @@ export const validateEnvironmentVariables = () => {
 };
 
 
+// Initialize environment variables
+const env = validateEnvironmentVariables();
 
 // Constants for token management
 const TOKEN_CONFIG = {
@@ -55,44 +63,6 @@ const TOKEN_CONFIG = {
   HTTP_TIMEOUT: 10000, // 10 seconds
   RETRY_DELAY_MS: 2000, // 2 seconds base delay
 } as const;
-
-// Initialize environment variables
-const env = validateEnvironmentVariables();
-
-// Enhanced HTTP client with timeout and retry logic
-// const createHttpClient = () => {
-//   return {
-//     async fetch(url: string, options: RequestInit = {}): Promise<Response> {
-//       const controller = new AbortController();
-//       const timeoutId = setTimeout(
-//         () => controller.abort(),
-//         TOKEN_CONFIG.HTTP_TIMEOUT
-//       );
-
-//       try {
-//         const response = await fetch(url, {
-//           ...options,
-//           signal: controller.signal,
-//           headers: {
-//             "Content-Type": "application/json",
-//             "User-Agent": "NextAuth.js",
-//             ...options.headers,
-//           },
-//         });
-//         clearTimeout(timeoutId);
-//         return response;
-//       } catch (error) {
-//         clearTimeout(timeoutId);
-//         if (error instanceof Error && error.name === "AbortError") {
-//           throw new Error(
-//             `Request timeout after ${TOKEN_CONFIG.HTTP_TIMEOUT}ms`
-//           );
-//         }
-//         throw error;
-//       }
-//     },
-//   };
-// };
 
 // Utility function for safe token refresh with retries
 const safeRefreshToken = async (
