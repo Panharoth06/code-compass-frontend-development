@@ -6,7 +6,20 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 
 // Validate required environment variables at startup
-const validateEnvironmentVariables = () => {
+export const validateEnvironmentVariables = () => {
+  // Skip validation if explicitly allowed
+  if (process.env.SKIP_ENV_VALIDATION === "true") {
+    console.warn("⚠️ Skipping environment variable validation (forced)");
+    return process.env as Record<string, string>;
+  }
+
+  // In dev mode, just warn instead of crashing
+  if (process.env.NODE_ENV !== "production") {
+    console.warn("⚠️ Skipping strict env validation in development");
+    return process.env as Record<string, string>;
+  }
+
+  // Strict validation in production
   const requiredVars = {
     OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
     OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
@@ -20,17 +33,17 @@ const validateEnvironmentVariables = () => {
   };
 
   const missing = Object.entries(requiredVars)
-    .filter(([, value]) => !value)
-    .map(([key]) => key);
+    .filter(([_, v]) => !v)
+    .map(([k]) => k);
 
-  if (missing.length > 0) {
-    throw new Error(
-      `Missing required environment variables: ${missing.join(", ")}`
-    );
+  if (missing.length) {
+    throw new Error(`❌ Missing required env vars: ${missing.join(", ")}`);
   }
 
-  return requiredVars as Record<keyof typeof requiredVars, string>;
+  return process.env as Record<string, string>;
 };
+
+
 
 // Constants for token management
 const TOKEN_CONFIG = {
