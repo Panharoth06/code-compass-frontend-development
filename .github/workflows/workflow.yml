@@ -59,6 +59,12 @@ jobs:
             export OIDC_ISSUER=${{ secrets.OIDC_ISSUER }}
             export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
             export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            export NEXT_PUBLIC_BASE_URL_CODE_COMPASS=${{ secrets.NEXT_PUBLIC_BASE_URL_CODE_COMPASS }}
+            export CCP_GITHUB_CLIENT_ID=${{ secrets.CCP_GITHUB_CLIENT_ID }}
+            export CCP_GITHUB_CLIENT_SECRET=${{ secrets.CCP_GITHUB_CLIENT_SECRET }}
+            export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            
 
             cd front/
             docker compose down
