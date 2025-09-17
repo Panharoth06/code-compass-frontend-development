@@ -42,7 +42,8 @@ export const validateEnvironmentVariables = () => {
   return process.env as Record<string, string>;
 };
 
-
+// Initialize environment variables
+const env = validateEnvironmentVariables();
 
 // Constants for token management
 const TOKEN_CONFIG = {
@@ -301,24 +302,77 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
-      // If there's a token error, the session should reflect this
-      if (token.error) {
-        console.warn("⚠️ Session has token error:", token.error);
+      try {
+        // Only attach tokens if they exist and are valid
+        if (token.access_token && !token.error) {
+          session.access_token = token.access_token as string;
+          session.refresh_token = token.refresh_token as string;
+          session.expires_at = token.expires_at as number;
+          session.provider = token.provider as string;
+          session.error = undefined;
+        } else {
+          // Handle error state
+          session.error = (token.error as string) || "TokenError";
+          console.warn("Session created with token error:", session.error);
+        }
+
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return { ...session, error: "SessionError" };
+      }
+    },
+
+    async redirect({ url, baseUrl }) {
+      console.log("NextAuth redirect called:", { url, baseUrl });
+
+      // If it's a relative path, build absolute URL
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
       }
 
-      return {
-        ...session,
-        user: {
-          id: token.user?.id || "",
-          email: token.user?.email || "",
-          name: token.user?.name || "",
-        },
-        accessToken: token.accessToken,
-        error: token.error,
-        requireRegistration: token.requireRegistration,
-        isRegistered: token.isRegistered,
-        oauthData: (token as any).oauthData,
-      };
+      // Only allow redirects that share the same origin
+      try {
+        const urlObj = new URL(url);
+
+        // Block localhost in production
+        if (
+          process.env.NODE_ENV === "production" &&
+          urlObj.hostname === "localhost"
+        ) {
+          console.warn(
+            "Blocked localhost redirect in production, falling back to baseUrl"
+          );
+          return baseUrl;
+        }
+
+        if (urlObj.origin === baseUrl) {
+          return url;
+        }
+      } catch (err) {
+        console.error("Error parsing URL:", err);
+      }
+
+      // Fallback
+      return baseUrl;
+    },
+
+    async signIn({ user, account, profile }) {
+      try {
+        console.info("Sign in attempt:", {
+          userId: user.id,
+          email: user.email,
+          provider: account?.provider,
+          profileId: profile?.sub || profile?.image,
+        });
+
+        // Allow all sign-ins by default
+        // Add custom logic here if needed (e.g., domain restrictions)
+        return true;
+      } catch (error) {
+        console.error("Sign in callback error:", error);
+        return false;
+      }
     },
   },
 
