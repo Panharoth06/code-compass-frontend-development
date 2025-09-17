@@ -4,14 +4,23 @@ import type { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { refreshKeycloakToken, logoutRequest } from "./oidc";
 
-const validateAuthConfig = () => {
-  const required = [
-    "OIDC_CLIENT_ID",
-    "OIDC_CLIENT_SECRET", 
-    "OIDC_ISSUER",
-    "NEXTAUTH_SECRET",
-  ];
-  const missing = required.filter((key) => !process.env[key]);
+// Validate required environment variables at startup
+const validateEnvironmentVariables = () => {
+  const requiredVars = {
+    OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
+    OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
+    OIDC_ISSUER: process.env.OIDC_ISSUER,
+    CCP_GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
+    CCP_GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+  };
+
+  const missing = Object.entries(requiredVars)
+    .filter(([, value]) => !value)
+    .map(([key]) => key);
 
   if (missing.length > 0) {
     throw new Error(
@@ -25,10 +34,36 @@ validateAuthConfig();
 export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
-      clientId: process.env.OIDC_CLIENT_ID!,
-      clientSecret: process.env.OIDC_CLIENT_SECRET!,
-      issuer: process.env.OIDC_ISSUER,
-      authorization: { params: { scope: "openid email profile" } },
+      clientId: env.OIDC_CLIENT_ID,
+      clientSecret: env.OIDC_CLIENT_SECRET,
+      issuer: env.OIDC_ISSUER,
+      // Add timeout configurations for Keycloak
+      httpOptions: {
+        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
+      },
+    }),
+    GithubProvider({
+      clientId: env.CCP_GITHUB_CLIENT_ID,
+      clientSecret: env.CCP_GITHUB_CLIENT_SECRET,
+      // GitHub specific configurations
+      httpOptions: {
+        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
+      },
+    }),
+    GoogleProvider({
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      // Google specific configurations
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code",
+        },
+      },
+      httpOptions: {
+        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
+      },
     }),
   ],
 
