@@ -2,7 +2,6 @@
 import React from "react";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import Image from "next/image";
-import codeEditorImage from "../../../public/image/image.png"
 
 export function HeroScrollDemo() {
   return (
@@ -18,15 +17,16 @@ export function HeroScrollDemo() {
       >
         <div
           className="mx-auto rounded-2xl h-full w-full flex items-center justify-center text-white text-2xl font-bold"
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: "100%", width: "100%" }}
         >
           <div className="text-center">
             <div className="text-lg font-normal mt-2 opacity-80">
-              <Image 
-              src={codeEditorImage}
-              height={800}
-              width={1300}
-              alt="Code Editor Illustration"
+              <Image
+                src="/image/image.png" 
+                height={800}
+                width={1300}
+                alt="Code Editor Illustration"
+                priority
               />
             </div>
           </div>
