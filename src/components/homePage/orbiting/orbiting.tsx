@@ -76,7 +76,7 @@ const LanguageIcons = {
   logo: () => (
     <div className="w-20 h-20  rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
       <Image 
-      src={"public/assets/image/Logo2.svg"} 
+      src={"/codecompass-2.png"} 
       alt="Code compass logo"
       width={50}
       height={50} 
@@ -95,13 +95,12 @@ const OrbitingAnimation = ({ isDarkMode = false }) => {
         </div>
 
         {/* Round 1 - Outermost */}
-        {/* <OrbitingCircles 
-          iconSize={70} 
-          radius={280} 
-          speed={0.5}
-        >
+        {/* <OrbitingCircles iconSize={60} radius={220} reverse={true} speed={0.7}>
+          <LanguageIcons.python />
+          <LanguageIcons.javascript />
           <LanguageIcons.cpp />
           <LanguageIcons.java />
+           <LanguageIcons.cpp />
         </OrbitingCircles> */}
 
         {/* Round 2 */}
@@ -110,13 +109,17 @@ const OrbitingAnimation = ({ isDarkMode = false }) => {
           <LanguageIcons.javascript />
           <LanguageIcons.cpp />
           <LanguageIcons.java />
+           <LanguageIcons.cpp />
         </OrbitingCircles>
 
         {/* Round 3 */}
         <OrbitingCircles iconSize={50} radius={160} speed={0.9}>
           <LanguageIcons.cpp />
+           <LanguageIcons.python />
+            <LanguageIcons.javascript />
           <LanguageIcons.python />
           <LanguageIcons.java />
+           <LanguageIcons.cpp />
         </OrbitingCircles>
 
         {/* Round 4 - Innermost */}
@@ -124,6 +127,8 @@ const OrbitingAnimation = ({ isDarkMode = false }) => {
           <LanguageIcons.java />
           <LanguageIcons.javascript />
           <LanguageIcons.cpp />
+           <LanguageIcons.python />
+            <LanguageIcons.javascript />
         </OrbitingCircles>
 
         {/* Orbital Trails */}

@@ -36,11 +36,11 @@ const WhyChooseSection = () => {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6" style={{ fontFamily: '"Source Code Pro", monospace' }}>
-            <span className="bg-gradient-to-r from-[#CCF301] via-[#000000] to-[#CCF301] dark:from-[#CCF301] dark:via-white dark:to-[#CCF301] bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
+            <span className="bg-gradient-to-r from-primary via-[#000000] to-primary dark:from-primary dark:via-white dark:to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
               Why Choose
             </span>
             <br />
-            <span className="bg-gradient-to-r from-[#CCF301] via-[#000000] to-[#CCF301] dark:from-[#CCF301] dark:via-white dark:to-[#CCF301] bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
+            <span className="bg-gradient-to-r from-primary via-[#000000] to-primary dark:from-primary dark:via-white dark:to-primary bg-[length:200%_100%] bg-clip-text text-transparent animate-gradient-x">
               CodeCompass?
             </span>
           </h2>
@@ -61,13 +61,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
                   <Code className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Powerful Editor
               </h4>
 
@@ -89,13 +89,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
                   <Lightbulb className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Smart Hints
               </h4>
 
@@ -117,13 +117,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
                   <Trophy className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Competitive
               </h4>
 
@@ -145,13 +145,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-primary/25">
                   <BarChart3 className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
+                <div className="absolute inset-0 border-2 border-primary/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Progress Analytics
               </h4>
 
@@ -173,13 +173,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
                   <Target className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
                 <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Interview Prep
               </h4>
 
@@ -201,13 +201,13 @@ const WhyChooseSection = () => {
             
             <div className="relative z-10">
               <div className="w-16 h-16 mb-6 relative">
-                <div className="w-16 h-16 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center group-hover:scale-105 group-hover:rotate-1 transition-all duration-500 ease-out shadow-lg group-hover:shadow-xl group-hover:shadow-[#CCF301]/25">
                   <Globe className="w-8 h-8 text-black transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-[#CCF301]/40 transition-all duration-700 group-hover:scale-110"></div>
+                <div className="absolute inset-0 border-2 border-[#CCF301]/20 rounded-2xl group-hover:border-primary/40 transition-all duration-700 group-hover:scale-110"></div>
               </div>
 
-              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-[#CCF301] transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
+              <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary transition-colors duration-500" style={{ fontFamily: '"Source Code Pro", monospace' }}>
                 Global Community
               </h4>
 

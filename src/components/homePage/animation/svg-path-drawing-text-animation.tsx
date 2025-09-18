@@ -96,6 +96,7 @@ const PathAnimation = ({ }) => {
         </p>
       </div>
 
+     
       {/* Buttons with improved theme support */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         {/* Primary Button - Explore Problems */}
@@ -103,31 +104,31 @@ const PathAnimation = ({ }) => {
           href="#"
           className="
             inline-flex items-center justify-center
-            font-bold text-lg
-            rounded-xl px-8 py-4 min-h-[56px]
-            bg-[#CCF301] text-black
+            font-semibold text-sm
+            rounded-lg px-4 py-2 min-h-[36px]
+            bg-primary text-black
             transition-all duration-300 ease-out
             shadow-[0_4px_14px_0_rgba(204,243,1,0.15)]
             hover:shadow-[0_6px_20px_0_rgba(204,243,1,0.25)]
-            hover:-translate-y-1
-            transform
+            hover
           "
         >
           Explore Problems
         </a>
-        
+
         {/* Secondary Button - View Leaderboard with theme support */}
         <a
           href="#"
           className={`
             inline-flex items-center justify-center
-            font-bold text-lg
-            rounded-xl px-8 py-4 min-h-[56px]
-            bg-transparent border-2 transition-all duration-300 ease-out
-            hover:-translate-y-1 transform
-            ${isDark 
-              ? "border-gray-600 text-white hover:shadow-[0_6px_20px_0_rgba(255,255,255,0.25)] hover:border-gray-400" 
-              : "border-gray-400 text-gray-800 hover:shadow-[0_6px_20px_0_rgba(0,0,0,0.15)] hover:border-gray-600"
+            font-semibold text-sm
+            rounded-lg px-4 py-2 min-h-[36px]
+            bg-transparent border-2 
+            hover
+            ${
+              isDark
+                ? "border-gray-600 text-white hover:shadow-[0_6px_20px_0_rgba(255,255,255,0.25)] hover:border-gray-400"
+                : "border-gray-400 text-gray-800 hover:shadow-[0_6px_20px_0_rgba(0,0,0,0.15)] hover:border-gray-600"
             }
           `}
         >
