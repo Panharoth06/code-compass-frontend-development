@@ -111,21 +111,82 @@ function StatCard({ value, label }: StatCardProps) {
   )
 }
 
-function TeamCard({ name, role, image }: TeamCardProps) {
+function TeamCard({ name, role, image, size, index = false }: TeamCardProps) {
+  const [isHovered, setIsHovered] = useState(false)
+
   return (
-    <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-600  p-6 rounded-2xl shadow-2xl flex flex-col items-center text-center space-y-5 ">
-      <div className="relative w-35 h-35 rounded-full overflow-hidden shadow-2xl border-2 border-white/30 backdrop-blur-sm   ">
-        <Image
-          src={image || "placeholder.svg"}
-          alt={image}
-          width={80}
-          height={80}
-          className="object-cover w-full h-full"
-        />
-      </div>
-      <div className="space-y-2">
-        <h4 className="font-bold text-xl">{name}</h4>
-        <p className="text-sm text-muted-foreground">{role}</p>
+    <div
+      className={`group relative ${index ? "w-80" : "w-72"} transition-all duration-500 hover:scale-105`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Glassmorphism Card */}
+      <div
+        className={`
+        relative bg-slate-800/20 backdrop-blur-xl 
+        ${index ? "p-8 rounded-3xl" : "p-6 rounded-2xl"} 
+        shadow-2xl
+      `}
+      >
+        {/* Gradient Glow Effect */}
+        <div className="absolute inset-0 rounded-2xl " />
+
+        {/* Profile Image */}
+        <div className="relative z-10 flex justify-center mb-6">
+          <div
+            className={`
+            relative ${index ? "w-32 h-32" : "w-24 h-24"} 
+            rounded-full overflow-hidden border-4 border-white/30 
+            shadow-xl group-hover:border-primary/50 transition-all duration-500
+          `}
+          >
+            <Image
+              src={image || "/placeholder.svg"}
+              alt={name}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            {/* Overlay glow */}
+            <div className="absolute inset-0 " />
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 text-center">
+          <h3
+            className={`
+            font-bold text-white mb-2 transition-colors duration-300
+            ${index ? "text-2xl" : "text-xl"}
+            group-hover:text-primary
+          `}
+          >
+            {name}
+          </h3>
+
+          <p
+            className={`
+            text-primary font-semibold mb-4 uppercase tracking-wide
+            ${index ? "text-sm" : "text-xs"}
+          `}
+          >
+            {role}
+          </p>
+
+          {size && (
+            <p
+              className={`
+              text-white/80 leading-relaxed transition-all duration-500
+              ${index ? "text-sm" : "text-xs"}
+              ${isHovered ? "opacity-100" : "opacity-70"}
+            `}
+            >
+              {size}
+            </p>
+          )}
+        </div>
+
+       
+
       </div>
     </div>
   )
@@ -270,30 +331,41 @@ function twoSum(nums, target) {
       </section>
 
       {/* Team Section */}
-      <section className="relative z-10 bg-transparent text-gray-900 dark:text-white ">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="text-center mb-10">
-            <h3 className="text-5xl font-bold text-primary">Meet Our Team</h3>
-            <p className="mt-10 text-gray-300 max-w-2xl mx-auto text-xl">
-              The brilliant minds behind CodeCompass – mentors and innovators dedicated to revolutionizing coding
-              education.
-            </p>
-          </div>
+     <section className="team-gradient-bg min-h-screen py-20 relative">
+      {/* Flowing Lines Background */}
+      <div className="flowing-lines" />
 
-          {/* Mentors */}
-          <div className="mb-15">
-            <h4 className="text-3xl font-semibold mb-10 text-center">Our Mentors</h4>
-            <div className="flex flex-wrap justify-center gap-28 ">
-              {mentors.map((mentor, idx) => (
-                <TeamCard key={idx} {...mentor} />
-              ))}
-            </div>
-          </div>
+      {/* Content */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-20">
+          <h2 className="text-6xl md:text-7xl font-black text-white mb-6 tracking-tight">
+            MEET OUR <span className="text-primary drop-shadow-lg">TEAM</span>
+          </h2>
+          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            The brilliant minds behind our success – mentors and innovators dedicated to revolutionizing the future of
+            technology and development.
+          </p>
+        </div>
 
-          {/* Core Team */}
-          <div className="mb-12 ">
-            <h4 className="text-2xl font-semibold mb-6 text-center">Our Core Team</h4>
-            <div className="flex flex-col items-center mb-12">
+        {/* Mentors Section */}
+        <div className="mb-20">
+          <h3 className="text-4xl font-bold text-center text-white mb-12">
+            Our <span className="text-primary">Mentors</span>
+          </h3>
+          <div className="flex flex-wrap justify-center gap-12">
+            {mentors.map((mentor, idx) => (
+              <TeamCard key={idx} {...mentor} index={true} />
+            ))}
+          </div>
+        </div>
+
+        {/* Core Team Section */}
+        <div>
+          <h3 className="text-4xl font-bold text-center text-white mb-12">
+            Our <span className="text-primary">Core Team</span>
+          </h3>
+           <div className="flex flex-col items-center mb-12">
               <TeamCard {...coreTeam[0]} />
             </div>
             <div className="grid sm:grid-cols-3 lg:gap-10 justify-items-center">
@@ -301,9 +373,11 @@ function twoSum(nums, target) {
                 <TeamCard key={idx} {...member} />
               ))}
             </div>
-          </div>
+
         </div>
-      </section>
+
+      </div>
+    </section>
 
       {/* Creator CTA Section */}
       <section className="relative z-10 bg-transparent text-gray-900 dark:text-white">
