@@ -60,7 +60,7 @@ const OrbitingContent: React.FC<OrbitingContentProps> = ({ isDarkMode }) => {
         }`}
       >
         <h3
-          className="text-sm font-medium leading-tight text-center"
+          className="text-xl font-medium  text-center md:text-left lg:text-3xl"
           style={{ fontFamily: '"Source Code Pro", monospace' }}
         >
           Choose Your <span className="text-lime-400">Language</span>, Solve

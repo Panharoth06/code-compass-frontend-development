@@ -34,7 +34,7 @@ export default function HeroSection() {
         </div>
 
         {/* Right side - Cards */}
-        <div className="hidden relative lg:flex justify-center lg:justify-end w-full max-w-lg h-[400px] lg:h-[500px]">
+        <div className="hidden relative lg:flex justify-center lg:justify-end w-full max-w-lg h-[400px] lg:h-[500px] ">
           <CardSwap
             cardDistance={60}
             verticalDistance={70}
