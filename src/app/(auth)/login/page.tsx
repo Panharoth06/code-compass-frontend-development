@@ -28,9 +28,9 @@ export default function AuthDebug() {
       <p className="text-green-800 mb-2">✅ Authenticated</p>
       <div className="text-sm space-y-1 mb-4">
         <p><strong>User:</strong> {session.user?.email || session.user?.name || 'Unknown'}</p>
-        <p><strong>Access Token:</strong> {session.access_token ? '✅ Present' : '❌ Missing'}</p>
+        <p><strong>Access Token:</strong> {session.accessToken ? '✅ Present' : '❌ Missing'}</p>
         <p><strong>Session Error:</strong> {session.error || 'None'}</p>
-        <p>{session.id_token}</p>
+        <p>{session.accessToken}</p>
       </div>
       <button 
         onClick={() => signOut()}

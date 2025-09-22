@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Barlow } from "next/font/google";
 import "../globals.css";
 import StoreProvider from "../StoreProvider";
 import Navbar from "@/components/navbar";

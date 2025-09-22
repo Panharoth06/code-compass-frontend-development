@@ -1,4 +1,6 @@
+import Loader from "@/components/loader/LoaderComponent";
 import ProblemDetailsComponents from "@/components/problemdetailComponents/ProblemDetailComponent";
+import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 
 interface ProblemDetailsPageProps {
@@ -14,7 +16,9 @@ export default async function ProblemDetailsPage({ params }: ProblemDetailsPageP
 
   return (
     <div className="h-screen">
-      <ProblemDetailsComponents problemId={problemId} />
+      <Suspense fallback={<Loader />}>
+        <ProblemDetailsComponents problemId={problemId} />
+      </Suspense>
       <Toaster />
     </div>
   );

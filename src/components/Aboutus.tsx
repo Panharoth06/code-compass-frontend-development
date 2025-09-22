@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
@@ -173,13 +172,13 @@ function TeamCard({
 
 // =================== Main Page ===================
 export default function About() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Detect system dark mode
-  useEffect(() => {
-    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setIsDarkMode(dark);
-  }, []);
+  // // Detect system dark mode
+  // useEffect(() => {
+  //   const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  //   setIsDarkMode(dark);
+  // }, []);
 
 
   return (

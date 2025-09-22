@@ -38,7 +38,7 @@ export const useHintSystem = () => {
       }
 
       toast.error(errorMessage);
-      console.error("Unlock hint error:", error);
+      // console.error("Unlock hint error:", error);
       return Promise.reject(errorMessage);
     }
   };

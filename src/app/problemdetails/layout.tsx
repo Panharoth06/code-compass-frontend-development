@@ -5,6 +5,8 @@ import "../globals.css";
 import { ThemeProvider } from "@/components/general/ThemeProvider";
 import { Providers } from "@/components/problemdetailComponents/problemsImpl/providers";
 import { Toaster } from "react-hot-toast";
+import { Suspense } from "react";
+import Loader from "@/components/loader/LoaderComponent";
 
 export const metadata: Metadata = {
   title: "CodeCompass",
@@ -17,6 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    <Suspense fallback={<Loader/>}>
     <Providers>
       <ThemeProvider
         attribute="class"
@@ -28,5 +31,7 @@ export default function RootLayout({
       </ThemeProvider>
       <Toaster />
     </Providers>
+
+    </Suspense>
   );
 }
