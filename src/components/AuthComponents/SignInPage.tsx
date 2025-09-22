@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { IconBrandGithub, IconBrandGoogle } from "@tabler/icons-react";
 
-
 import * as THREE from "three";
 import RegisterForm from "./RegisterFormComponent";
 import toast, { Toaster } from "react-hot-toast";

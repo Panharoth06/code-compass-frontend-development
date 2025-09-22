@@ -4,6 +4,7 @@ import "../globals.css";
 
 import { ThemeProvider } from "@/components/general/ThemeProvider";
 import { Providers } from "@/components/problemdetailComponents/problemsImpl/providers";
+import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import Loader from "@/components/loader/LoaderComponent";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <Suspense fallback={<Loader/>}>
+    <Suspense fallback={<Loader/>}>
     <Providers>
       <ThemeProvider
         attribute="class"
@@ -30,6 +32,8 @@ export default function RootLayout({
 
       </ThemeProvider>
     </Providers>
+
+    </Suspense>
 
     </Suspense>
   );
