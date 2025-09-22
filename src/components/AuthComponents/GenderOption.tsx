@@ -24,8 +24,8 @@ export function GenderOption() {
       render={({ field }) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="backdrop-blur-[2px] w-full flex items-center justify-between bg-white/5 hover:bg-white/10 hover:text-white text-white border border-white/10 rounded-full transition-colors text-base sm:text-lg"
             >
               {field.value || "Select gender"}
@@ -42,20 +42,20 @@ export function GenderOption() {
               onValueChange={field.onChange}
               className="w-full text-white py-3 px-4 bg-black/50 rounded transition-colors text-sm sm:text-base"
             >
-              <DropdownMenuRadioItem 
-                value="MALE" 
+              <DropdownMenuRadioItem
+                value="MALE"
                 className=" text-gray-200 text-base"
               >
                 Male
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem 
-                value="FEMALE" 
+              <DropdownMenuRadioItem
+                value="FEMALE"
                 className=" text-gray-200 text-base"
               >
                 Female
               </DropdownMenuRadioItem>
-              <DropdownMenuRadioItem 
-                value="OTHER" 
+              <DropdownMenuRadioItem
+                value="OTHER"
                 className=" text-gray-200 text-base"
               >
                 Other

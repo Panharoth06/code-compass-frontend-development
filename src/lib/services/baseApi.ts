@@ -1,70 +1,81 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { RootState } from "../store";
-import { setAccessToken, setRefreshToken, logout, setTokens } from "@/lib/services/auth/authSlice";
-import { getSession } from "next-auth/react";
+import { getSession, signOut } from "next-auth/react";
 
-// Proxy baseQuery without async in prepareHeaders
-const baseQuery = fetchBaseQuery({
-  // baseUrl: "/api/proxy",
-    baseUrl:process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS,
+const PUBLIC_ENDPOINTS = ["auth/register", "auth/login", "auth/refresh"];
+
+const isPublicProxyPath = (urlOrRequest: RequestInfo): boolean => {
+  try {
+    const urlString = typeof urlOrRequest === "string" ? urlOrRequest : (urlOrRequest as Request).url;
+    // Handle relative URLs
+    const url = urlString.startsWith("http")
+      ? new URL(urlString)
+      : new URL(urlString, typeof window !== "undefined" ? window.location.origin : "http://localhost");
+    // Expecting "/api/proxy/<path>"
+    const proxyPrefix = "/api/proxy/";
+    const pathname = url.pathname.startsWith(proxyPrefix)
+      ? url.pathname.slice(proxyPrefix.length)
+      : url.pathname.replace(/^\//, "");
+    return PUBLIC_ENDPOINTS.some((p) => pathname.startsWith(p));
+  } catch {
+    return false;
+  }
+};
+
+const customFetch = async (input: RequestInfo, init?: RequestInit) => {
+  init = init || {};
+  const session = await getSession();
+  const isPublic = isPublicProxyPath(input);
+  if (!isPublic && session?.accessToken) {
+    init.headers = {
+      ...init.headers,
+      Authorization: `Bearer ${session.accessToken}`,
+    };
+  }
+
+  const response = await fetch(input, init);
+
+  if (response.status === 401) {
+    const authRefreshHeader = response.headers.get("x-auth-refresh");
+    const authExpiredHeader = response.headers.get("x-auth-expired");
+
+    if (authRefreshHeader === "true") {
+      try {
+        console.warn("[Client][baseApi] Received X-Auth-Refresh. Refreshing session and retrying...", {
+          url: String(input),
+        });
+        const sessionResponse = await fetch("/api/auth/session", {
+          method: "GET",
+        });
+        if (sessionResponse.ok) {
+          // Retry original request once
+          console.info("[Client][baseApi] Session refreshed. Retrying request once.");
+          return await fetch(input, { ...init, _retry: true } as any);
+        } else {
+          console.error("[Client][baseApi] Session refresh failed. Signing out.");
+          await signOut({ callbackUrl: "/login" });
+        }
+      } catch {
+        console.error("[Client][baseApi] Error while refreshing session. Signing out.");
+        await signOut({ callbackUrl: "/login" });
+      }
+    } else if (authExpiredHeader === "true") {
+      console.warn("[Client][baseApi] Session expired. Signing out.");
+      await signOut({ callbackUrl: "/login" });
+    }
+  }
+
+  return response;
+};
+
+const baseQueryWithReAuth = fetchBaseQuery({
+  baseUrl: "/api/proxy",
+  fetchFn: customFetch,
   prepareHeaders: (headers) => {
     headers.set("Content-Type", "application/json");
     return headers;
   },
 });
-
-
-// Async wrapper to handle getSession + refresh
-const baseQueryWithReAuth = async (args: any, api: any, extraOptions: any) => {
-  const session = await getSession();
-
-  // Normalize args
-  const queryArgs: any = typeof args === "string" ? { url: args } : { ...args };
-
-  if (session?.access_token) {
-    queryArgs.headers = {
-      ...queryArgs.headers,
-      Authorization: `Bearer ${session.access_token}`,
-    };
-  }
-
-  let result = await baseQuery(queryArgs, api, extraOptions);
-
-  if (result.error?.status === 401 || result.error?.status === 403) {
-    const state = api.getState() as RootState;
-    const currentRefreshToken = state.auth.refreshToken;
-
-    if (!currentRefreshToken) {
-      api.dispatch(logout());
-      return result;
-    }
-
-    const refreshResult = await baseQuery(
-      { url: "/token", method: "POST", body: { refresh_token: currentRefreshToken } },
-      api,
-      extraOptions
-    );
-
-    if (refreshResult.data) {
-      const tokens = refreshResult.data as { accessToken: string; refreshToken: string };
-      api.dispatch(setTokens(tokens));
-      api.dispatch(setAccessToken(tokens.accessToken));
-      api.dispatch(setRefreshToken(tokens.refreshToken));
-
-      // Retry original request
-      queryArgs.headers = {
-        ...queryArgs.headers,
-        Authorization: `Bearer ${tokens.accessToken}`,
-      };
-      result = await baseQuery(queryArgs, api, extraOptions);
-    } else {
-      api.dispatch(logout());
-    }
-  }
-
-  return result;
-};
 
 
 export const baseApi = createApi({
@@ -78,7 +89,7 @@ export const baseApi = createApi({
     "Solutions",
     "Problems",
     "Medias",
-    "CreatorRequests", // fixed typo
+    "CreatorRequests",
     "Badges",
     "Auth",
     "Users",

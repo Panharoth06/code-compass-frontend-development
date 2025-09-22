@@ -13,6 +13,7 @@ import { Coins, Lock, Unlock } from "lucide-react";
 import React from "react";
 import toast from "react-hot-toast";
 import { skipToken } from '@reduxjs/toolkit/query/react';
+import Loader from "@/components/loader/LoaderComponent";
 
 
 interface HintComponentProps {
@@ -23,10 +24,10 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
   const { isUnlocking, unlockHint, isHintUnlocked } = useHintSystem();
 
   // Fetch current user
-  const { data: userData, refetch: refetchUser } = useGetCurrentUserQuery();
+  const { data: userData } = useGetCurrentUserQuery();
 
   // Fetch problem data safely
-  const { data: problem, isLoading: problemLoading, refetch: refetchProblem } =
+  const { data: problem, isLoading: problemLoading } =
     useGetProblemQuery(problemId ?? skipToken);
 
     /* eslint-disable */
@@ -35,12 +36,9 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
       await unlockHint(hintId);
       toast.success("Hint unlocked successfully");
 
-      await refetchUser();
-      await refetchProblem();
     } catch (err: any) {
       const message = err?.data?.error || err?.error || err?.message || "Failed to unlock hint";
       toast.error(message);
-      console.error("Unlock error:", err);
     }
   };
   /* eslint-enable */
@@ -51,9 +49,9 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
     return unlockedIndex !== -1 ? `item-${unlockedIndex + 1}` : undefined;
   }, [problem?.hints]);
 
-  if (problemLoading) return <p>Loading hints...</p>;
+  if (problemLoading) return <Loader/>;
 
-console.log(defaultAccordion);
+// console.log(defaultAccordion);
 
 
   return (

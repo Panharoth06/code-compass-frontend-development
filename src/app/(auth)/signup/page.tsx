@@ -1,6 +1,6 @@
 'use client'
 
-import { SignInPage } from "@/components/blocks/sign-in-flow-1";
+import { SignInPage } from "@/components/AuthComponents/SignInPage";
 import { Toaster } from "react-hot-toast";
 
 const RegisterPage = () => {

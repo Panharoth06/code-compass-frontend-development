@@ -195,13 +195,14 @@ function TeamCard({ name, role, image, size, index = false }: TeamCardProps) {
 
 // =================== Main Page ===================
 export default function About() {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+  // const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Detect system dark mode
-  useEffect(() => {
-    const dark = window.matchMedia("(prefers-color-scheme: dark)").matches
-    setIsDarkMode(dark)
-  }, [])
+  // // Detect system dark mode
+  // useEffect(() => {
+  //   const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  //   setIsDarkMode(dark);
+  // }, []);
+
 
   return (
     <div className="min-h-screen relative overflow-hidden">

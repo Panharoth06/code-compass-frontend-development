@@ -1,9 +1,8 @@
+/* eslint-disable */ 
 // lib/auth/next-auth-options.ts
-import { logoutRequest, refreshTokenRequest } from "./oidc";
 import type { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
-import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import { refreshKeycloakToken, logoutRequest } from "./oidc";
 
 // Validate required environment variables at startup
 export const validateEnvironmentVariables = () => {
@@ -162,80 +161,112 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, account, trigger, session }) {
-      try {
-        // Initial sign in - store tokens from account
-        if (account?.access_token) {
-          console.info("Initial sign in - storing new tokens", {
-            provider: account.provider,
+    async jwt({ token, account, user }) {
+      // Initial Keycloak sign-in
+      if (account?.provider === "keycloak" && user) {
+        console.log("🔐 Keycloak sign-in successful", {
+          userId: user.id,
+          email: user.email,
+          hasAccessToken: !!account.access_token,
+          hasRefreshToken: !!account.refresh_token,
+          expiresIn: account.expires_in,
+        });
+
+        const expiresAt = Math.floor(Date.now() / 1000) + Number(account.expires_in || 300);
+
+        return {
+          ...token,
+          accessToken: account.access_token || "",
+          refreshToken: account.refresh_token || "",
+          expiresAt,
+          user: {
+            id: user.id || "",
+            email: user.email || "",
+            name: user.name || "",
+          },
+          requireRegistration: false,
+          isRegistered: true,
+          error: undefined,
+        };
+      }
+
+      // Token refresh logic
+      const currentTime = Math.floor(Date.now() / 1000);
+      const bufferTime = 300; // 5 minutes buffer before expiry
+      
+      // Check if we have a refresh token and if the access token needs refresh
+      if (!token?.refreshToken) {
+        // No refresh token available, can't refresh
+        if (token?.expiresAt && currentTime > token.expiresAt) {
+          console.warn("⚠️ Token expired and no refresh token available");
+          return { ...token, error: "TokenExpiredError" };
+        }
+        return token;
+      }
+
+      // Don't attempt refresh on tokens that are too old (likely invalid)
+      const tokenAge = token.expiresAt ? currentTime - (token.expiresAt - (token.accessToken ? 600 : 300)) : 0; // Estimate token age
+      if (tokenAge > 86400) { // 24 hours
+        console.warn("⚠️ Refresh token too old, forcing re-authentication");
+        return { ...token, error: "RefreshTokenTooOld" };
+      }
+      
+      const needsRefresh = token.expiresAt && currentTime >= (token.expiresAt - bufferTime);
+
+      if (needsRefresh) {
+        try {
+          console.log("🔄 Token refresh needed", {
+            expiresAt: token.expiresAt,
+            currentTime,
+            timeUntilExpiry: token.expiresAt! - currentTime,
+            tokenAge: Math.round(tokenAge / 3600 * 10) / 10 + 'h', // hours with 1 decimal
+            hasRefreshToken: !!token.refreshToken
           });
+
+          const refreshed = await refreshKeycloakToken(token.refreshToken);
+          
+          console.log("✅ Token refreshed successfully");
           return {
             ...token,
-            provider: account.provider,
-            access_token: account.access_token,
-            refresh_token: account.refresh_token || token.refresh_token,
-            expires_at: calculateExpiresAt(account.expires_at),
-            error: undefined, // Clear any previous errors
+            accessToken: refreshed.accessToken,
+            refreshToken: refreshed.refreshToken,
+            expiresAt: currentTime + refreshed.expiresIn,
+            error: undefined,
+          };
+        } catch (error) {
+          console.error("❌ Token refresh failed in NextAuth:", error);
+          
+          // For "Session doesn't have required client" errors, force re-authentication
+          const isSessionError = error instanceof Error && 
+            (error.message.includes("RefreshTokenInvalidError") || 
+             error.message.includes("Session doesn't have required client"));
+          
+          if (isSessionError) {
+            console.warn("🔄 Refresh token invalid, will force re-authentication");
+            // Clear the refresh token so NextAuth will redirect to login
+            return { 
+              ...token, 
+              refreshToken: undefined,
+              accessToken: undefined,
+              error: "RefreshTokenInvalidError"
+            };
+          }
+          
+          // For other errors, keep trying with the same token
+          return { 
+            ...token, 
+            error: "RefreshAccessTokenError"
           };
         }
-
-        // Handle forced refresh triggers
-        if (trigger === "update" && session?.forceRefresh) {
-          console.info("Forced token refresh requested");
-          const refreshed = await safeRefreshToken(token.refresh_token);
-
-          if (refreshed) {
-            return {
-              ...token,
-              access_token: refreshed.access_token,
-              refresh_token: refreshed.refresh_token || token.refresh_token,
-              expires_at: calculateExpiresAt(refreshed.expires_in),
-              error: undefined,
-            };
-          } else {
-            console.error("Forced token refresh failed");
-            return { ...token, error: "RefreshAccessTokenError" };
-          }
-        }
-
-        // Skip refresh if token has error or is missing required fields
-        if (token.error || !token.access_token || !token.expires_at) {
-          console.warn(
-            "Token has error or missing required fields, skipping refresh"
-          );
-          return token;
-        }
-
-        // Check if token needs refresh (only for providers that support refresh tokens)
-        if (
-          token.refresh_token &&
-          shouldRefreshToken(token.expires_at as number)
-        ) {
-          console.info("Token expired or expiring soon, attempting refresh");
-
-          const refreshed = await safeRefreshToken(token.refresh_token);
-
-          if (refreshed) {
-            console.info("Token refresh successful");
-            return {
-              ...token,
-              access_token: refreshed.access_token,
-              refresh_token: refreshed.refresh_token || token.refresh_token,
-              expires_at: calculateExpiresAt(refreshed.expires_in),
-              error: undefined,
-            };
-          } else {
-            console.error("Token refresh failed - marking token as errored");
-            return { ...token, error: "RefreshAccessTokenError" };
-          }
-        }
-
-        // Token is still valid
-        return token;
-      } catch (error) {
-        console.error("JWT callback error:", error);
-        return { ...token, error: "JWTError" };
       }
+
+      // Check if token is already expired
+      if (token?.expiresAt && currentTime > token.expiresAt && !token.refreshToken) {
+        console.warn("⚠️ Token expired and no refresh token available");
+        return { ...token, error: "TokenExpiredError" };
+      }
+
+      return token;
     },
 
     async session({ session, token }) {
@@ -315,113 +346,66 @@ export const authOptions: AuthOptions = {
 
   events: {
     async signOut({ token }) {
-      console.info("User signing out - attempting to revoke tokens");
-
-      if (token.refresh_token && typeof token.refresh_token === "string") {
+      if (token?.refreshToken) {
         try {
-          await logoutRequest(token.refresh_token);
-          console.info("Token revocation successful");
+          await logoutRequest(token.refreshToken);
+          console.log("✅ Keycloak logout successful");
         } catch (error) {
-          console.error("Token revocation failed:", error);
-          // Don't throw - sign out should still succeed even if revocation fails
+          console.error("❌ Keycloak logout failed:", error);
         }
-      } else {
-        console.warn("No valid refresh token available for revocation");
       }
     },
-
-    async signIn({ user, account, profile }) {
-      console.info("Sign in successful:", {
-        userId: user.id,
-        email: user.email,
-        provider: account?.provider,
-        profileId: profile?.sub || profile?.image,
-      });
-    },
   },
 
-  // Configure JWT settings for short-lived tokens
-  jwt: {
-    maxAge: TOKEN_CONFIG.JWT_MAX_AGE,
-  },
-
-  // Configure session settings
   session: {
     strategy: "jwt",
-    maxAge: TOKEN_CONFIG.JWT_MAX_AGE,
-    updateAge: 60, // Update session every minute
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  // Configure pages (optional - customize sign-in/error pages)
-  pages: {
-    error: "/auth/error", // Custom error page to handle token refresh errors
-    verifyRequest: "/auth/verify-request", // Email verification page
-  },
-
-  // Enable debug in development
+  // Add debug mode in development
   debug: process.env.NODE_ENV === "development",
-
-  // Configure cookies for better security
-  cookies: {
-    sessionToken: {
-      name: `next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: TOKEN_CONFIG.JWT_MAX_AGE,
-      },
-    },
-    callbackUrl: {
-      name: `next-auth.callback-url`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 15, // 15 minutes
-      },
-    },
-    csrfToken: {
-      name: `next-auth.csrf-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 15, // 15 minutes
-      },
-    },
-  },
 };
 
-// Extended types to include all custom properties
+// Type declarations remain the same...
 declare module "next-auth" {
   interface Session {
-    access_token?: string;
-    refresh_token?: string;
-    expires_at?: number;
-    provider?: string;
+    user: { id: string; email: string; name: string };
+    accessToken?: string;
     error?: string;
-    providerAccountId?: string;
-    id_token: string;
+    requireRegistration?: boolean;
+    isRegistered?: boolean;
+    oauthData?: {
+      email: string;
+      name?: string;
+      given_name?: string;
+      family_name?: string;
+      login?: string;
+    };
   }
 
-  // Add forceRefresh to session update type
-  interface DefaultSession {
-    forceRefresh?: boolean;
+  interface User {
+    id: string;
+    email: string;
+    name: string;
+    image?: string;
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    access_token?: string;
-    refresh_token?: string;
-    expires_at?: number;
-    provider?: string;
+    accessToken?: string;
+    refreshToken?: string;
+    expiresAt?: number;
+    user?: { id: string; email: string; name: string };
     error?: string;
-    providerAccountId?: string;
-    id_token: string;
+    requireRegistration?: boolean;
+    isRegistered?: boolean;
+    oauthData?: {
+      email: string;
+      name?: string;
+      given_name?: string;
+      family_name?: string;
+      login?: string;
+    };
   }
 }

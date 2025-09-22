@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../globals.css";
 import StoreProvider from "../StoreProvider";
 import SessionProviderWrapper from "../SessionProviderWrapper";
+import { Suspense } from "react";
+import Loader from "@/components/loader/LoaderComponent";
 
 export const metadata: Metadata = {
   title: "CodeCompass",
@@ -12,11 +14,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
+    <Suspense fallback={<Loader/>}>
     <SessionProviderWrapper>
       <StoreProvider>
         <main>{children}</main>
       </StoreProvider>
     </SessionProviderWrapper>
+
+    </Suspense>
   );
 }
 

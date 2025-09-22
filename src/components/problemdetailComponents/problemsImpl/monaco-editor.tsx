@@ -1,4 +1,5 @@
 "use client"
+import Loader from "@/components/loader/LoaderComponent"
 /* eslint-disable */
 import { Editor, loader } from "@monaco-editor/react"
 import { useTheme } from "next-themes"
@@ -224,12 +225,13 @@ export function MonacoEditor({
 
   if (!mounted) {
     return (
-      <div 
-        className={`h-full bg-card flex items-center justify-center ${className || ""}`}
-        style={{ height }}
-      >
-        <div className="text-muted-foreground text-sm">Loading editor...</div>
-      </div>
+      // <div 
+      //   className={`h-full bg-card flex items-center justify-center ${className || ""}`}
+      //   style={{ height }}
+      // >
+      //   <div className="text-muted-foreground text-sm">Loading editor...</div>
+      // </div>
+      <Loader/>
     )
   }
 

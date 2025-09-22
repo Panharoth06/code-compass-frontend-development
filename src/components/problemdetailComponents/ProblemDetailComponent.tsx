@@ -11,6 +11,7 @@ import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
 import { TestCase } from "@/lib/types/problem/problemResponse";
 import TestAndOutputPanel from "./problemsImpl/code-output";
+import Loader from "../loader/LoaderComponent";
 // import TestAndOutputPanel from "./problemsImpl/code-output";
 
 interface ProblemDetailsProps {
@@ -111,7 +112,7 @@ int main() {
     }
   };
 
-  if (isLoading) return <div className="p-4 rounded animate-pulse">Loading problem...</div>;
+  if (isLoading) return <Loader/>;
   if (error || !data) return <div className="p-4 rounded bg-red-100 text-red-800">Error loading problem, could be not found. Please try again later.</div>;
 
   return (
