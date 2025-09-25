@@ -1,7 +1,7 @@
 export type DiscussionResponse = {
-  id: number;
+  id?: number;
   problemId: number;
-  content: string;
-  author?: string;
-  createdAt?: string;
+  comment?: string;
+  username?: string;
+  commentAt?: string;
 };
