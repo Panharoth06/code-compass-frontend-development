@@ -9,14 +9,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ProblemResponse } from "@/lib/types/problem/problemResponse";
 import ExampleComponent from "./ExampleComponent";
 import HintComponent from "./HintComponent";
+import CommentComponent from "./CommentComponent";
 
 interface ProblemDescriptionProps {
   problem: ProblemResponse | undefined;
 }
 
-
 function ProblemDescription({ problem }: ProblemDescriptionProps) {
-
   // Create editor with immediatelyRender:false and no initial content.
   // Then set content on client inside useEffect to avoid hydration mismatch.
   const editor = useEditor({
@@ -40,8 +39,6 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
     }
   }, [editor, problem?.description]);
 
-  
-
   const getDifficultyColor = (difficulty: string | undefined) => {
     switch (difficulty) {
       case "Easy":
@@ -58,10 +55,11 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
   return (
     <div className="h-full flex flex-col bg-background">
       <Tabs defaultValue="description" className="flex-1 flex flex-col min-h-0">
-        <TabsList className="grid w-full grid-cols-3 bg-muted">
+        <TabsList className="grid w-full grid-cols-4 bg-muted">
           <TabsTrigger value="description">Description</TabsTrigger>
           <TabsTrigger value="solutions">Solutions</TabsTrigger>
           <TabsTrigger value="submissions">Submissions</TabsTrigger>
+          <TabsTrigger value="discussions">Discussions</TabsTrigger>
         </TabsList>
 
         <TabsContent
@@ -106,20 +104,34 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
 
             {/* Examples */}
 
-            
             <hr />
             <section>
-
               <ExampleComponent problem={problem} />
               <HintComponent problemId={problem?.id} />
-
             </section>
+          </div>
+        </TabsContent>
+        <TabsContent
+          value="discussions"
+          className="flex-1 flex flex-col min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
+            <div className="space-y-4">
+              <h6 className="text-2xl font-semibold">
+                Discussions for {problem?.title}
+              </h6>
+            </div>
+
+            {problem?.id ? (
+              <CommentComponent problemId={problem.id} />
+            ) : (
+              <p className="text-muted-foreground">No problem selected</p>
+            )}
           </div>
         </TabsContent>
       </Tabs>
     </div>
   );
 }
-
 
 export default ProblemDescription;
