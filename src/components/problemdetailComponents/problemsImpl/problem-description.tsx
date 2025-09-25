@@ -10,13 +10,19 @@ import { ProblemResponse } from "@/lib/types/problem/problemResponse";
 import ExampleComponent from "./ExampleComponent";
 import HintComponent from "./HintComponent";
 import CommentComponent from "./CommentComponent";
+import CreateComment from "./CreateCommentComponent";
+import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
 
 interface ProblemDescriptionProps {
-  problem: ProblemResponse | undefined;
+  problem: ProblemResponse | undefined ;
 }
 
-function ProblemDescription({ problem }: ProblemDescriptionProps) {
+
+function ProblemDescription({ problem}: ProblemDescriptionProps) {
   // Create editor with immediatelyRender:false and no initial content.
+
+  const { data: userData } = useGetCurrentUserQuery();
+
   // Then set content on client inside useEffect to avoid hydration mismatch.
   const editor = useEditor({
     extensions: [StarterKit],
@@ -128,6 +134,8 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
               <p className="text-muted-foreground">No problem selected</p>
             )}
           </div>
+
+          <CreateComment username={userData?.username} problemId={problem?.id}/>
         </TabsContent>
       </Tabs>
     </div>
