@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useEffect, useState, useRef } from "react";
 import SockJS from "sockjs-client";
@@ -18,9 +18,11 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
       const session = await getSession();
       const token = session?.accessToken;
 
-      const socket = new SockJS(`${process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS}/ws-comments`);
+      const socket = new SockJS(
+        `${process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS}/ws-comments`
+      );
       clientRef.current = new Client({
-        webSocketFactory: () => socket as any,
+        webSocketFactory: () => socket,
         reconnectDelay: 5000,
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
@@ -39,12 +41,12 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
               console.log("Raw message received:", msg.body);
               try {
                 const body = JSON.parse(msg.body);
-                const mapComment = (comment: any): DiscussionResponse => ({
-                  id: comment.id || Date.now() + Math.random(),
+                const mapComment = (comment: DiscussionResponse): DiscussionResponse => ({
+                  id: comment.id ?? Date.now() + Math.random(),
                   problemId: comment.problemId,
-                  content: comment.comment || "No content",
-                  author: comment.username || "Anon",
-                  createdAt: comment.commentAt,
+                  comment: comment.comment ?? "No content",
+                  username: comment.username ?? "Anon",
+                  commentAt: comment.commentAt,
                 });
 
                 if (Array.isArray(body)) {
@@ -52,7 +54,13 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
                 } else {
                   setComments((prev) => {
                     const newComment = mapComment(body);
-                    if (prev.some((c) => c.content === newComment.content && c.createdAt === newComment.createdAt)) {
+                    if (
+                      prev.some(
+                        (c) =>
+                          c.comment === newComment.comment &&
+                          c.commentAt === newComment.commentAt
+                      )
+                    ) {
                       return prev;
                     }
                     return [...prev, newComment];
@@ -91,7 +99,7 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
       <ul className="space-y-2">
         {comments.map((c) => (
           <li key={c.id} className="border-b pb-1">
-            <strong>{c.author ?? "Anon"}:</strong> {c.content}
+            <strong>{c.username ?? "Anon"}:</strong> {c.comment}
           </li>
         ))}
       </ul>
