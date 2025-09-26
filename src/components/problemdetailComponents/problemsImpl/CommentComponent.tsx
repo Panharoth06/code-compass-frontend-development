@@ -5,11 +5,13 @@ import SockJS from "sockjs-client";
 import { Client, IMessage } from "@stomp/stompjs";
 import { getSession } from "next-auth/react";
 import { DiscussionResponse } from "@/lib/types/discussion/discussionResponse";
+import ReportComment from "./ReportCommmentComponent";
 
-export default function CommentComponent({ problemId }: { problemId: number }) {
+export default function CommentComponent({ problemId, username }: { problemId: number; username?: string }) {
   const [comments, setComments] = useState<DiscussionResponse[]>([]);
+  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
   const clientRef = useRef<Client | null>(null);
-  const subscriptionRef = useRef<string | null | undefined>(null); // Allow undefined
+  const subscriptionRef = useRef<string | null | undefined>(null);
 
   useEffect(() => {
     if (!problemId) return;
@@ -41,13 +43,19 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
               console.log("Raw message received:", msg.body);
               try {
                 const body = JSON.parse(msg.body);
-                const mapComment = (comment: DiscussionResponse): DiscussionResponse => ({
-                  id: comment.id ?? Date.now() + Math.random(),
-                  problemId: comment.problemId,
-                  comment: comment.comment ?? "No content",
-                  username: comment.username ?? "Anon",
-                  commentAt: comment.commentAt,
-                });
+                const mapComment = (comment: DiscussionResponse) => {
+                  if (!comment.id) {
+                    console.error("Comment missing id:", comment);
+                    throw new Error("Comment ID is missing from backend response");
+                  }
+                  return {
+                    id: comment.id,
+                    problemId: comment.problemId ?? problemId,
+                    comment: comment.comment ?? "No content",
+                    username: comment.username ?? "Anon",
+                    commentAt: comment.commentAt ?? new Date().toISOString(),
+                  };
+                };
 
                 if (Array.isArray(body)) {
                   setComments(body.map(mapComment));
@@ -70,7 +78,7 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
                 console.error("Parse error:", err);
               }
             }
-          ).id; // id is string | undefined, compatible with string | null | undefined
+          ).id;
 
           clientRef.current?.publish({
             destination: `/app/init.${problemId}`,
@@ -98,11 +106,32 @@ export default function CommentComponent({ problemId }: { problemId: number }) {
     <div className="p-4 border rounded">
       <ul className="space-y-2">
         {comments.map((c) => (
-          <li key={c.id} className="border-b pb-1">
-            <strong>{c.username ?? "Anon"}:</strong> {c.comment}
+          <li key={c.id} className="border-b pb-1 flex justify-between items-center">
+            <div>
+              <strong>{c.username ?? "Anon"}:</strong> {c.comment}
+            </div>
+            <button
+              onClick={() => {
+                if (c.id !== undefined) {
+                  setSelectedCommentId(c.id);
+                }
+              }}
+              className="text-red-500 hover:text-red-600 text-sm"
+              disabled={c.id === undefined}
+            >
+              Report
+            </button>
           </li>
         ))}
       </ul>
+      {selectedCommentId && (
+        <ReportComment
+          commentId={selectedCommentId}
+          problemId={problemId}
+          onClose={() => setSelectedCommentId(null)}
+          username={username}
+        />
+      )}
     </div>
   );
 }

@@ -5,42 +5,35 @@ import { Lightbulb } from "lucide-react";
 import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ProblemResponse } from "@/lib/types/problem/problemResponse";
 import ExampleComponent from "./ExampleComponent";
 import HintComponent from "./HintComponent";
 import CommentComponent from "./CommentComponent";
-import CreateComment from "./CreateCommentComponent";
 import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
+import CreateComment from "./CreateCommentComponent";
 
 interface ProblemDescriptionProps {
-  problem: ProblemResponse | undefined ;
+  problem: ProblemResponse | undefined;
 }
 
-
-function ProblemDescription({ problem}: ProblemDescriptionProps) {
-  // Create editor with immediatelyRender:false and no initial content.
-
+function ProblemDescription({ problem }: ProblemDescriptionProps) {
   const { data: userData } = useGetCurrentUserQuery();
 
-  // Then set content on client inside useEffect to avoid hydration mismatch.
   const editor = useEditor({
     extensions: [StarterKit],
-    content: "", // start empty to avoid SSR mismatch
+    content: "",
     editable: false,
     editorProps: {
       attributes: {
         class: "prose prose-sm dark:prose-invert max-w-none focus:outline-none",
       },
     },
-    // IMPORTANT: avoid Tiptap trying to immediately render on hydration
     immediatelyRender: false,
   });
 
-  // Set actual content client-side (avoids SSR/content mismatch)
   useEffect(() => {
     if (editor) {
-      // set HTML content (strip none — StarterKit handles basic tags)
       editor.commands.setContent(problem?.description || "");
     }
   }, [editor, problem?.description]);
@@ -100,15 +93,10 @@ function ProblemDescription({ problem}: ProblemDescriptionProps) {
               </div>
             </div>
 
-            {/* Description with hover copy button */}
             <div className="relative group">
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-              {/* Render EditorContent only when editor is ready */}
               {editor ? <EditorContent editor={editor} /> : null}
             </div>
-
-            {/* Examples */}
 
             <hr />
             <section>
@@ -124,18 +112,16 @@ function ProblemDescription({ problem}: ProblemDescriptionProps) {
           <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
             <div className="space-y-4">
               <h6 className="text-2xl font-semibold">
-                Discussions for {problem?.title}
+                Discussions for {problem?.title || 'No Problem Selected'}
               </h6>
             </div>
-
+            <CreateComment username={userData?.username} problemId={problem?.id} />
             {problem?.id ? (
-              <CommentComponent problemId={problem.id} />
+              <CommentComponent problemId={problem.id} username={userData?.username} />
             ) : (
               <p className="text-muted-foreground">No problem selected</p>
             )}
           </div>
-
-          <CreateComment username={userData?.username} problemId={problem?.id}/>
         </TabsContent>
       </Tabs>
     </div>
