@@ -11,7 +11,6 @@ import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi"; // Assuming this exists
 import { Coins, Lock, Unlock } from "lucide-react";
 import React from "react";
-import toast from "react-hot-toast";
 import { skipToken } from '@reduxjs/toolkit/query/react';
 import Loader from "@/components/loader/LoaderComponent";
 
@@ -30,24 +29,9 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
   const { data: problem, isLoading: problemLoading } =
     useGetProblemQuery(problemId ?? skipToken);
 
-    /* eslint-disable */
   const handleUnlockHint = async (hintId: number) => {
-    try {
-      await unlockHint(hintId);
-      toast.success("Hint unlocked successfully");
-
-    } catch (err: any) {
-      const message = err?.data?.error || err?.error || err?.message || "Failed to unlock hint";
-      toast.error(message);
-    }
+      await unlockHint(hintId)
   };
-  /* eslint-enable */
-  const defaultAccordion = React.useMemo(() => {
-    if (!problem?.hints) return undefined;
-    const unlockedIndex = problem.hints.findIndex((hint) => !hint.is_locked);
-    console.log(problem.hints.map(h => h.is_locked));
-    return unlockedIndex !== -1 ? `item-${unlockedIndex + 1}` : undefined;
-  }, [problem?.hints]);
 
   if (problemLoading) return <Loader/>;
 
@@ -59,7 +43,6 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
       type="single"
       collapsible
       className="w-full"
-      defaultValue={defaultAccordion}
     >
       {problem?.hints.map((hint, index) => (
         <AccordionItem
