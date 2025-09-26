@@ -42,8 +42,8 @@ export default function CreateComment({ username, problemId }: { problemId?: num
 
     try {
       await createComment(commentData).unwrap();
-      setComment(''); // Clear input after successful submission
-      setValidationError(null); // Clear any previous errors
+      setComment('');
+      setValidationError(null);
     } catch (err) {
       console.error('Failed to create comment:', err);
     }
