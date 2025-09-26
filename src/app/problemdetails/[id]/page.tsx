@@ -1,7 +1,6 @@
 import Loader from "@/components/loader/LoaderComponent";
 import ProblemDetailsComponents from "@/components/problemdetailComponents/ProblemDetailComponent";
 import { Suspense } from "react";
-import { Toaster } from "react-hot-toast";
 
 interface ProblemDetailsPageProps {
   params: Promise<{
