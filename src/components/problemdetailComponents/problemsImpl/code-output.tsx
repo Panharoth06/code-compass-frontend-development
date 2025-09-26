@@ -235,7 +235,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
         },
         submittedAt: new Date(),
         language: language.toUpperCase(),
-        time: `${(avgRuntime * 1000).toFixed(0)}ms`, // <- use `time` field
+        time: `${(avgRuntime * 1000).toFixed(0)}ms`, 
         memory: `${Math.round(avgMemory)} KB`,
       } as unknown as SubmissionResult);
     } catch (err) {
