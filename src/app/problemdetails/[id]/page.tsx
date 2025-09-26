@@ -19,7 +19,6 @@ export default async function ProblemDetailsPage({ params }: ProblemDetailsPageP
       <Suspense fallback={<Loader />}>
         <ProblemDetailsComponents problemId={problemId} />
       </Suspense>
-      <Toaster />
     </div>
   );
 }

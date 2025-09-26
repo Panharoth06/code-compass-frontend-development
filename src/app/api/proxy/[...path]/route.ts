@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 // List of endpoints that don't require authentication
-const PUBLIC_ENDPOINTS = ["users/register", "auth/login", "auth/refresh"];
+const PUBLIC_ENDPOINTS = ["auth/register", "auth/login", "auth/refresh", "submissions/run/batch"];
 
 // Check if the endpoint requires authentication
 function requiresAuthentication(path: string[]): boolean {
@@ -184,25 +184,28 @@ async function handleProxyRequest(
         );
       }
     }
+    const clonedResponse = response.clone(); 
 
     // Successful response
     try {
-      const data = await response.json();
-      return NextResponse.json(data);
+        // Try reading the original response
+        const data = await response.json();
+        return NextResponse.json(data);
     } catch {
-      // Handle non-JSON responses
-      const text = await response.text();
-      return NextResponse.json({ result: text }, { status: response.status });
+        // Handle non-JSON responses by reading the CLONED response
+        // The cloned body is still usable.
+        const text = await clonedResponse.text();
+        return NextResponse.json({ result: text }, { status: response.status });
     }
-  } catch (error) {
+} catch (error) {
     console.error("Proxy error:", error);
 
     return NextResponse.json(
-      {
-        error: "Internal server error",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
+        {
+            error: "Internal server error",
+            message: error instanceof Error ? error.message : "Unknown error",
+        },
+        { status: 500 }
     );
   }
 }
