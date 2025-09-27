@@ -12,6 +12,7 @@ import HintComponent from "./HintComponent";
 import CommentComponent from "./CommentComponent";
 import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
 import CreateComment from "./CreateCommentComponent";
+import SubmissionHistoryComponent from "./SubmissionHistory";
 
 interface ProblemDescriptionProps {
   problem: ProblemResponse | undefined;
@@ -104,6 +105,15 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
               <HintComponent problemId={problem?.id} />
             </section>
           </div>
+        </TabsContent>
+        <TabsContent 
+        value="submissions"
+        className="flex-1 flex flex-col min-h-0"
+        >
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
+            <SubmissionHistoryComponent problem_id={problem?.id} />
+          </div>
+
         </TabsContent>
         <TabsContent
           value="discussions"

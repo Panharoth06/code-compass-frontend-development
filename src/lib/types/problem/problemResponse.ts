@@ -34,6 +34,14 @@ export interface Hint {
   is_locked: boolean;
 }
 
+
+export interface ProblemSummaryResponse {
+  id: number;
+  title: string;
+  difficulty: "EASY" | "MEDIUM" | "HARD";
+  tags: string[];
+}
+
 // {
 //   "id": 0,
 //   "best_memory_usage": 0,
