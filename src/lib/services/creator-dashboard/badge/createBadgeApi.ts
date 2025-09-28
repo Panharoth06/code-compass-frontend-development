@@ -1,4 +1,4 @@
-import baseApi
+import { baseApi } from "../../baseApi";
 
 // Types for the badge API
 interface CreateBadgeRequest {
