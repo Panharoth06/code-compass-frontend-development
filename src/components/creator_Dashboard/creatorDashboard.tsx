@@ -3,8 +3,6 @@
 import React, { useState, useMemo } from "react"
 import {
   Plus,
-  Edit,
-  Trash2,
   Code,
   Award,
   Package,
@@ -20,13 +18,7 @@ import CreatePackageForm from "./create-new/packages/createPackage"
 import CreateProblemForm from "./create-new/problems/createProblem"
 import AllItemsTable from "./filter-table/AllItemsTable"
 
-const Badge = ({ children, className = "" }) => (
-  <span
-    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition-all duration-200 ${className}`}
-  >
-    {children}
-  </span>
-)
+
 
 const Button = ({
   children,
@@ -329,27 +321,7 @@ export default function CreatorDashboard() {
     setCurrentPage(1)
   }, [filter])
 
-  const handleCreateProblem = (formData) => {
-    console.log("Create Problem:", formData)
-    // Form handles its own success/failure, just close dialog on success
-  }
-
-  const handleEditProblem = (formData) => {
-    console.log("Edit Problem:", formData)
-    setEditingProblem(null)
-    // Form handles its own success/failure, just close dialog on success
-  }
-
-  const handleCreateBadge = () => {
-    console.log("Create Badge")
-    // Form handles its own success/failure, just close dialog on success
-  }
-
-  const handleCreatePackage = (result) => {
-    console.log("Create Package:", result)
-    // Form handles its own success/failure, just close dialog on success
-  }
-
+  
   const openEditDialog = (item) => {
     setEditingProblem(item)
     setIsEditDialogOpen(true)
@@ -537,7 +509,7 @@ export default function CreatorDashboard() {
             <Code className="w-4 h-4 mr-2" />
             Problems
           </Button>
-          {/* <Button
+          <Button
             variant={filter === "badge" ? "default" : "outline"}
             onClick={() => setFilter("badge")}
             className={
@@ -556,7 +528,7 @@ export default function CreatorDashboard() {
           >
             <Package className="w-4 h-4 mr-2" />
             Packages
-          </Button> */}
+          </Button>
           <Button
             variant={filter === "admin" ? "default" : "outline"}
             onClick={() => setFilter("admin")}
