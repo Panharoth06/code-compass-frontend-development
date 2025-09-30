@@ -27,6 +27,7 @@ h6 {
   font-size: 20px;
   font-weight: 600;
 } */
+ 
 
 @theme inline {
   --color-background: var(--background);
@@ -65,11 +66,14 @@ h6 {
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+    --color-terminal-green: var(--terminal-green);
+  --color-terminal-gray: var(--terminal-gray);
+  
 }
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(95.514% 0.00011 271.152);
+  --background: oklch(0.05 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -101,6 +105,9 @@ h6 {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+    --terminal-green: oklch(0.75 0.15 145);
+  --terminal-gray: oklch(0.45 0 0);
+
 }
 
 .dark {
@@ -136,6 +143,9 @@ h6 {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+      --terminal-green: oklch(0.75 0.15 145);
+  --terminal-gray: oklch(0.45 0 0);
 }
 
 @layer base {
@@ -247,4 +257,27 @@ h6 {
 
 .circle-content {
   background: #1a1a1a;
+}
+
+/* @layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+} */
+
+@layer components {
+  .terminal-input {
+    @apply bg-card border-border text-foreground font-mono placeholder:text-muted-foreground;
+    @apply focus:border-terminal-green focus:ring-1 focus:ring-terminal-green;
+    @apply transition-all duration-200;
+  }
+
+  .glow-button {
+    @apply shadow-lg shadow-terminal-green/50;
+    @apply hover:shadow-xl hover:shadow-terminal-green/70;
+    @apply transition-all duration-300;
+  }
 }
