@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Trophy, Code, Flame, Crown, Medal, Award, Star, Zap } from "lucide-react"
+import Image from "next/image"
 
 export default function ModernCodeCompassLeaderboard() {
   const [isDarkMode] = useState(true)
@@ -82,16 +83,17 @@ export default function ModernCodeCompassLeaderboard() {
           <div className="mb-6">
             <div className="flex items-center gap-3 mb-4">
        <div
-  className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-3  ${
+  className={`relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 overflow-hidden border-3  ${
     isDarkMode
       ? "border-primary/40 shadow-xl shadow-primary/20"
       : "border-primary/60 shadow-xl shadow-primary/30"
   }`}
 >
-  <img
+  <Image
     src={topUser.image}
     alt={topUser.name}
-    className="w-full h-full object-cover"
+    fill
+    className="object-cover object-center"
   />
 </div>
 
@@ -224,19 +226,15 @@ export default function ModernCodeCompassLeaderboard() {
 
               <div className="relative flex flex-col lg:flex-row items-center gap-4">
                 <div className="relative">
-                <div
-  className={`w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden border-3  ${
-    isDarkMode
-      ? "border-primary/40 shadow-xl shadow-primary/20"
-      : "border-primary/60 shadow-xl shadow-primary/30"
-  }`}
->
-  <img
-    src={topUser.image}
-    alt={topUser.name}
-    className="w-full h-full object-cover"
-  />
-</div>
+                  <div className={`relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-3  ${isDarkMode ? "border-primary/40 shadow-xl shadow-primary/20"
+                    : "border-primary/60 shadow-xl shadow-primary/30"}`}>
+                    <Image
+                      src={topUser.image}
+                      alt={topUser.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
 
                   <div className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white font-bold text-xs flex items-center gap-1 px-2 py-1 rounded-lg">
                     <Crown className="w-3 h-3" />
@@ -257,7 +255,7 @@ export default function ModernCodeCompassLeaderboard() {
                       isDarkMode ? "text-gray-300" : "text-gray-700"
                     }`}
                   >
-                    "{topUser.quote}"
+                    &quot;{topUser.quote}&quot;
                   </p>
 
                   {/* Champion Stats */}
@@ -327,12 +325,13 @@ export default function ModernCodeCompassLeaderboard() {
                         <td className="p-3">
                           <div className="flex items-center gap-3">
                             <div
-                              className={`w-8 h-8 rounded-xl bg-gradient-to-br from-primary/80 to-primary/60 flex items-center justify-center text-white font-bold text-xs`}
+                              className={`relative w-10 h-10 rounded-full bg-gradient-to-br from-primary/80 to-primary/60 flex items-center justify-center text-white font-bold text-xs`}
                             >
-                                 <img
+                                 <Image
                                      src={user.image}
                                       alt={user.name}
-                                      className="w-full h-full object-cover rounded-full"
+                                      fill
+                                      className="object-cover rounded-full"
                                      />
 
                             </div>
@@ -380,9 +379,14 @@ export default function ModernCodeCompassLeaderboard() {
                       <span className="text-xl font-bold text-primary">#{user.rank.toString().padStart(2, "0")}</span>
                     </div>
                     <div
-                      className={`w-10 h-10 rounded-full bg-gradient-to-br from-primary/80 to-primary/60 flex items-center justify-center text-white font-bold text-xs transition-transform duration-300 group-hover:scale-110`}
+                      className={`relative w-10 h-10 rounded-full bg-gradient-to-br from-primary/80 to-primary/60 flex items-center justify-center text-white font-bold text-xs transition-transform duration-300 group-hover:scale-110`}
                     >
-                      {user.avatar}
+                      <Image
+                        src={user.image}
+                        alt={`${user.name} picture`}
+                        fill
+                        className="object-cover object-center"
+                      />
                     </div>
                     <div>
                       <span
