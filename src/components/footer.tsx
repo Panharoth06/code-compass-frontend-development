@@ -10,7 +10,6 @@ import {
   Facebook, 
   Twitter, 
   Linkedin,
-  ArrowUpRight,
   Globe
 } from 'lucide-react';
 
