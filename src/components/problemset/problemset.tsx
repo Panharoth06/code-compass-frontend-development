@@ -24,6 +24,7 @@ import { ButtonProps } from "@/lib/types/ButtonProps";
 import Link from "next/link";
 import { useGetAllProblemsQuery } from "@/lib/services/problem/problemApi";
 import { ProblemSummaryResponse } from "@/lib/types/problem/problemResponse";
+import Loader from "../loader/LoaderComponent";
 
 const mockData = [
   {
@@ -708,7 +709,7 @@ export default function Problemset(): JSX.Element {
 const {data: problems} = useGetAllProblemsQuery();
 
 
-  const minWidth = 64; // w-16
+    const minWidth = 64; // w-16
   const maxWidth = 400;
 
   useEffect(() => {
@@ -792,6 +793,9 @@ const {data: problems} = useGetAllProblemsQuery();
     }
   };
 
+const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery();
+
+  if (isLoading || isFetching) return <Loader/>
   
 
   const filteredData = problems
@@ -1072,7 +1076,10 @@ const {data: problems} = useGetAllProblemsQuery();
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData.map((problem: ProblemSummaryResponse) => {
+                  {isLoading || isFetching ? 
+                  ( <Loader/> ) : (
+                  
+                  filteredData.map((problem: ProblemSummaryResponse) => {
                     const difficultyConfig = getDifficultyConfig(
                       problem.difficulty
                     );
@@ -1139,7 +1146,8 @@ const {data: problems} = useGetAllProblemsQuery();
                         </td>
                       </tr>
                     );
-                  })}
+                  })
+                )}
                 </tbody>
               </table>
             </div>
