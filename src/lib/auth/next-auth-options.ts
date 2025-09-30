@@ -138,57 +138,15 @@ const safeRefreshToken = async (
   }
 };
 
-// Utility function to check if token needs refresh
-const shouldRefreshToken = (expiresAt: number): boolean => {
-  const currentTime = Math.floor(Date.now() / 1000);
-  return currentTime >= expiresAt - TOKEN_CONFIG.REFRESH_BUFFER_TIME;
-};
-
-// Utility function to calculate expiration time
-const calculateExpiresAt = (expiresIn?: string | number): number => {
-  const currentTime = Math.floor(Date.now() / 1000);
-  const expirationSeconds = expiresIn
-    ? typeof expiresIn === "string"
-      ? parseInt(expiresIn, 10)
-      : expiresIn
-    : TOKEN_CONFIG.DEFAULT_EXPIRES_IN;
-
-  return currentTime + Math.max(expirationSeconds, 60); // Minimum 1 minute
-};
+validateAuthConfig();
 
 export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
-      clientId: env.OIDC_CLIENT_ID,
-      clientSecret: env.OIDC_CLIENT_SECRET,
-      issuer: env.OIDC_ISSUER,
-      // Add timeout configurations for Keycloak
-      httpOptions: {
-        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
-      },
-    }),
-    GithubProvider({
-      clientId: env.CCP_GITHUB_CLIENT_ID,
-      clientSecret: env.CCP_GITHUB_CLIENT_SECRET,
-      // GitHub specific configurations
-      httpOptions: {
-        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
-      },
-    }),
-    GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      // Google specific configurations
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
-      httpOptions: {
-        timeout: TOKEN_CONFIG.HTTP_TIMEOUT,
-      },
+      clientId: process.env.OIDC_CLIENT_ID!,
+      clientSecret: process.env.OIDC_CLIENT_SECRET!,
+      issuer: process.env.OIDC_ISSUER,
+      authorization: { params: { scope: "openid email profile" } },
     }),
   ],
 
@@ -302,77 +260,24 @@ export const authOptions: AuthOptions = {
     },
 
     async session({ session, token }) {
-      try {
-        // Only attach tokens if they exist and are valid
-        if (token.access_token && !token.error) {
-          session.access_token = token.access_token as string;
-          session.refresh_token = token.refresh_token as string;
-          session.expires_at = token.expires_at as number;
-          session.provider = token.provider as string;
-          session.error = undefined;
-        } else {
-          // Handle error state
-          session.error = (token.error as string) || "TokenError";
-          console.warn("Session created with token error:", session.error);
-        }
-
-        return session;
-      } catch (error) {
-        console.error("Session callback error:", error);
-        return { ...session, error: "SessionError" };
-      }
-    },
-
-    async redirect({ url, baseUrl }) {
-      console.log("NextAuth redirect called:", { url, baseUrl });
-
-      // If it's a relative path, build absolute URL
-      if (url.startsWith("/")) {
-        return `${baseUrl}${url}`;
+      // If there's a token error, the session should reflect this
+      if (token.error) {
+        console.warn("⚠️ Session has token error:", token.error);
       }
 
-      // Only allow redirects that share the same origin
-      try {
-        const urlObj = new URL(url);
-
-        // Block localhost in production
-        if (
-          process.env.NODE_ENV === "production" &&
-          urlObj.hostname === "localhost"
-        ) {
-          console.warn(
-            "Blocked localhost redirect in production, falling back to baseUrl"
-          );
-          return baseUrl;
-        }
-
-        if (urlObj.origin === baseUrl) {
-          return url;
-        }
-      } catch (err) {
-        console.error("Error parsing URL:", err);
-      }
-
-      // Fallback
-      return baseUrl;
-    },
-
-    async signIn({ user, account, profile }) {
-      try {
-        console.info("Sign in attempt:", {
-          userId: user.id,
-          email: user.email,
-          provider: account?.provider,
-          profileId: profile?.sub || profile?.image,
-        });
-
-        // Allow all sign-ins by default
-        // Add custom logic here if needed (e.g., domain restrictions)
-        return true;
-      } catch (error) {
-        console.error("Sign in callback error:", error);
-        return false;
-      }
+      return {
+        ...session,
+        user: {
+          id: token.user?.id || "",
+          email: token.user?.email || "",
+          name: token.user?.name || "",
+        },
+        accessToken: token.accessToken,
+        error: token.error,
+        requireRegistration: token.requireRegistration,
+        isRegistered: token.isRegistered,
+        oauthData: (token as any).oauthData,
+      };
     },
   },
 
