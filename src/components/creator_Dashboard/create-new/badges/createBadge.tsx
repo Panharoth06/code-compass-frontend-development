@@ -38,6 +38,7 @@ const Button = ({
   ...props
 }) => {
   const baseClasses =
+  
     "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background transform active:scale-95"
 
   const variants = {
