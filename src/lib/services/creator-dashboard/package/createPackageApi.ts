@@ -1,6 +1,6 @@
 import { baseApi } from "../../baseApi";
 
-// Response type based on your API documentation
+// Response type based on your updated API documentation
 export interface CreatePackageResponse {
   id: number;
   name: string;
@@ -23,7 +23,9 @@ export interface CreatePackageResponse {
     is_verified: boolean;
     author: string;
     status: "PENDING" | "APPROVED" | "REJECTED";
-  };
+  } | null;
+  is_deleted: boolean;
+  is_verified: boolean;
 }
 
 // Request type based on your API documentation

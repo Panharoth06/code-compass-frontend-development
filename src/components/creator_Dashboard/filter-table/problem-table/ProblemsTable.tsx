@@ -168,6 +168,8 @@
 //   onDelete 
 // }: ProblemsTableProps) {
 //   const [notification, setNotification] = React.useState<{type: string, message: string} | null>(null)
+//   const [currentPage, setCurrentPage] = React.useState(1)
+//   const itemsPerPage = 5
   
 //   // Fetch problems from API
 //   const { 
@@ -198,6 +200,108 @@
 //     }
 //   }, [allProblems, showVerified, showAll])
 
+//   // Pagination calculations
+//   const totalPages = Math.ceil((problems?.length || 0) / itemsPerPage)
+//   const startIndex = (currentPage - 1) * itemsPerPage
+//   const endIndex = startIndex + itemsPerPage
+//   const paginatedProblems = problems.slice(startIndex, endIndex)
+
+//   // Reset to page 1 when filters change
+//   React.useEffect(() => {
+//     setCurrentPage(1)
+//   }, [showVerified, showAll])
+
+//   const handlePageChange = (page: number) => {
+//     setCurrentPage(page)
+//     window.scrollTo({ top: 0, behavior: 'smooth' })
+//   }
+
+//   const renderPagination = () => {
+//     if (totalPages <= 1) return null
+
+//     const pages: (number | string)[] = []
+//     const maxVisiblePages = 5
+
+//     if (totalPages <= maxVisiblePages) {
+//       // Show all pages if total is small
+//       for (let i = 1; i <= totalPages; i++) {
+//         pages.push(i)
+//       }
+//     } else {
+//       // Always show first page
+//       pages.push(1)
+
+//       if (currentPage > 3) {
+//         pages.push('...')
+//       }
+
+//       // Show pages around current page
+//       const startPage = Math.max(2, currentPage - 1)
+//       const endPage = Math.min(totalPages - 1, currentPage + 1)
+
+//       for (let i = startPage; i <= endPage; i++) {
+//         pages.push(i)
+//       }
+
+//       if (currentPage < totalPages - 2) {
+//         pages.push('...')
+//       }
+
+//       // Always show last page
+//       pages.push(totalPages)
+//     }
+
+//     return (
+//       <div className="flex items-center justify-center gap-2 mt-6 mb-2">
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={() => handlePageChange(currentPage - 1)}
+//           disabled={currentPage === 1}
+//           className="px-3 py-2"
+//         >
+//           Previous
+//         </Button>
+
+//         {pages.map((page, index) => {
+//           if (page === '...') {
+//             return (
+//               <span key={`ellipsis-${index}`} className="px-2 text-gray-500 dark:text-gray-400">
+//                 {page}
+//               </span>
+//             )
+//           }
+
+//           return (
+//             <Button
+//               key={page}
+//               variant={currentPage === page ? 'default' : 'outline'}
+//               size="sm"
+//               onClick={() => handlePageChange(page as number)}
+//               className={`min-w-[2.5rem] px-3 py-2 ${
+//                 currentPage === page 
+//                   ? 'bg-primary text-white' 
+//                   : 'bg-white dark:bg-gray-800'
+//               }`}
+//             >
+//               {page}
+//             </Button>
+//           )
+//         })}
+
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={() => handlePageChange(currentPage + 1)}
+//           disabled={currentPage === totalPages}
+//           className="px-3 py-2"
+//         >
+//           Next
+//         </Button>
+//       </div>
+//     )
+//   }
+
 //   // Handle API response notifications
 //   useEffect(() => {
 //     if (error) {
@@ -227,10 +331,16 @@
 //   }
 
 //   const handleEdit = async (problem: Problem) => {
+//     console.log('=== EDIT BUTTON CLICKED ===')
+//     console.log('Problem to edit:', problem)
+//     console.log('Problem ID:', problem.id)
+//     console.log('onEdit callback exists:', !!onEdit)
+    
 //     try {
 //       if (onEdit) {
 //         await onEdit(problem)
-//         showNotification('info', `Editing problem: ${problem.title}`)
+//         showNotification('info', `Opening editor for: ${problem.title} (ID: ${problem.id})`)
+//         // Don't refetch here - let the actual edit save handle it
 //       } else {
 //         showNotification('info', 'Edit functionality - please implement onEdit prop')
 //       }
@@ -448,15 +558,20 @@
 //         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
 //           {showAll ? 'All Problems' : showVerified ? 'All Problems' : 'Pending Problems'} ({problems?.length || 0})
 //         </h3>
-//         <Button
-//           variant="outline"
-//           size="sm"
-//           onClick={handleRefresh}
-//           className="flex items-center gap-2"
-//         >
-//           <RefreshCw className="w-4 h-4" />
-//           Refresh
-//         </Button>
+//         <div className="flex items-center gap-2">
+//           <span className="text-sm text-gray-600 dark:text-gray-400">
+//             Showing {startIndex + 1}-{Math.min(endIndex, problems?.length || 0)} of {problems?.length || 0}
+//           </span>
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             onClick={handleRefresh}
+//             className="flex items-center gap-2"
+//           >
+//             <RefreshCw className="w-4 h-4" />
+//             Refresh
+//           </Button>
+//         </div>
 //       </div>
       
 //       <div className="overflow-x-auto">
@@ -468,12 +583,12 @@
 //               <TableHead className="font-semibold text-gray-900 dark:text-white">Difficulty</TableHead>
 //               <TableHead className="font-semibold text-gray-900 dark:text-white">Status</TableHead>
 //               <TableHead className="font-semibold text-gray-900 dark:text-white">Tags</TableHead>
-//               <TableHead className="font-semibeld text-gray-900 dark:text-white text-right">Actions</TableHead>
+//               <TableHead className="font-semibold text-gray-900 dark:text-white text-right">Actions</TableHead>
 //             </TableRow>
 //           </TableHeader>
 //           <TableBody>
-//             {problems.length > 0 ? (
-//               problems.map((problem) => (
+//             {paginatedProblems.length > 0 ? (
+//               paginatedProblems.map((problem) => (
 //                 <TableRow
 //                   key={problem.id}
 //                   className="hover:bg-gray-100/30 dark:hover:bg-gray-800/30 transition-all duration-200 group"
@@ -558,33 +673,18 @@
 //           </TableBody>
 //         </Table>
 //       </div>
+      
+//       {renderPagination()}
 //     </div>
 //   )
 // }
 
+
 import React, { useEffect } from "react"
 import { Edit, Trash2, CheckCircle, XCircle, AlertCircle, RefreshCw } from "lucide-react"
 import { useGetMyProblemsQuery, Problem } from "@/lib/services/creator-dashboard/problem/displayAllProblemsApi"
-
-// Import the APIs - make sure these paths match your actual file structure
-// If you get import errors, adjust these paths accordingly
-let useModifyProblemMutation, useDeleteProblemMutation;
-
-try {
-  const modifyApi = require("@/lib/services/creator-dashboard/problem/modifyProblemsApi");
-  useModifyProblemMutation = modifyApi.useModifyProblemMutation;
-} catch (error) {
-  console.warn("Could not import modifyProblemsApi:", error);
-  useModifyProblemMutation = () => [() => Promise.reject("Modify API not available"), { isLoading: false, error: null }];
-}
-
-try {
-  const deleteApi = require("@/lib/services/creator-dashboard/problem/deletedProblemsApi");
-  useDeleteProblemMutation = deleteApi.useDeleteProblemMutation;
-} catch (error) {
-  console.warn("Could not import deletedProblemsApi:", error);
-  useDeleteProblemMutation = () => [() => Promise.reject("Delete API not available"), { isLoading: false, error: null }];
-}
+import { useModifyProblemMutation } from "@/lib/services/creator-dashboard/problem/modifyProblemsApi"
+import { useDeleteProblemMutation } from "@/lib/services/creator-dashboard/problem/deletedProblemsApi"
 
 const Badge = ({ children, className = "" }) => (
   <span
@@ -743,7 +843,7 @@ export default function ProblemsTable({
     refetch
   } = useGetMyProblemsQuery()
 
-  // Use the API hooks with error handling
+  // Use the API hooks with proper imports
   const [modifyProblem, modifyState] = useModifyProblemMutation()
   const [deleteProblem, deleteState] = useDeleteProblemMutation()
 
@@ -959,9 +1059,7 @@ export default function ProblemsTable({
       // Handle different error types
       let errorMessage = 'Failed to delete problem'
       
-      if (error === "Delete API not available") {
-        errorMessage = 'Delete API is not properly configured. Check your imports.'
-      } else if (typeof error === 'string') {
+      if (typeof error === 'string') {
         errorMessage = error
       } else if (error?.status) {
         errorMessage = `Delete failed with status ${error.status}`

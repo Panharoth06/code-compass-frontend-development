@@ -1,3 +1,4 @@
+
 // import React, { useEffect, useState } from "react"
 // import { Edit, Trash2, RefreshCw, CheckCircle, Clock, AlertCircle, Shield, Award } from "lucide-react"
 // import { useGetAllBadgesByAuthorQuery } from "@/lib/services/creator-dashboard/badge/displayAllBadgesApi"
@@ -203,8 +204,8 @@
 // )
 
 // interface BadgesTableProps {
-//   onEdit?: (item: Badge) => void;
-//   onDelete?: (item: Badge) => void;
+//   onEdit?: (item: any) => void;
+//   onDelete?: (item: any) => void;
 // }
 
 // export default function BadgesTable({ onEdit, onDelete }: BadgesTableProps) {
@@ -215,6 +216,101 @@
 //     isOpen: false,
 //     badge: null
 //   })
+//   const [currentPage, setCurrentPage] = useState(1)
+//   const itemsPerPage = 5
+
+//   // Pagination calculations
+//   const totalPages = Math.ceil((badges?.length || 0) / itemsPerPage)
+//   const startIndex = (currentPage - 1) * itemsPerPage
+//   const endIndex = startIndex + itemsPerPage
+//   const paginatedBadges = badges?.slice(startIndex, endIndex) || []
+
+//   const handlePageChange = (page: number) => {
+//     setCurrentPage(page)
+//     window.scrollTo({ top: 0, behavior: 'smooth' })
+//   }
+
+//   const renderPagination = () => {
+//     if (totalPages <= 1) return null
+
+//     const pages: (number | string)[] = []
+//     const maxVisiblePages = 5
+
+//     if (totalPages <= maxVisiblePages) {
+//       for (let i = 1; i <= totalPages; i++) {
+//         pages.push(i)
+//       }
+//     } else {
+//       pages.push(1)
+
+//       if (currentPage > 3) {
+//         pages.push('...')
+//       }
+
+//       const startPage = Math.max(2, currentPage - 1)
+//       const endPage = Math.min(totalPages - 1, currentPage + 1)
+
+//       for (let i = startPage; i <= endPage; i++) {
+//         pages.push(i)
+//       }
+
+//       if (currentPage < totalPages - 2) {
+//         pages.push('...')
+//       }
+
+//       pages.push(totalPages)
+//     }
+
+//     return (
+//       <div className="flex items-center justify-center gap-2 mt-6 mb-2">
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={() => handlePageChange(currentPage - 1)}
+//           disabled={currentPage === 1}
+//           className="px-3 py-2"
+//         >
+//           Previous
+//         </Button>
+
+//         {pages.map((page, index) => {
+//           if (page === '...') {
+//             return (
+//               <span key={`ellipsis-${index}`} className="px-2 text-gray-500 dark:text-gray-400">
+//                 {page}
+//               </span>
+//             )
+//           }
+
+//           return (
+//             <Button
+//               key={page}
+//               variant={currentPage === page ? 'default' : 'outline'}
+//               size="sm"
+//               onClick={() => handlePageChange(page as number)}
+//               className={`min-w-[2.5rem] px-3 py-2 ${
+//                 currentPage === page 
+//                   ? 'bg-primary text-white' 
+//                   : 'bg-white dark:bg-gray-800'
+//               }`}
+//             >
+//               {page}
+//             </Button>
+//           )
+//         })}
+
+//         <Button
+//           variant="outline"
+//           size="sm"
+//           onClick={() => handlePageChange(currentPage + 1)}
+//           disabled={currentPage === totalPages}
+//           className="px-3 py-2"
+//         >
+//           Next
+//         </Button>
+//       </div>
+//     )
+//   }
 
 //   // Show notification for 5 seconds
 //   useEffect(() => {
@@ -234,7 +330,7 @@
 //     })
 //   }
 
-//   const handleEdit = (badge: Badge) => {
+//   const handleEdit = (badge: any) => {
 //     if (onEdit) {
 //       onEdit(badge)
 //       setNotification({
@@ -244,24 +340,19 @@
 //     }
 //   }
 
-//   const handleDeleteClick = (badge: Badge) => {
+//   const handleDeleteClick = (badge: any) => {
 //     setDeleteModal({
 //       isOpen: true,
 //       badge: badge
 //     })
 //   }
 
-//   const [deletedBadges, setDeletedBadges] = useState<Set<number>>(new Set())
-
 //   const handleDeleteConfirm = async () => {
 //     if (!deleteModal.badge) return
 
 //     try {
-//       // Call the delete API
+//       // Call the delete mutation
 //       await deleteBadge(deleteModal.badge.id).unwrap()
-      
-//       // Mark badge as deleted in local state
-//       setDeletedBadges(prev => new Set(prev).add(deleteModal.badge.id))
       
 //       // Show success notification
 //       setNotification({
@@ -269,7 +360,7 @@
 //         message: `Badge "${deleteModal.badge.name}" has been deleted successfully!`
 //       })
       
-//       // Close modal
+//       // Close the modal
 //       setDeleteModal({ isOpen: false, badge: null })
       
 //       // Call onDelete callback if provided
@@ -277,17 +368,25 @@
 //         onDelete(deleteModal.badge)
 //       }
       
-//       // Refresh the list after a short delay to show the deleted state
+//       // The refetch will happen automatically due to invalidatesTags
+//       // But we can also manually refetch to be sure
 //       setTimeout(() => {
 //         refetch()
-//       }, 2000)
+//       }, 500)
+      
 //     } catch (err: any) {
-//       // Show error notification
+//       // Handle error
+//       const errorMessage = err?.data?.message || err?.message || 'Failed to delete badge. Please try again.'
+      
 //       setNotification({
 //         type: 'error',
-//         message: err?.data?.message || `Failed to delete badge "${deleteModal.badge.name}". Please try again.`
+//         message: errorMessage
 //       })
+      
 //       console.error('Delete badge error:', err)
+      
+//       // Close modal even on error
+//       setDeleteModal({ isOpen: false, badge: null })
 //     }
 //   }
 
@@ -334,15 +433,20 @@
 //         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
 //           My Badges ({badges?.length || 0})
 //         </h3>
-//         <Button
-//           variant="outline"
-//           size="sm"
-//           onClick={handleRefresh}
-//           className="flex items-center gap-2"
-//         >
-//           <RefreshCw className="w-4 h-4" />
-//           Refresh
-//         </Button>
+//         <div className="flex items-center gap-2">
+//           <span className="text-sm text-gray-600 dark:text-gray-400">
+//             Showing {startIndex + 1}-{Math.min(endIndex, badges?.length || 0)} of {badges?.length || 0}
+//           </span>
+//           <Button
+//             variant="outline"
+//             size="sm"
+//             onClick={handleRefresh}
+//             className="flex items-center gap-2"
+//           >
+//             <RefreshCw className="w-4 h-4" />
+//             Refresh
+//           </Button>
+//         </div>
 //       </div>
 
 //       <div className="overflow-x-auto">
@@ -359,95 +463,65 @@
 //             </TableRow>
 //           </TableHeader>
 //           <TableBody>
-//             {badges && badges.length > 0 ? (
-//               badges.map((badge) => {
-//                 const isDeleted = deletedBadges.has(badge.id)
-                
-//                 return (
-//                   <TableRow
-//                     key={badge.id}
-//                     className={`transition-all duration-200 group ${
-//                       isDeleted 
-//                         ? 'opacity-50 bg-red-50 dark:bg-red-900/10' 
-//                         : 'hover:bg-gray-100/30 dark:hover:bg-gray-800/30'
-//                     }`}
-//                   >
-//                     <TableCell>
-//                       <div className="flex items-center space-x-3">
-//                         <div className="relative">
-//                           <BadgeIcon iconUrl={badge.icon_url} name={badge.name} />
-//                           {isDeleted && (
-//                             <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
-//                               <Trash2 className="w-5 h-5 text-white" />
-//                             </div>
-//                           )}
+//             {paginatedBadges && paginatedBadges.length > 0 ? (
+//               paginatedBadges.map((badge) => (
+//                 <TableRow
+//                   key={badge.id}
+//                   className="transition-all duration-200 group hover:bg-gray-100/30 dark:hover:bg-gray-800/30"
+//                 >
+//                   <TableCell>
+//                     <div className="flex items-center space-x-3">
+//                       <BadgeIcon iconUrl={badge.icon_url} name={badge.name} />
+//                       <div>
+//                         <div className="font-medium text-gray-900 dark:text-white flex items-center">
+//                           {badge.name}
+//                           <VerificationBadge isVerified={badge.is_verified} />
 //                         </div>
-//                         <div>
-//                           <div className="font-medium text-gray-900 dark:text-white flex items-center">
-//                             {badge.name}
-//                             <VerificationBadge isVerified={badge.is_verified} />
-//                             {isDeleted && (
-//                               <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400 ml-2">
-//                                 <Trash2 className="w-3 h-3 mr-1" />
-//                                 Deleted
-//                               </Badge>
-//                             )}
-//                           </div>
-//                           <div className="text-sm text-gray-500 dark:text-gray-400">
-//                             by {badge.author}
-//                           </div>
+//                         <div className="text-sm text-gray-500 dark:text-gray-400">
+//                           by {badge.author}
 //                         </div>
 //                       </div>
-//                     </TableCell>
-//                     <TableCell className={`max-w-xs ${isDeleted ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-600 dark:text-gray-300'}`}>
-//                       <div className="truncate" title={badge.description}>
-//                         {badge.description}
-//                       </div>
-//                     </TableCell>
-//                     <TableCell className="hidden sm:table-cell">
-//                       <StatusBadge status={badge.status} />
-//                     </TableCell>
-//                     <TableCell className={`hidden md:table-cell text-right ${isDeleted ? 'text-gray-400 dark:text-gray-500' : 'text-gray-600 dark:text-gray-300'}`}>
-//                       {formatDate(badge.created_at)}
-//                     </TableCell>
-//                     <TableCell className="text-right">
-//                       {isDeleted ? (
-//                         <div className="flex justify-end">
-//                           <Badge className="bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400">
-//                             <CheckCircle className="w-3 h-3 mr-1" />
-//                             Deleted Successfully
-//                           </Badge>
-//                         </div>
-//                       ) : (
-//                         <div className="flex justify-end space-x-1">
-//                           <Button
-//                             size="sm"
-//                             variant="ghost"
-//                             className="hover:bg-accent hover:text-accent-foreground transition-all duration-200 group-hover:scale-105 p-2"
-//                             onClick={() => handleEdit(badge)}
-//                             title="Edit badge"
-//                           >
-//                             <Edit className="w-4 h-4" />
-//                           </Button>
-//                           <Button
-//                             size="sm"
-//                             variant="destructive"
-//                             className="hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 group-hover:scale-105 p-2"
-//                             onClick={() => handleDeleteClick(badge)}
-//                             title="Delete badge"
-//                             disabled={isDeleting}
-//                           >
-//                             <Trash2 className="w-4 h-4" />
-//                           </Button>
-//                         </div>
-//                       )}
-//                     </TableCell>
-//                   </TableRow>
-//                 )
-//               })
+//                     </div>
+//                   </TableCell>
+//                   <TableCell className="max-w-xs text-gray-600 dark:text-gray-300">
+//                     <div className="truncate" title={badge.description}>
+//                       {badge.description}
+//                     </div>
+//                   </TableCell>
+//                   <TableCell className="hidden sm:table-cell">
+//                     <StatusBadge status={badge.status} />
+//                   </TableCell>
+//                   <TableCell className="hidden md:table-cell text-right text-gray-600 dark:text-gray-300">
+//                     {formatDate(badge.created_at)}
+//                   </TableCell>
+//                   <TableCell className="text-right">
+//                     <div className="flex justify-end space-x-1">
+//                       <Button
+//                         size="sm"
+//                         variant="ghost"
+//                         className="hover:bg-accent hover:text-accent-foreground transition-all duration-200 group-hover:scale-105 p-2"
+//                         onClick={() => handleEdit(badge)}
+//                         title="Edit badge"
+//                       >
+//                         <Edit className="w-4 h-4" />
+//                       </Button>
+//                       <Button
+//                         size="sm"
+//                         variant="destructive"
+//                         className="hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 group-hover:scale-105 p-2"
+//                         onClick={() => handleDeleteClick(badge)}
+//                         title="Delete badge"
+//                         disabled={isDeleting}
+//                       >
+//                         <Trash2 className="w-4 h-4" />
+//                       </Button>
+//                     </div>
+//                   </TableCell>
+//                 </TableRow>
+//               ))
 //             ) : (
 //               <TableRow>
-//                 <TableCell colSpan="5" className="text-center py-8 text-gray-500 dark:text-gray-400">
+//                 <TableCell colSpan={5} className="text-center py-8 text-gray-500 dark:text-gray-400">
 //                   {error ? 'Failed to load badges' : 'No badges found'}
 //                 </TableCell>
 //               </TableRow>
@@ -455,6 +529,8 @@
 //           </TableBody>
 //         </Table>
 //       </div>
+      
+//       {renderPagination()}
 //     </div>
 //   )
 // }
@@ -575,7 +651,7 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel, badgeName, isDeleting 
         </div>
         
         <p className="text-gray-600 dark:text-gray-300 mb-6">
-          Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-white">"{badgeName}"</span>? This action cannot be undone.
+          Are you sure you want to delete <span className="font-semibold text-gray-900 dark:text-white">&quot;{badgeName}&quot;</span>? This action cannot be undone.
         </p>
         
         <div className="flex gap-3 justify-end">
@@ -611,7 +687,7 @@ const ConfirmationModal = ({ isOpen, onConfirm, onCancel, badgeName, isDeleting 
 }
 
 // Status badge component
-const StatusBadge = ({ status }) => {
+const StatusBadge = ({ status }: { status: "APPROVED" | "PENDING" }) => {
   const statusConfig = {
     APPROVED: {
       className: "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400",
@@ -634,7 +710,7 @@ const StatusBadge = ({ status }) => {
 }
 
 // Verification badge component
-const VerificationBadge = ({ isVerified }) => {
+const VerificationBadge = ({ isVerified }: { isVerified: boolean }) => {
   if (!isVerified) return null
   
   return (
@@ -646,15 +722,19 @@ const VerificationBadge = ({ isVerified }) => {
 }
 
 // Badge icon component
-const BadgeIcon = ({ iconUrl, name }) => (
+const BadgeIcon = ({ iconUrl, name }: { iconUrl: string; name: string }) => (
   <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 dark:bg-gray-800 flex-shrink-0">
     <img
       src={iconUrl}
       alt={name}
       className="w-full h-full object-cover"
       onError={(e) => {
-        e.target.style.display = 'none'
-        e.target.nextSibling.style.display = 'flex'
+        const target = e.target as HTMLImageElement;
+        target.style.display = 'none';
+        const nextSibling = target.nextSibling as HTMLElement;
+        if (nextSibling) {
+          nextSibling.style.display = 'flex';
+        }
       }}
     />
     <div className="w-full h-full hidden items-center justify-center text-gray-400">
@@ -663,16 +743,39 @@ const BadgeIcon = ({ iconUrl, name }) => (
   </div>
 )
 
+// Define Badge interface
+interface BadgeItem {
+  id: number;
+  name: string;
+  description: string;
+  icon_url: string;
+  created_at: string;
+  is_deleted: boolean;
+  is_verified: boolean;
+  author: string;
+  status: "PENDING" | "APPROVED";
+}
+
 interface BadgesTableProps {
-  onEdit?: (item: any) => void;
-  onDelete?: (item: any) => void;
+  onEdit?: (item: BadgeItem) => void;
+  onDelete?: (item: BadgeItem) => void;
+}
+
+interface NotificationState {
+  type: string;
+  message: string;
+}
+
+interface DeleteModalState {
+  isOpen: boolean;
+  badge: BadgeItem | null;
 }
 
 export default function BadgesTable({ onEdit, onDelete }: BadgesTableProps) {
   const { data: badges, error, isLoading, refetch } = useGetAllBadgesByAuthorQuery()
   const [deleteBadge, { isLoading: isDeleting }] = useDeleteBadgeMutation()
-  const [notification, setNotification] = useState<{type: string, message: string} | null>(null)
-  const [deleteModal, setDeleteModal] = useState<{isOpen: boolean, badge: any | null}>({
+  const [notification, setNotification] = useState<NotificationState | null>(null)
+  const [deleteModal, setDeleteModal] = useState<DeleteModalState>({
     isOpen: false,
     badge: null
   })
@@ -790,7 +893,7 @@ export default function BadgesTable({ onEdit, onDelete }: BadgesTableProps) {
     })
   }
 
-  const handleEdit = (badge: any) => {
+  const handleEdit = (badge: BadgeItem) => {
     if (onEdit) {
       onEdit(badge)
       setNotification({
@@ -800,7 +903,7 @@ export default function BadgesTable({ onEdit, onDelete }: BadgesTableProps) {
     }
   }
 
-  const handleDeleteClick = (badge: any) => {
+  const handleDeleteClick = (badge: BadgeItem) => {
     setDeleteModal({
       isOpen: true,
       badge: badge
@@ -834,9 +937,11 @@ export default function BadgesTable({ onEdit, onDelete }: BadgesTableProps) {
         refetch()
       }, 500)
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Handle error
-      const errorMessage = err?.data?.message || err?.message || 'Failed to delete badge. Please try again.'
+      const errorMessage = (err as { data?: { message?: string }; message?: string })?.data?.message || 
+                          (err as { message?: string })?.message || 
+                          'Failed to delete badge. Please try again.'
       
       setNotification({
         type: 'error',
