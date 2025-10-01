@@ -22,6 +22,9 @@ import {
 } from "lucide-react";
 import { ButtonProps } from "@/lib/types/ButtonProps";
 import Link from "next/link";
+import { useGetAllProblemsQuery } from "@/lib/services/problem/problemApi";
+import { ProblemSummaryResponse } from "@/lib/types/problem/problemResponse";
+import Loader from "../loader/LoaderComponent";
 
 const mockData = [
   {
@@ -292,23 +295,23 @@ const getDifficultyConfig = (difficulty: string) => {
 };
 
 // Fixed star display to only show 3 stars max
-const getStarsDisplay = (stars: string) => {
-  const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
-  return (
-    <div className="flex items-center gap-1">
-      {Array.from({ length: 3 }, (_, i) => (
-        <Star
-          key={i}
-          className={`w-3 h-3 ${
-            i < starCount
-              ? "text-yellow-500 fill-current"
-              : "text-gray-300 dark:text-slate-500"
-          }`}
-        />
-      ))}
-    </div>
-  );
-};
+// const getStarsDisplay = (stars: string) => {
+//   const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
+//   return (
+//     <div className="flex items-center gap-1">
+//       {Array.from({ length: 3 }, (_, i) => (
+//         <Star
+//           key={i}
+//           className={`w-3 h-3 ${
+//             i < starCount
+//               ? "text-yellow-500 fill-current"
+//               : "text-gray-300 dark:text-slate-500"
+//           }`}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
 
 // Sidebar Component - Fixed mobile text visibility
 const Sidebar = ({
@@ -703,7 +706,7 @@ export default function Problemset(): JSX.Element {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
 
-  const minWidth = 64; // w-16
+    const minWidth = 64; // w-16
   const maxWidth = 400;
 
   useEffect(() => {
@@ -787,9 +790,15 @@ export default function Problemset(): JSX.Element {
     }
   };
 
-  const filteredData = mockData
-    .sort((a, b) => a.id - b.id)
-    .filter((problem) => {
+const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery();
+
+  if (isLoading || isFetching) return <Loader/>
+  
+
+  const filteredData = problems
+    ? [...problems]
+    .sort((a: ProblemSummaryResponse, b: ProblemSummaryResponse) => a.id - b.id)
+    .filter((problem: ProblemSummaryResponse) => {
       const matchesSearch = problem.title
         .toLowerCase()
         .includes(searchQuery.toLowerCase());
@@ -805,7 +814,7 @@ export default function Problemset(): JSX.Element {
         });
 
       return matchesSearch && matchesTopic;
-    });
+    }) : [];
 
   if (currentView === "studyplan") {
     return (
@@ -894,7 +903,7 @@ export default function Problemset(): JSX.Element {
           {/* Header - Made smaller and responsive */}
           <div className="mb-6 sm:mb-8">
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
-              Problem Library
+              Problem Packages
             </h3>
             <p className="text-sm sm:text-base text-gray-600 dark:text-slate-400">
               Master coding interviews with curated problems
@@ -931,12 +940,12 @@ export default function Problemset(): JSX.Element {
             <Card className="group cursor-pointer">
               <CardHeader>
                 <div className="flex items-center justify-between mb-3">
-                  <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-[#CCF301] to-[#CCF301]/80 rounded-xl flex items-center justify-center">
+                  <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center">
                     <Trophy className="w-5 sm:w-6 h-5 sm:h-6 text-gray-900" />
                   </div>
-                  <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-[#CCF301] transition-colors" />
+                  <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-primary transition-colors" />
                 </div>
-                <CardTitle className="group-hover:text-[#CCF301] transition-colors text-sm sm:text-base">
+                <CardTitle className="group-hover:text-primary transition-colors text-sm sm:text-base">
                   Data Structures & Algorithms
                 </CardTitle>
               </CardHeader>
@@ -958,9 +967,9 @@ export default function Problemset(): JSX.Element {
                   <div className="w-10 sm:w-12 h-10 sm:h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
                     <Star className="w-5 sm:w-6 h-5 sm:h-6 text-white" />
                   </div>
-                  <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-[#CCF301] transition-colors" />
+                  <ChevronRight className="w-4 sm:w-5 h-4 sm:h-5 text-gray-400 dark:text-slate-400 group-hover:text-primary transition-colors" />
                 </div>
-                <CardTitle className="group-hover:text-[#CCF301] transition-colors text-sm sm:text-base">
+                <CardTitle className="group-hover:text-primary transition-colors text-sm sm:text-base">
                   Top Interview Questions
                 </CardTitle>
               </CardHeader>
@@ -1055,16 +1064,19 @@ export default function Problemset(): JSX.Element {
                     <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
                       Problem
                     </th>
-                    <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
+                    {/* <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
                       Stars
-                    </th>
+                    </th> */}
                     <th className="text-left p-3 sm:p-4 text-gray-700 dark:text-slate-300 font-medium text-sm">
                       Difficulty
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredData.map((problem) => {
+                  {isLoading || isFetching ? 
+                  ( <Loader/> ) : (
+                  
+                  filteredData.map((problem: ProblemSummaryResponse) => {
                     const difficultyConfig = getDifficultyConfig(
                       problem.difficulty
                     );
@@ -1114,9 +1126,9 @@ export default function Problemset(): JSX.Element {
                               </div>
                             </Link>
                         </td>
-                        <td className="p-3 sm:p-4">
+                        {/* <td className="p-3 sm:p-4">
                           {getStarsDisplay(problem.stars)}
-                        </td>
+                        </td> */}
                         <td className="p-3 sm:p-4">
 <Link
                               href={`/problemdetails/${problem.id}`}
@@ -1131,7 +1143,8 @@ export default function Problemset(): JSX.Element {
                         </td>
                       </tr>
                     );
-                  })}
+                  })
+                )}
                 </tbody>
               </table>
             </div>
@@ -1139,7 +1152,7 @@ export default function Problemset(): JSX.Element {
             {/* Mobile Card View */}
             <div className="block sm:hidden">
               <div className="divide-y divide-gray-200 dark:divide-slate-700/50">
-                {filteredData.map((problem) => {
+                {filteredData.map((problem: ProblemSummaryResponse) => {
                   const difficultyConfig = getDifficultyConfig(
                     problem.difficulty
                   );
@@ -1160,9 +1173,9 @@ export default function Problemset(): JSX.Element {
                             </h6>
                           </div>
                         </div>
-                        <div className="flex-shrink-0 ml-2">
+                        {/* <div className="flex-shrink-0 ml-2">
                           {getStarsDisplay(problem.stars)}
-                        </div>
+                        </div> */}
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 mb-3">

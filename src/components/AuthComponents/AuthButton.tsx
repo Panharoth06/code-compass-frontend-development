@@ -10,7 +10,7 @@ export default function AuthButtons() {
 
   return (
     <div className="flex gap-2">
-      {session?.access_token ? (
+      {session?.accessToken ? (
         <>
           <motion.button
             className="flex items-center space-x-2 px-4 py-2 text-gray-600 dark:text-black rounded-xl transition-all duration-200 font-medium relative group hover:cursor-pointer bg-primary/90 hover:bg-primary/80"

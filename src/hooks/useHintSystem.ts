@@ -1,6 +1,5 @@
 import { useUnlockHintMutation } from "@/lib/services/hint/hintApi";
 import { useState } from "react";
-import { toast } from "react-hot-toast";
 
 export const useHintSystem = () => {
   const [unlockHintMutation, { isLoading: isUnlocking }] = useUnlockHintMutation();
@@ -8,37 +7,31 @@ export const useHintSystem = () => {
 
   const unlockHint = async (hintId: number) => {
     try {
-      const response = await unlockHintMutation(hintId).unwrap();
+      // 1. The response is now guaranteed to be { message: string }
+      const response: string = await unlockHintMutation(hintId).unwrap(); 
 
-      // Add to local unlocked hints
+      // Add to local unlocked hints (Optimistic UI update)
       setUnlockedHints((prev) => [...prev, hintId]);
 
-      // Handle response safely
-      const successMessage =
-        typeof response === "string"
-          ? response
-          : response || "Hint unlocked successfully";
+      // 2. Extract the string message directly from the consistent key 'message'
+      const successMessage = response || "Hint unlocked successfully";
 
-      toast.success(successMessage);
       return successMessage;
     } 
     /* eslint-disable */
     catch (error: any) {
       let errorMessage = "Failed to unlock hint";
+      const errorData = error?.data;
 
-      if (typeof error?.data === "string") {
-        errorMessage = error.data;
-      } else if (typeof error?.data === "object") {
-        errorMessage =
-          error.data?.message ||
-          error.data?.error ||
-          JSON.stringify(error.data);
+      // 3. Since the proxy wraps the error string, we check for the 'message' key
+      if (typeof errorData === "object" && errorData !== null && errorData.message) {
+        errorMessage = errorData.message;
+      
+      // 4. Fallback for network or unknown errors
       } else if (error?.message) {
         errorMessage = error.message;
       }
 
-      toast.error(errorMessage);
-      console.error("Unlock hint error:", error);
       return Promise.reject(errorMessage);
     }
   };
@@ -51,6 +44,6 @@ export const useHintSystem = () => {
     isUnlocking,
     unlockHint,
     isHintUnlocked,
-    unlockedHints, // optional: expose local unlocked hints 
+    unlockedHints,
   };
 };

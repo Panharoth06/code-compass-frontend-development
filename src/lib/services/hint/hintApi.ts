@@ -1,15 +1,15 @@
 import {baseApi}  from "../baseApi";
 
 export const hintApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     unlockHint: builder.mutation<string, number>({
       query: (hintId) => ({
         url: `hints/${hintId}/unlock`,
-        method: 'PATCH',
+        method: 'PUT',
       }),
-      // Fixed: Added curly braces around the object
       invalidatesTags: (hintId) => [
-        { type: 'Hints', id: hintId, }
+        { type: 'Hints', id: hintId}, {type: 'Problems'}, {type: 'Users'}
       ]
     }),
   }),

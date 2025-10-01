@@ -1,18 +1,35 @@
-import { ProblemResponse } from "@/lib/types/problem/problemResponse";
+import {
+  ProblemResponse,
+  ProblemSummaryResponse,
+} from "@/lib/types/problem/problemResponse";
 import { baseApi } from "../baseApi";
-import { getSession } from "next-auth/react";
+
 
 export const problemApi = baseApi.injectEndpoints({
+
   endpoints: (builder) => ({
-    getProblem: builder.query<ProblemResponse, number>({
-      query: async (id) => {
-        const session = await getSession();
-        const endpoint = session?.access_token ? '/me' : '';
-        return { url: `problems/${id}${endpoint}`, method: "GET" };
-      },
+    getProblem: builder.query<ProblemResponse | undefined, number>({
+      query: (id) => ({
+        url: `problems/${id}/me`,
+        method: "GET",
+      }),
       providesTags: (result, error, id) => [{ type: "Problems", id }],
+    }),
+    
+    getAllProblems: builder.query<ProblemSummaryResponse[], void>({
+      query: () => `problems/verified`,
+      keepUnusedDataFor: 300, 
+      providesTags: () => [{ type: "Problems" }],
+    }),
+
+    searchProblems: builder.query<ProblemSummaryResponse[], {searchQuery: string}>({
+      // The parameter type is now correctly inferred from the generic argument:
+      query: ({ searchQuery }) => ({
+        url: `problems/search?keyword=${searchQuery}`, 
+      }),
+      providesTags: () => [{type: 'Problems'}],
     }),
   }),
 });
 
-export const { useGetProblemQuery } = problemApi;
+export const { useGetProblemQuery, useGetAllProblemsQuery, useSearchProblemsQuery } = problemApi;

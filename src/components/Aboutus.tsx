@@ -19,7 +19,7 @@ interface TeamCardProps {
   role: string
   image: string
   size?: string
-  index?: number
+  index?: boolean
 }
 
 interface StatCardProps {

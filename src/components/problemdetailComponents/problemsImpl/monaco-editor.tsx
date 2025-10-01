@@ -1,4 +1,5 @@
 "use client"
+import Loader from "@/components/loader/LoaderComponent"
 /* eslint-disable */
 import { Editor, loader } from "@monaco-editor/react"
 import { useTheme } from "next-themes"
@@ -6,7 +7,7 @@ import { useEffect, useRef, useState } from "react"
 
 interface MonacoEditorProps {
   value: string
-  onChange: (value: string) => void
+  onChange?: (value: string) => void
   language: string
   fontSize?: number
   height?: string
@@ -195,7 +196,7 @@ export function MonacoEditor({
   }
 
   const handleChange = (newValue: string | undefined) => {
-    if (newValue !== undefined) {
+    if (newValue !== undefined && onChange) {
       onChange(newValue)
     }
   }
@@ -224,12 +225,7 @@ export function MonacoEditor({
 
   if (!mounted) {
     return (
-      <div 
-        className={`h-full bg-card flex items-center justify-center ${className || ""}`}
-        style={{ height }}
-      >
-        <div className="text-muted-foreground text-sm">Loading editor...</div>
-      </div>
+      <Loader/>
     )
   }
 

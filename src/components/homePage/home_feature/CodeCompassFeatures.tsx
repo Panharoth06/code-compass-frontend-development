@@ -1,7 +1,7 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
-import { Lightbulb, MessageSquare, Trophy } from 'lucide-react';
 
 export default function CodeCompassFeatures() {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -63,26 +63,27 @@ export default function CodeCompassFeatures() {
             </div>
 
             <div className="relative rounded-2xl  overflow-hidden border bg-muted/30 group hover:bg-muted/50 transition-colors shadow-xl">
-              <img
-                src="code submission.png"
+              <Image
+                src="/code submission.png"
                 alt=" Code Submission"
-                className="w-full h-auto object-cover"
+                fill
+                className="object-cover"
               />
-          
+
             </div>
           </div>
 
           {/* Discussion Feature */}
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
- <div className="relative rounded-xl overflow-hidden border bg-muted/30 group hover:bg-muted/50 transition-colors shadow-xl">
-  <img
-    src="leaderboard.png"
-    alt="CodeCompass LeaderBoard"
-    className="w-full h-auto object-cover"
-  />
-</div>
+            <div className="relative rounded-xl overflow-hidden border bg-muted/30 group hover:bg-muted/50 transition-colors shadow-xl">
+              <Image
+                src="/leaderboard.png"
+                alt="CodeCompass LeaderBoard"
+                fill
+                className="object-cover"
+              />
+            </div>
 
-          
 
             <div className="space-y-6 order-1 lg:order-2">
               <div className="flex items-center gap-4 mb-6">
@@ -100,14 +101,14 @@ export default function CodeCompassFeatures() {
           </div>
 
           {/* Leaderboard Ranking Feature */}
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <div className="space-y-6">
               <div className="flex items-center gap-4 mb-6">
                 {/* <div className="p-3 rounded-xl bg-muted border">
                   <Trophy className="w-6 h-6 text-lime-400" />
                 </div> */}
                 <h2 className="text-2xl lg:text-4xl font-bold">
-                 Leaderboard Ranking
+                  Leaderboard Ranking
                 </h2>
               </div>
               <p className="text-xl text-muted-foreground leading-relaxed">
@@ -117,10 +118,11 @@ export default function CodeCompassFeatures() {
             </div>
 
             <div className="relative rounded-2xl  overflow-hidden border bg-muted/30 group hover:bg-muted/50 transition-colors  shadow-xl">
-              <img
-                src="leaderboard.png"
-                alt="CodeCompass LeaderBoard "
-                className="w-full h-auto object-cover"
+              <Image
+                src="/leaderboard.png"
+                alt="CodeCompass LeaderBoard"
+                fill
+                className="object-cover"
               />
             </div>
           </div>
