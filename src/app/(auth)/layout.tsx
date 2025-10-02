@@ -4,6 +4,7 @@ import StoreProvider from "../StoreProvider";
 import SessionProviderWrapper from "../SessionProviderWrapper";
 import { Suspense } from "react";
 import Loader from "@/components/loader/LoaderComponent";
+import { Toaster } from "react-hot-toast";
 
 
 export const metadata: Metadata = {
@@ -19,9 +20,9 @@ export default function RootLayout({
     <SessionProviderWrapper>
       <StoreProvider>
         <main>{children}</main>
+        <Toaster/>
       </StoreProvider>
     </SessionProviderWrapper>
-
     </Suspense>
   );
 }

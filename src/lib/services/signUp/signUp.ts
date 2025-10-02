@@ -11,7 +11,14 @@ export const signUpApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: () => [{ type: "Auth" }, { type: "Users" }],
     }),
+    oauthRegister: builder.mutation <void, void> ({
+      query: () => ({
+        url: `auth/oauth/register`,
+        method: 'POST'
+      }),
+      invalidatesTags: () => [{ type: 'Auth' }, { type: 'Users'}],
+    })
   }),
 });
 
-export const { useSignupMutation } = signUpApi;
+export const { useSignupMutation, useOauthRegisterMutation } = signUpApi;

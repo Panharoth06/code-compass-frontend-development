@@ -294,23 +294,23 @@ const getDifficultyConfig = (difficulty: string) => {
 };
 
 // Fixed star display to only show 3 stars max
-const getStarsDisplay = (stars: string) => {
-  const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
-  return (
-    <div className="flex items-center gap-1">
-      {Array.from({ length: 3 }, (_, i) => (
-        <Star
-          key={i}
-          className={`w-3 h-3 ${
-            i < starCount
-              ? "text-yellow-500 fill-current"
-              : "text-gray-300 dark:text-slate-500"
-          }`}
-        />
-      ))}
-    </div>
-  );
-};
+// const getStarsDisplay = (stars: string) => {
+//   const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
+//   return (
+//     <div className="flex items-center gap-1">
+//       {Array.from({ length: 3 }, (_, i) => (
+//         <Star
+//           key={i}
+//           className={`w-3 h-3 ${
+//             i < starCount
+//               ? "text-yellow-500 fill-current"
+//               : "text-gray-300 dark:text-slate-500"
+//           }`}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
 
 // Sidebar Component - Fixed mobile text visibility
 const Sidebar = ({
@@ -705,7 +705,7 @@ export default function Problemset(): JSX.Element {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const dragRef = useRef<HTMLDivElement>(null);
 
-const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery();
+const {data: problems} = useGetAllProblemsQuery();
 
 
   const minWidth = 64; // w-16

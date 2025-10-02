@@ -193,6 +193,7 @@ declare module "next-auth" {
     error?: string;
     requireRegistration?: boolean;
     isRegistered?: boolean;
+    provider?: "google" | "github"
     oauthData?: {
       email: string;
       name?: string;
@@ -219,6 +220,7 @@ declare module "next-auth/jwt" {
     error?: string;
     requireRegistration?: boolean;
     isRegistered?: boolean;
+    provider?: "google" | "github"
     oauthData?: {
       email: string;
       name?: string;

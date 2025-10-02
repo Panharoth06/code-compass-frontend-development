@@ -1,14 +1,19 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import { signIn } from "next-auth/react";
+import { toast } from "react-hot-toast";
 
 export function OAuthButtons() {
+
   const handleGoogleLogin = () => {
-    alert("Google OAuth login")
+    toast.loading("Redirecting to Google...");
+    signIn("keycloak", { callbackUrl: "/newsignup" }, { kc_idp_hint: "google" });
   }
 
   const handleGitHubLogin = () => {
-    alert("GitHub OAuth login")
+    toast.loading("Redirecting to GitHub...");
+    signIn("keycloak", { callbackUrl: "/newsignup" }, { kc_idp_hint: "github" });
   }
 
   return (
