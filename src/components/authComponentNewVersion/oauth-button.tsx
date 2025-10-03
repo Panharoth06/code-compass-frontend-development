@@ -8,12 +8,12 @@ export function OAuthButtons() {
 
   const handleGoogleLogin = () => {
     toast.loading("Redirecting to Google...");
-    signIn("keycloak", { callbackUrl: "/newsignup" }, { kc_idp_hint: "google" });
+    signIn("keycloak", { callbackUrl: "/signup" }, { kc_idp_hint: "google" });
   }
 
   const handleGitHubLogin = () => {
     toast.loading("Redirecting to GitHub...");
-    signIn("keycloak", { callbackUrl: "/newsignup" }, { kc_idp_hint: "github" });
+    signIn("keycloak", { callbackUrl: "/signup" }, { kc_idp_hint: "github" });
   }
 
   return (
@@ -21,7 +21,7 @@ export function OAuthButtons() {
       <Button
         type="button"
         variant="outline"
-        className="w-full h-12 bg-background border-gray-600 hover:bg-black/95 cursor-pointer transition-all duration-200 font-mono"
+        className="w-full h-12 bg-background border-gray-800 hover:bg-black/95 hover:border-terminal-green cursor-pointer hover:transition-all duration-300 font-mono"
         onClick={handleGoogleLogin}
       >
         <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
@@ -48,7 +48,7 @@ export function OAuthButtons() {
       <Button
         type="button"
         variant="outline"
-        className="w-full h-12 bg-background border-gray-600 hover:bg-black/95 cursor-pointer transition-all duration-200 font-mono "
+        className="w-full h-12 bg-background border-gray-800 hover:bg-black/95 hover:border-terminal-green cursor-pointer transition-all duration-200 font-mono "
         onClick={handleGitHubLogin}
       >
         <svg className="w-5 h-5 mr-3" fill="white" viewBox="0 0 24 24">
