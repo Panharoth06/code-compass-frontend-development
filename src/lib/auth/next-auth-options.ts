@@ -4,137 +4,19 @@ import type { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { refreshKeycloakToken, logoutRequest } from "./oidc";
 
-// Validate required environment variables at startup
-export const validateEnvironmentVariables = () => {
-  // Skip validation if explicitly allowed
-  if (process.env.SKIP_ENV_VALIDATION === "true") {
-    console.warn("⚠️ Skipping environment variable validation (forced)");
-    return process.env as Record<string, string>;
-  }
+const validateAuthConfig = () => {
+  const required = [
+    "OIDC_CLIENT_ID",
+    "OIDC_CLIENT_SECRET", 
+    "OIDC_ISSUER",
+    "NEXTAUTH_SECRET",
+  ];
+  const missing = required.filter((key) => !process.env[key]);
 
-  // In dev mode, just warn instead of crashing
-  if (process.env.NODE_ENV !== "production") {
-    console.warn("⚠️ Skipping strict env validation in development");
-    return process.env as Record<string, string>;
-  }
-
-  // Strict validation in production
-  const requiredVars = {
-    OIDC_CLIENT_ID: process.env.OIDC_CLIENT_ID,
-    OIDC_CLIENT_SECRET: process.env.OIDC_CLIENT_SECRET,
-    OIDC_ISSUER: process.env.OIDC_ISSUER,
-    CCP_GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-    CCP_GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  };
-
-  const missing = Object.entries(requiredVars)
-    .filter(([_, v]) => !v)
-    .map(([k]) => k);
-
-  if (missing.length) {
-    throw new Error(`❌ Missing required env vars: ${missing.join(", ")}`);
-  }
-
-  return process.env as Record<string, string>;
-};
-
-// Initialize environment variables
-const env = validateEnvironmentVariables();
-
-// Constants for token management
-const TOKEN_CONFIG = {
-  DEFAULT_EXPIRES_IN: 180, // 3 minutes in seconds
-  REFRESH_BUFFER_TIME: 30, // 30-second buffer before expiration
-  JWT_MAX_AGE: 60 * 4, // 4 minutes - slightly longer than token expiration
-  MAX_REFRESH_RETRIES: 2,
-  // HTTP timeout configurations
-  HTTP_TIMEOUT: 10000, // 10 seconds
-  RETRY_DELAY_MS: 2000, // 2 seconds base delay
-} as const;
-
-// Initialize environment variables
-const env = validateEnvironmentVariables();
-
-// Enhanced HTTP client with timeout and retry logic
-// const createHttpClient = () => {
-//   return {
-//     async fetch(url: string, options: RequestInit = {}): Promise<Response> {
-//       const controller = new AbortController();
-//       const timeoutId = setTimeout(
-//         () => controller.abort(),
-//         TOKEN_CONFIG.HTTP_TIMEOUT
-//       );
-
-//       try {
-//         const response = await fetch(url, {
-//           ...options,
-//           signal: controller.signal,
-//           headers: {
-//             "Content-Type": "application/json",
-//             "User-Agent": "NextAuth.js",
-//             ...options.headers,
-//           },
-//         });
-//         clearTimeout(timeoutId);
-//         return response;
-//       } catch (error) {
-//         clearTimeout(timeoutId);
-//         if (error instanceof Error && error.name === "AbortError") {
-//           throw new Error(
-//             `Request timeout after ${TOKEN_CONFIG.HTTP_TIMEOUT}ms`
-//           );
-//         }
-//         throw error;
-//       }
-//     },
-//   };
-// };
-
-// Utility function for safe token refresh with retries
-const safeRefreshToken = async (
-  refreshToken: string | undefined,
-  retryCount: number = 0
-): Promise<{
-  access_token: string;
-  refresh_token?: string;
-  expires_in: number;
-} | null> => {
-  if (!refreshToken || typeof refreshToken !== "string") {
-    console.error("Invalid refresh token provided");
-    return null;
-  }
-
-  try {
-    const refreshed = await refreshTokenRequest(refreshToken);
-
-    // Validate the refresh response
-    if (!refreshed?.access_token) {
-      console.error("Invalid refresh token response: missing access_token");
-      return null;
-    }
-
-    return refreshed;
-  } catch (error) {
-    console.error(`Token refresh attempt ${retryCount + 1} failed:`, error);
-
-    // Retry logic for transient failures
-    if (retryCount < TOKEN_CONFIG.MAX_REFRESH_RETRIES) {
-      console.info(
-        `Retrying token refresh (${retryCount + 1}/${
-          TOKEN_CONFIG.MAX_REFRESH_RETRIES
-        })`
-      );
-      await new Promise((resolve) =>
-        setTimeout(resolve, TOKEN_CONFIG.RETRY_DELAY_MS * (retryCount + 1))
-      ); // Exponential backoff
-      return safeRefreshToken(refreshToken, retryCount + 1);
-    }
-
-    return null;
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required authentication environment variables: ${missing.join(", ")}`
+    );
   }
 };
 
