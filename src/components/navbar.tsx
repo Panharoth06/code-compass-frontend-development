@@ -205,7 +205,7 @@ const Navbar = () => {
   const moreItems = [
     { name: "Document", href: "/document", icon: FileText },
     { name: "About Us", href: "/about", icon: Users },
-    { name: "Contact", href: "/contact", icon: Mail },
+    { name: "Contact", href: "/contact-us", icon: Mail },
     { name: "Privacy Policy", href: "/privacy-policy", icon: Shield },
   ];
 
