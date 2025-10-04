@@ -6,6 +6,8 @@ import { ThemeProvider } from "@/components/general/ThemeProvider";
 import { Providers } from "@/components/problemdetailComponents/problemsImpl/providers";
 import { Suspense } from "react";
 import Loader from "@/components/loader/LoaderComponent";
+import { Suspense } from "react";
+import Loader from "@/components/loader/LoaderComponent";
 
 export const metadata: Metadata = {
   title: "CodeCompass",
@@ -27,6 +29,7 @@ export default function RootLayout({
         disableTransitionOnChange
       >
         {children}
+
       </ThemeProvider>
     </Providers>
     </Suspense>
