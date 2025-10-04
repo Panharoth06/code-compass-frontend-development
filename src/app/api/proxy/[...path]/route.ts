@@ -101,8 +101,8 @@ async function handleProxyRequest(
 
       // log to see access token and cookie
       console.log("============================ LOG ================================")
-      console.log("Cookie header:", request.headers.get("cookie"));
-      console.log("Token from getToken:", token);
+      console.debug("Cookie header:", request.headers.get("cookie"));
+      console.debug("Token from getToken:", token);
       console.log("============================-----================================")
 
       if (!token?.accessToken || token?.error) {
