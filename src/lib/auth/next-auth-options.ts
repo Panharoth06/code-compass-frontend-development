@@ -12,7 +12,6 @@ const validateAuthConfig = () => {
     "NEXTAUTH_SECRET",
   ];
   const missing = required.filter((key) => !process.env[key]);
-
   if (missing.length > 0) {
     throw new Error(
       `Missing required authentication environment variables: ${missing.join(", ")}`
@@ -33,63 +32,69 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-  async jwt({ token, account, user }) {
-    // Initial Keycloak sign-in
-    if (account?.provider === "keycloak" && user) {
-      console.log("🔐 Keycloak sign-in successful", {
-        userId: user.id,
-        email: user.email,
-      });
+    async jwt({ token, account, user }) {
+      const currentTime = Math.floor(Date.now() / 1000);
+      const buffer = 300; // refresh 5 minutes before expiry
 
-      const expiresAt =
-        Math.floor(Date.now() / 1000) + Number(account.expires_in || 300);
-
-      // 🧹 Keep JWT minimal (no refreshToken in cookie)
-      return {
-        accessToken: account.access_token,
-        expiresAt,
-        user: {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        },
-      };
-    }
-
-    // Token refresh check
-    const currentTime = Math.floor(Date.now() / 1000);
-    const buffer = 300;
-
-    if (token.expiresAt && currentTime >= token.expiresAt - buffer) {
-      try {
-        console.log("🔄 Refreshing Keycloak token...");
-        const refreshed = await refreshKeycloakToken(account?.refresh_token!);
+      // === Initial sign-in ===
+      if (account && user) {
         return {
-          ...token,
-          accessToken: refreshed.accessToken,
-          expiresAt: currentTime + refreshed.expiresIn,
+          accessToken: account.access_token,
+          refreshToken: account.refresh_token,
+          expiresAt: currentTime + Number(account.expires_in || 300),
+          user: { id: user.id, email: user.email, name: user.name },
         };
-      } catch (err) {
-        console.error("❌ Refresh failed:", err);
-        return { ...token, error: "RefreshError" };
       }
-    }
 
-    return token;
+      // === Token refresh ===
+      if (token.expiresAt && currentTime >= token.expiresAt - buffer) {
+        if (!token.refreshToken) {
+          console.warn("❌ No refresh token available. User must log in again.");
+          return { ...token, error: "RefreshError" };
+        }
+
+        try {
+          console.log("🔄 Refreshing Keycloak token...");
+          const refreshed = await refreshKeycloakToken(token.refreshToken);
+
+          return {
+            ...token,
+            accessToken: refreshed.accessToken,
+            refreshToken: refreshed.refreshToken ?? token.refreshToken, // update token
+            expiresAt: currentTime + refreshed.expiresIn,
+            error: undefined, // clear previous errors
+          };
+        } catch (err: any) {
+          console.error("❌ Refresh failed:", err.message || err);
+
+          // Force re-login if Keycloak rejects refresh token
+          return {
+            ...token,
+            error: "RefreshError",
+            accessToken: undefined,
+            refreshToken: undefined,
+            expiresAt: undefined,
+          };
+        }
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      session.user = {
+        id: token.user?.id ?? "",
+        email: token.user?.email ?? "",
+        name: token.user?.name ?? "",
+      };
+      session.accessToken = token.accessToken;
+      session.error = token.error;
+
+      // Optional: reduce session size to prevent cookie overflow
+
+      return session;
+    },
   },
-
-async session({ session, token }) {
-  session.user = {
-    id: token.user?.id ?? "",
-    email: token.user?.email ?? "",
-    name: token.user?.name ?? "",
-  };
-  session.accessToken = token.accessToken;
-  session.error = token.error;
-  return session;
-},
-
-},
 
   events: {
     async signOut({ token }) {
@@ -109,9 +114,9 @@ async session({ session, token }) {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  // Add debug mode in development
   debug: process.env.NODE_ENV === "development",
 };
+
 
 // Type declarations remain the same...
 declare module "next-auth" {
