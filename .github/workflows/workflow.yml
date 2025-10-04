@@ -26,10 +26,21 @@ jobs:
       - name: Login to Docker Registry
         run: echo "${{ secrets.PASSWORD }}" | docker login -u ${{ secrets.USERNAME }} --password-stdin
 
-      # Build and tag image with SHA and latest
+      # Build and tag image with SHA and latest (with build args)
       - name: Build Docker Image
         run: |
           docker build \
+            --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} \
+            --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} \
+            --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} \
+            --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
+            --build-arg NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} \
+            --build-arg NEXT_PUBLIC_BASE_URL_CODE_COMPASS=${{ secrets.NEXT_PUBLIC_BASE_URL_CODE_COMPASS }} \
+            --build-arg BASE_URL_CODE_COMPASS=${{ secrets.BASE_URL_CODE_COMPASS }} \
+            --build-arg CCP_GITHUB_CLIENT_ID=${{ secrets.CCP_GITHUB_CLIENT_ID }} \
+            --build-arg CCP_GITHUB_CLIENT_SECRET=${{ secrets.CCP_GITHUB_CLIENT_SECRET }} \
+            --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
             -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
 
@@ -59,12 +70,10 @@ jobs:
             export OIDC_ISSUER=${{ secrets.OIDC_ISSUER }}
             export NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}
             export NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            export NEXT_PUBLIC_BASE_URL_CODE_COMPASS=${{ secrets.NEXT_PUBLIC_BASE_URL_CODE_COMPASS }}
             export CCP_GITHUB_CLIENT_ID=${{ secrets.CCP_GITHUB_CLIENT_ID }}
             export CCP_GITHUB_CLIENT_SECRET=${{ secrets.CCP_GITHUB_CLIENT_SECRET }}
             export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
-            
 
             cd front/
             docker compose down
