@@ -1,5 +1,7 @@
 /* eslint-disable */ 
 // lib/auth/next-auth-options.ts
+import type { JWT } from "next-auth/jwt";
+import type { User } from "next-auth";
 import type { AuthOptions } from "next-auth";
 import KeycloakProvider from "next-auth/providers/keycloak";
 import { refreshKeycloakToken, logoutRequest } from "./oidc";
@@ -7,7 +9,7 @@ import { refreshKeycloakToken, logoutRequest } from "./oidc";
 const validateAuthConfig = () => {
   const required = [
     "OIDC_CLIENT_ID",
-    "OIDC_CLIENT_SECRET", 
+    "OIDC_CLIENT_SECRET",
     "OIDC_ISSUER",
     "NEXTAUTH_SECRET",
   ];
@@ -21,6 +23,10 @@ const validateAuthConfig = () => {
 
 validateAuthConfig();
 
+declare global {
+  var __NEXTAUTH_REFRESH_TOKEN__: string | undefined;
+}
+
 export const authOptions: AuthOptions = {
   providers: [
     KeycloakProvider({
@@ -32,75 +38,83 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, account, user }) {
-      const currentTime = Math.floor(Date.now() / 1000);
-      const buffer = 300; // refresh 5 minutes before expiry
+ async jwt({ token, account, user }: { token: JWT; account: any | null; user: User | undefined }): Promise<JWT>
+ {
+    const currentTime = Math.floor(Date.now() / 1000);
+    const buffer = 300;
 
-      // === Initial sign-in ===
-      if (account && user) {
+    // === Initial login ===
+    if (account && user) {
+      globalThis.__NEXTAUTH_REFRESH_TOKEN__ = account.refresh_token;
+
+      return {
+        ...token, // include existing JWT fields
+        accessToken: account.access_token,
+        expiresAt: currentTime + Number(account.expires_in || 300),
+        user: { id: user.id, name: user.name }, // minimal info
+        error: undefined,
+      };
+    }
+
+    // === Token refresh ===
+    if (token.expiresAt && currentTime >= token.expiresAt - buffer) {
+      const refreshToken = globalThis.__NEXTAUTH_REFRESH_TOKEN__;
+      if (!refreshToken) {
+        console.warn("❌ No refresh token available. User must log in again.");
         return {
-          accessToken: account.access_token,
-          refreshToken: account.refresh_token,
-          expiresAt: currentTime + Number(account.expires_in || 300),
-          user: { id: user.id, email: user.email, name: user.name },
+          ...token,
+          error: "RefreshError",
+          accessToken: undefined,
+          expiresAt: undefined,
         };
       }
 
-      // === Token refresh ===
-      if (token.expiresAt && currentTime >= token.expiresAt - buffer) {
-        if (!token.refreshToken) {
-          console.warn("❌ No refresh token available. User must log in again.");
-          return { ...token, error: "RefreshError" };
-        }
+      try {
+        console.log("🔄 Refreshing Keycloak token...");
+        const refreshed = await refreshKeycloakToken(refreshToken);
 
-        try {
-          console.log("🔄 Refreshing Keycloak token...");
-          const refreshed = await refreshKeycloakToken(token.refreshToken);
+        // update server-side refresh token
+        globalThis.__NEXTAUTH_REFRESH_TOKEN__ = refreshed.refreshToken ?? refreshToken;
 
-          return {
-            ...token,
-            accessToken: refreshed.accessToken,
-            refreshToken: refreshed.refreshToken ?? token.refreshToken, // update token
-            expiresAt: currentTime + refreshed.expiresIn,
-            error: undefined, // clear previous errors
-          };
-        } catch (err: any) {
-          console.error("❌ Refresh failed:", err.message || err);
-
-          // Force re-login if Keycloak rejects refresh token
-          return {
-            ...token,
-            error: "RefreshError",
-            accessToken: undefined,
-            refreshToken: undefined,
-            expiresAt: undefined,
-          };
-        }
+        return {
+          ...token,
+          accessToken: refreshed.accessToken,
+          expiresAt: currentTime + refreshed.expiresIn,
+          error: undefined,
+        };
+      } catch (err: any) {
+        console.error("❌ Refresh failed:", err.message || err);
+        return {
+          ...token,
+          error: "RefreshError",
+          accessToken: undefined,
+          expiresAt: undefined,
+        };
       }
+    }
 
-      return token;
-    },
-
-    async session({ session, token }) {
-      session.user = {
-        id: token.user?.id ?? "",
-        email: token.user?.email ?? "",
-        name: token.user?.name ?? "",
-      };
-      session.accessToken = token.accessToken;
-      session.error = token.error;
-
-      // Optional: reduce session size to prevent cookie overflow
-
-      return session;
-    },
+    return token;
   },
+
+  async session({ session, token }): Promise<any> {
+    session.user = {
+      id: token.user?.id ?? "",
+      name: token.user?.name ?? "",
+    };
+    session.accessToken = token.accessToken;
+    session.error = token.error;
+
+    return session;
+  },
+},
+
 
   events: {
     async signOut({ token }) {
-      if (token?.refreshToken) {
+      const refreshToken = globalThis.__NEXTAUTH_REFRESH_TOKEN__;
+      if (refreshToken) {
         try {
-          await logoutRequest(token.refreshToken);
+          await logoutRequest(refreshToken);
           console.log("✅ Keycloak logout successful");
         } catch (error) {
           console.error("❌ Keycloak logout failed:", error);
@@ -110,18 +124,19 @@ export const authOptions: AuthOptions = {
   },
 
   session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    strategy: "jwt", // keep JWT strategy, but minimal payload
+    maxAge: 30 * 24 * 60 * 60,
   },
 
   debug: process.env.NODE_ENV === "development",
 };
 
 
+
 // Type declarations remain the same...
 declare module "next-auth" {
   interface Session {
-    user: { id: string; email: string; name: string };
+    user: { id: string; email?: string; name: string };
     accessToken?: string;
     error?: string;
     requireRegistration?: boolean;
@@ -149,7 +164,7 @@ declare module "next-auth/jwt" {
     accessToken?: string;
     refreshToken?: string;
     expiresAt?: number;
-    user?: { id: string; email: string; name: string };
+    user?: { id: string; email?: string; name: string };
     error?: string;
     requireRegistration?: boolean;
     isRegistered?: boolean;

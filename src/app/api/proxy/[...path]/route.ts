@@ -41,7 +41,10 @@ async function handleProxyRequest(
   method: string
 ) {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS?.replace(/\/$/, "");
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL_CODE_COMPASS?.replace(
+      /\/$/,
+      ""
+    );
     if (!baseUrl) {
       throw new Error("NEXT_PUBLIC_BASE_URL_CODE_COMPASS is not configured");
     }
@@ -73,15 +76,20 @@ async function handleProxyRequest(
         const nextAuthUrl =
           process.env.NEXTAUTH_URL || `https://${request.headers.get("host")}`;
         try {
-          const sessionRes = await fetch(`${nextAuthUrl.replace(/\/$/, "")}/api/auth/session`, {
-            method: "GET",
-            headers: { cookie: cookieHeader },
-          });
+          const sessionRes = await fetch(
+            `${nextAuthUrl.replace(/\/$/, "")}/api/auth/session`,
+            {
+              method: "GET",
+              headers: { cookie: cookieHeader },
+            }
+          );
 
           if (sessionRes.ok) {
             const sessionData = await sessionRes.json();
             if (sessionData?.accessToken) {
-              console.log("✅ Fallback session retrieved accessToken successfully");
+              console.log(
+                "✅ Fallback session retrieved accessToken successfully"
+              );
               token = {
                 accessToken: sessionData.accessToken,
                 refreshToken: sessionData.refreshToken,
@@ -99,7 +107,9 @@ async function handleProxyRequest(
 
       // Final validation
       if (!token?.accessToken) {
-        console.error("❌ Access token not found in both getToken() and fallback");
+        console.error(
+          "❌ Access token not found in both getToken() and fallback"
+        );
         return NextResponse.json(
           { error: "Unauthorized - Please sign in" },
           { status: 401, headers: { "X-Auth-Required": "true" } }
@@ -108,19 +118,31 @@ async function handleProxyRequest(
     }
 
     // Copy key headers
-    const copyHeaders = ["content-type", "accept", "accept-language", "accept-encoding"];
+    const copyHeaders = [
+      "content-type",
+      "accept",
+      "accept-language",
+      "accept-encoding",
+    ];
     for (const header of copyHeaders) {
       const value = request.headers.get(header);
       if (value) backendHeaders.set(header, value);
     }
 
-    if (!backendHeaders.has("content-type") && method !== "GET" && method !== "HEAD") {
+    if (
+      !backendHeaders.has("content-type") &&
+      method !== "GET" &&
+      method !== "HEAD"
+    ) {
       backendHeaders.set("content-type", "application/json");
     }
 
     if (requiresAuth && token?.accessToken) {
       backendHeaders.set("Authorization", `Bearer ${token.accessToken}`);
-      console.log("🟢 Using access token for request, length:", token.accessToken.length);
+      console.log(
+        "🟢 Using access token for request, length:",
+        token.accessToken.length
+      );
     }
 
     let body: BodyInit | null = null;
@@ -135,7 +157,22 @@ async function handleProxyRequest(
       }
     }
 
-    const response = await fetch(targetUrl, { method, headers: backendHeaders, body });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000); // 20s
+
+    let response
+    try {
+        response = await fetch(targetUrl, {
+        method,
+        headers: backendHeaders,
+        body,
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    // const response = await fetch(targetUrl, { method, headers: backendHeaders, body });
 
     if (requiresAuth && response.status === 401) {
       console.warn("[Proxy] Backend returned 401, signaling reauth...");
