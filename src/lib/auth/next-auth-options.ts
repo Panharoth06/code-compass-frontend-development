@@ -33,135 +33,63 @@ export const authOptions: AuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, account, user }) {
-      // Initial Keycloak sign-in
-      if (account?.provider === "keycloak" && user) {
-        console.log("🔐 Keycloak sign-in successful", {
-          userId: user.id,
+  async jwt({ token, account, user }) {
+    // Initial Keycloak sign-in
+    if (account?.provider === "keycloak" && user) {
+      console.log("🔐 Keycloak sign-in successful", {
+        userId: user.id,
+        email: user.email,
+      });
+
+      const expiresAt =
+        Math.floor(Date.now() / 1000) + Number(account.expires_in || 300);
+
+      // 🧹 Keep JWT minimal (no refreshToken in cookie)
+      return {
+        accessToken: account.access_token,
+        expiresAt,
+        user: {
+          id: user.id,
           email: user.email,
-          hasAccessToken: !!account.access_token,
-          hasRefreshToken: !!account.refresh_token,
-          expiresIn: account.expires_in,
-        });
+          name: user.name,
+        },
+      };
+    }
 
-        const expiresAt = Math.floor(Date.now() / 1000) + Number(account.expires_in || 300);
+    // Token refresh check
+    const currentTime = Math.floor(Date.now() / 1000);
+    const buffer = 300;
 
+    if (token.expiresAt && currentTime >= token.expiresAt - buffer) {
+      try {
+        console.log("🔄 Refreshing Keycloak token...");
+        const refreshed = await refreshKeycloakToken(account?.refresh_token!);
         return {
           ...token,
-          accessToken: account.access_token || "",
-          refreshToken: account.refresh_token || "",
-          expiresAt,
-          user: {
-            id: user.id || "",
-            email: user.email || "",
-            name: user.name || "",
-          },
-          requireRegistration: false,
-          isRegistered: true,
-          error: undefined,
+          accessToken: refreshed.accessToken,
+          expiresAt: currentTime + refreshed.expiresIn,
         };
+      } catch (err) {
+        console.error("❌ Refresh failed:", err);
+        return { ...token, error: "RefreshError" };
       }
+    }
 
-      // Token refresh logic
-      const currentTime = Math.floor(Date.now() / 1000);
-      const bufferTime = 300; // 5 minutes buffer before expiry
-      
-      // Check if we have a refresh token and if the access token needs refresh
-      if (!token?.refreshToken) {
-        // No refresh token available, can't refresh
-        if (token?.expiresAt && currentTime > token.expiresAt) {
-          console.warn("⚠️ Token expired and no refresh token available");
-          return { ...token, error: "TokenExpiredError" };
-        }
-        return token;
-      }
-
-      // Don't attempt refresh on tokens that are too old (likely invalid)
-      const tokenAge = token.expiresAt ? currentTime - (token.expiresAt - (token.accessToken ? 600 : 300)) : 0; // Estimate token age
-      if (tokenAge > 86400) { // 24 hours
-        console.warn("⚠️ Refresh token too old, forcing re-authentication");
-        return { ...token, error: "RefreshTokenTooOld" };
-      }
-      
-      const needsRefresh = token.expiresAt && currentTime >= (token.expiresAt - bufferTime);
-
-      if (needsRefresh) {
-        try {
-          console.log("🔄 Token refresh needed", {
-            expiresAt: token.expiresAt,
-            currentTime,
-            timeUntilExpiry: token.expiresAt! - currentTime,
-            tokenAge: Math.round(tokenAge / 3600 * 10) / 10 + 'h', // hours with 1 decimal
-            hasRefreshToken: !!token.refreshToken
-          });
-
-          const refreshed = await refreshKeycloakToken(token.refreshToken);
-          
-          console.log("✅ Token refreshed successfully");
-          return {
-            ...token,
-            accessToken: refreshed.accessToken,
-            refreshToken: refreshed.refreshToken,
-            expiresAt: currentTime + refreshed.expiresIn,
-            error: undefined,
-          };
-        } catch (error) {
-          console.error("❌ Token refresh failed in NextAuth:", error);
-          
-          // For "Session doesn't have required client" errors, force re-authentication
-          const isSessionError = error instanceof Error && 
-            (error.message.includes("RefreshTokenInvalidError") || 
-             error.message.includes("Session doesn't have required client"));
-          
-          if (isSessionError) {
-            console.warn("🔄 Refresh token invalid, will force re-authentication");
-            // Clear the refresh token so NextAuth will redirect to login
-            return { 
-              ...token, 
-              refreshToken: undefined,
-              accessToken: undefined,
-              error: "RefreshTokenInvalidError"
-            };
-          }
-          
-          // For other errors, keep trying with the same token
-          return { 
-            ...token, 
-            error: "RefreshAccessTokenError"
-          };
-        }
-      }
-
-      // Check if token is already expired
-      if (token?.expiresAt && currentTime > token.expiresAt && !token.refreshToken) {
-        console.warn("⚠️ Token expired and no refresh token available");
-        return { ...token, error: "TokenExpiredError" };
-      }
-
-      return token;
-    },
-
-    async session({ session, token }) {
-      // If there's a token error, the session should reflect this
-      if (token.error) {
-        console.warn("⚠️ Session has token error:", token.error);
-      }
-
-      return {
-        ...session,
-        user: {
-          id: token.user?.id || "",
-          email: token.user?.email || "",
-          name: token.user?.name || "",
-        },
-        accessToken: token.accessToken,
-        error: token.error,
-        requireRegistration: token.requireRegistration,
-        isRegistered: token.isRegistered,
-        oauthData: (token as any).oauthData,
-      };
-    },
+    return token;
   },
+
+async session({ session, token }) {
+  session.user = {
+    id: token.user?.id ?? "",
+    email: token.user?.email ?? "",
+    name: token.user?.name ?? "",
+  };
+  session.accessToken = token.accessToken;
+  session.error = token.error;
+  return session;
+},
+
+},
 
   events: {
     async signOut({ token }) {
