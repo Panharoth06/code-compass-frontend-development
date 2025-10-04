@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import StoreProvider from "../StoreProvider";
-import Navbar from "@/components/navbarCore/navbar";
+import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import SessionProviderWrapper from "../SessionProviderWrapper";
 

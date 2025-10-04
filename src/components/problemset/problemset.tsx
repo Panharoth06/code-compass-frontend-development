@@ -24,7 +24,6 @@ import { ButtonProps } from "@/lib/types/ButtonProps";
 import Link from "next/link";
 import { useGetAllProblemsQuery } from "@/lib/services/problem/problemApi";
 import { ProblemSummaryResponse } from "@/lib/types/problem/problemResponse";
-import Loader from "../loader/LoaderComponent";
 
 const mockData = [
   {
@@ -295,6 +294,23 @@ const getDifficultyConfig = (difficulty: string) => {
 };
 
 // Fixed star display to only show 3 stars max
+// const getStarsDisplay = (stars: string) => {
+//   const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
+//   return (
+//     <div className="flex items-center gap-1">
+//       {Array.from({ length: 3 }, (_, i) => (
+//         <Star
+//           key={i}
+//           className={`w-3 h-3 ${
+//             i < starCount
+//               ? "text-yellow-500 fill-current"
+//               : "text-gray-300 dark:text-slate-500"
+//           }`}
+//         />
+//       ))}
+//     </div>
+//   );
+// };
 // const getStarsDisplay = (stars: string) => {
 //   const starCount = stars === "ONE" ? 1 : stars === "TWO" ? 2 : 3; // Max 3 stars
 //   return (
@@ -709,7 +725,7 @@ export default function Problemset(): JSX.Element {
 const {data: problems} = useGetAllProblemsQuery();
 
 
-    const minWidth = 64; // w-16
+  const minWidth = 64; // w-16
   const maxWidth = 400;
 
   useEffect(() => {
@@ -793,9 +809,6 @@ const {data: problems} = useGetAllProblemsQuery();
     }
   };
 
-const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery();
-
-  if (isLoading || isFetching) return <Loader/>
   
 
   const filteredData = problems
@@ -1076,10 +1089,7 @@ const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery(
                   </tr>
                 </thead>
                 <tbody>
-                  {isLoading || isFetching ? 
-                  ( <Loader/> ) : (
-                  
-                  filteredData.map((problem: ProblemSummaryResponse) => {
+                  {filteredData.map((problem: ProblemSummaryResponse) => {
                     const difficultyConfig = getDifficultyConfig(
                       problem.difficulty
                     );
@@ -1146,8 +1156,7 @@ const {data: problems, isLoading, isFetching, isError} = useGetAllProblemsQuery(
                         </td>
                       </tr>
                     );
-                  })
-                )}
+                  })}
                 </tbody>
               </table>
             </div>

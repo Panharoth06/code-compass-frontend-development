@@ -16,7 +16,6 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <Suspense fallback={<Loader/>}>
-    <Suspense fallback={<Loader/>}>
     <SessionProviderWrapper>
       <StoreProvider>
         <main>{children}</main>
