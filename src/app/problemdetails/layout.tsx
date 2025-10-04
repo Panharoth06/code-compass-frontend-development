@@ -19,7 +19,6 @@ export default function RootLayout({
 }>) {
   return (
     <Suspense fallback={<Loader/>}>
-    <Suspense fallback={<Loader/>}>
     <Providers>
       <ThemeProvider
         attribute="class"
@@ -28,12 +27,8 @@ export default function RootLayout({
         disableTransitionOnChange
       >
         {children}
-
       </ThemeProvider>
     </Providers>
-
-    </Suspense>
-
     </Suspense>
   );
 }
