@@ -17,7 +17,6 @@ import { useOauthRegisterMutation, useSignupMutation } from "@/lib/services/sign
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { DEFAULT_FORM_VALUES, formSchema } from "@/lib/types/auth/form-validation"
-import Loader from "@/components/loader/LoaderComponent"
 import toast from "react-hot-toast"
 import { CodeEditorPanel } from "@/components/authComponentNewVersion/code-editor-panel"
 
@@ -69,9 +68,9 @@ export default function RegisterPage() {
     })
   }
 
-  if (isLoading) {
-    return <Loader />
-  }
+  // if (isLoading) {
+  //   return <Loader />
+  // }
 
   return (
     <div className="min-h-screen relative flex items-center justify-center">

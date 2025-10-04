@@ -4,7 +4,13 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 // List of endpoints that don't require authentication
-const PUBLIC_ENDPOINTS = ["auth/register", "auth/signup","auth/login", "auth/refresh", "problems/verified"];
+const PUBLIC_ENDPOINTS = [
+  "auth/register",
+  "auth/signup",
+  "auth/login",
+  "auth/refresh",
+  "problems/verified",
+];
 
 // Check if the endpoint requires authentication
 function requiresAuthentication(path: string[]): boolean {
@@ -13,7 +19,6 @@ function requiresAuthentication(path: string[]): boolean {
     fullPath.startsWith(publicPath)
   );
 }
-
 
 // HTTP methods handler
 const createHandler =
@@ -93,6 +98,12 @@ async function handleProxyRequest(
         req: request,
         secret: process.env.NEXTAUTH_SECRET,
       });
+
+      // log to see access token and cookie
+      console.log("============================ LOG ================================")
+      console.log("Cookie header:", request.headers.get("cookie"));
+      console.log("Token from getToken:", token);
+      console.log("============================-----================================")
 
       if (!token?.accessToken || token?.error) {
         console.error("Access token not found or has error:", token?.error);
@@ -184,28 +195,28 @@ async function handleProxyRequest(
         );
       }
     }
-    const clonedResponse = response.clone(); 
+    const clonedResponse = response.clone();
 
     // Successful response
     try {
-        // Try reading the original response
-        const data = await response.json();
-        return NextResponse.json(data);
+      // Try reading the original response
+      const data = await response.json();
+      return NextResponse.json(data);
     } catch {
-        // Handle non-JSON responses by reading the CLONED response
-        // The cloned body is still usable.
-        const text = await clonedResponse.text();
-        return NextResponse.json({ result: text }, { status: response.status });
+      // Handle non-JSON responses by reading the CLONED response
+      // The cloned body is still usable.
+      const text = await clonedResponse.text();
+      return NextResponse.json({ result: text }, { status: response.status });
     }
-} catch (error) {
+  } catch (error) {
     console.error("Proxy error:", error);
 
     return NextResponse.json(
-        {
-            error: "Internal server error",
-            message: error instanceof Error ? error.message : "Unknown error",
-        },
-        { status: 500 }
+      {
+        error: "Internal server error",
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
     );
   }
 }
