@@ -9,10 +9,10 @@ import { MonacoEditor } from "./monaco-editor";
 
 // --- Map Judge0 language IDs to readable names ---
 const monacoLanguageMap: Record<string, string> = {
-  54: "cpp",
-  62: "java",
-  63: "javascript",
-  71: "python",
+  54: "C++",
+  62: "Java",
+  63: "Javascript",
+  71: "Python",
 };
 
 
