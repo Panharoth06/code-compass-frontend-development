@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { Button } from "@/components/ui/button";
-import { Share, RotateCcw } from "lucide-react";
+import { Share, RotateCcw, MoonIcon, SunIcon } from "lucide-react";
 import ProblemDescription from "./problemsImpl/problem-description";
 import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/monaco-editor";
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
@@ -64,6 +64,31 @@ int main() {
   const [language, setLanguage] = useState<keyof typeof codeTemplates>("cpp");
   const [code, setCode] = useState(codeTemplates["cpp"]);
   const [isMobile, setIsMobile] = useState(false);
+  const [isDark, setIsDark] = useState<boolean>(true);
+  const[mounted, setMounted] = useState<boolean>(false);
+
+  useEffect(() => {
+      setMounted(true);
+      const saved = localStorage.getItem('darkMode');
+      if (saved) {
+        setIsDark(JSON.parse(saved));
+      }
+    }, []);
+  
+    useEffect(() => {
+      if (mounted) {
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        localStorage.setItem('darkMode', JSON.stringify(isDark));
+      }
+    }, [isDark, mounted]);
+  
+    const toggleTheme = () => {
+      setIsDark(prev => !prev);
+    };
 
   // Detect mobile
   useEffect(() => {
@@ -102,6 +127,9 @@ int main() {
         </div>
         <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
           <Button variant="outline" size="sm"><Share className="w-4 h-4 mr-1 sm:mr-2" /> Share</Button>
+<span onClick={toggleTheme} className={`hover:cursor-pointer transition-all duration-200 ${(isDark ? "text-yellow-500" : "text-gray-700")}`}>
+  {isDark ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5"/>}
+</span>
         </div>
       </header>
 

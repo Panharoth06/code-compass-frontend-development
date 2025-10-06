@@ -30,15 +30,33 @@ import codecompasslogo from "../../public/codecompass-2.png";
 
 // Uiverse Toggle Component
 const UiverseToggle = () => {
-  const [isDark, setIsDark] = useState(true);
+  // const [isDark, setIsDark] = useState(true);
 
+  const [isDark, setIsDark] = useState<boolean>(true);
+  const [mounted, setMounted] = useState(false);
+
+  // After component mounts, we have access to localStorage
   useEffect(() => {
-    document.documentElement.classList.add("dark");
+    setMounted(true);
+    const saved = localStorage.getItem('darkMode');
+    if (saved) {
+      setIsDark(JSON.parse(saved));
+    }
   }, []);
 
+  useEffect(() => {
+    if (mounted) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      localStorage.setItem('darkMode', JSON.stringify(isDark));
+    }
+  }, [isDark, mounted]);
+
   const toggleTheme = () => {
-    setIsDark(!isDark);
-    document.documentElement.classList.toggle("dark");
+    setIsDark(prev => !prev);
   };
 
   return (

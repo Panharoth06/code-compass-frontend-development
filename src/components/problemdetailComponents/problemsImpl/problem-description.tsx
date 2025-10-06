@@ -13,6 +13,7 @@ import CommentComponent from "./CommentComponent";
 import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
 import CreateComment from "./CreateCommentComponent";
 import SubmissionHistoryComponent from "./SubmissionHistory";
+import { ProblemEditor } from "@/components/tiptap/text-editor";
 
 interface ProblemDescriptionProps {
   problem: ProblemResponse | undefined;
@@ -41,11 +42,11 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
 
   const getDifficultyColor = (difficulty: string | undefined) => {
     switch (difficulty) {
-      case "Easy":
+      case "EASY":
         return "bg-green-500/15 border-green-500/20 text-green-600 dark:text-green-400 text-base";
-      case "Medium":
+      case "MEDIUM":
         return "bg-orange-500/15 border-orange-500/20 text-orange-600 dark:text-orange-400 text-base";
-      case "Hard":
+      case "HARD":
         return "bg-red-500/15 border-red-500/20 dark:text-red-200 text-base";
       default:
         return "bg-gray-100 text-gray-800 dark:bg-gray-900 text-red-600 dark:text-red-400 text-base";
@@ -105,6 +106,16 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
               <HintComponent problemId={problem?.id} />
             </section>
           </div>
+        </TabsContent>
+        <TabsContent 
+        value="solutions"
+        className="flex-1 flex flex-col min-h-0"
+        >
+          <div className="overflow-auto">
+            <ProblemEditor/>
+            {/* <SubmissionHistoryComponent problem_id={problem?.id} /> */}
+          </div>
+
         </TabsContent>
         <TabsContent 
         value="submissions"

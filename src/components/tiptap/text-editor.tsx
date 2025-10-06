@@ -22,14 +22,8 @@ import {
   RemoveFormatting,
   Eye,
   EyeOff,
-  Save,
   FileCode,
-  Table,
-  ChevronDown,
-  Moon,
-  Sun,
-  PanelLeftClose,
-  PanelLeft,
+  ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -284,14 +278,13 @@ export function ProblemEditor({
   initialContent,
 }: ProblemEditorProps) {
   const [isPreview, setIsPreview] = useState(false);
-  const [isDark, setIsDark] = useState(true);
 
   const editor = useEditor({
     extensions,
     content:
       initialContent 
       ||
-      `<p>Start writing your problem here...</p>`,
+      `<p>Start writing your problem description here...</p>`,
     immediatelyRender: false,
     onUpdate({ editor }) {
       if (onChange) onChange(editor.getHTML());
@@ -305,16 +298,10 @@ export function ProblemEditor({
     };
   }, [editor]);
 
-  // Dark mode toggle
-  useEffect(() => {
-    if (isDark) document.documentElement.classList.add("dark");
-    else document.documentElement.classList.remove("dark");
-  }, [isDark]);
-
   if (!editor) return <Loader/>;
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-auto bg-background">
       {/* Main Editor Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Bar */}
@@ -341,20 +328,7 @@ export function ProblemEditor({
                   <Eye className="h-4 w-4 mr-2" /> Preview{" "}
                 </>
               )}
-            </Button>{" "}
-            <Button
-              variant="ghost"
-              size="sm"
-              className="hover:cursor-pointer"
-              onClick={() => setIsDark(!isDark)}
-              title="Toggle Theme"
-            >
-              {isDark ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}{" "}
-            </Button>{" "}
+            </Button>
           </div>
         </div>
         {/* Toolbar */}
