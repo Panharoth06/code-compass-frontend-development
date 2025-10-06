@@ -30,20 +30,8 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build \
-            --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} \
-            --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} \
-            --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} \
-            --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
-            --build-arg NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} \
-            --build-arg BASE_URL_CODE_COMPASS=${{ secrets.BASE_URL_CODE_COMPASS }} \
-            --build-arg NEXT_PUBLIC_BASE_URL_CODE_COMPASS=${{ secrets.NEXT_PUBLIC_BASE_URL_CODE_COMPASS }} \
-            --build-arg CCP_GITHUB_CLIENT_ID=${{ secrets.CCP_GITHUB_CLIENT_ID }} \
-            --build-arg CCP_GITHUB_CLIENT_SECRET=${{ secrets.CCP_GITHUB_CLIENT_SECRET }} \
-            --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
-            --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest \
-            .
+            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
 
       # Push both tags
       - name: Push Docker Image
@@ -77,7 +65,6 @@ jobs:
             export GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             export GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             
-
             cd front/
             docker compose down
             docker pull $DOCKER_USERNAME/next-code-compass:latest
