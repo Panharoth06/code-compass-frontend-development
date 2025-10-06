@@ -11,13 +11,20 @@ import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
 import TestAndOutputPanel from "./problemsImpl/code-output";
 import Loader from "../loader/LoaderComponent";
+import { useSession } from "next-auth/react";
 interface ProblemDetailsProps {
   problemId: number;
 }
 
 export default function ProblemDetailsComponent({ problemId }: ProblemDetailsProps) {
   const router = useRouter();
-  const { data, error, isLoading } = useGetProblemQuery(problemId);
+  const {status} = useSession();
+
+  const shouldFetch = status === "authenticated";
+  const { data, error, isLoading } = useGetProblemQuery(problemId, {
+    skip: !shouldFetch,
+  });
+
 
   // Your original code templates
   const codeTemplates: Record<string, string> = {
@@ -102,10 +109,9 @@ int main() {
     setLanguage(newLanguage);
     setCode(codeTemplates[newLanguage]);
   };
-  
 
   if (isLoading) return <Loader />;
-  if (error || !data) return <div className="p-4 rounded bg-red-100 text-red-800">Error loading problem, could be not found. Please try again later.</div>;
+  if (error || !data) return <div className="p-4 rounded bg-red-100 text-red-800">Error loading problem, You must login first. Please try again later.</div>;
 
   
 
