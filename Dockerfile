@@ -1,6 +1,20 @@
 # ---------- Build Stage ----------
 FROM node:20-alpine AS builder
 
+# Build args for auth env vars (passed via CLI/secrets)
+ARG OIDC_CLIENT_ID
+ARG OIDC_CLIENT_SECRET
+ARG OIDC_ISSUER
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL  # Proactive: If your auth config checks this at build time
+
+# Set as ENV for build process
+ENV OIDC_CLIENT_ID=$OIDC_CLIENT_ID
+ENV OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
+ENV OIDC_ISSUER=$OIDC_ISSUER
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+
 WORKDIR /app
 
 # Install dependencies
