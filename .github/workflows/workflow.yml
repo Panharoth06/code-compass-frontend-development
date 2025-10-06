@@ -42,7 +42,8 @@ jobs:
             --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
             --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
+            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest \
+            .
 
 
       # Push both tags
