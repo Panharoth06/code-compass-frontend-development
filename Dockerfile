@@ -1,8 +1,19 @@
 # ---------- Build Stage ----------
 FROM node:20-alpine AS builder
 
-# Optional: Keep non-secret ARG if needed (e.g., for public URLs)
-ARG NEXTAUTH_URL
+# Build args for auth env vars (passed via CLI/secrets)
+ARG OIDC_CLIENT_ID
+ARG OIDC_CLIENT_SECRET
+ARG OIDC_ISSUER
+ARG NEXTAUTH_SECRET
+ARG NEXTAUTH_URL  # Proactive: If your auth config checks this at build time
+
+# Set as ENV for build process
+ENV OIDC_CLIENT_ID=$OIDC_CLIENT_ID
+ENV OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET
+ENV OIDC_ISSUER=$OIDC_ISSUER
+ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
 
 WORKDIR /app
 
@@ -13,17 +24,8 @@ RUN npm ci
 # Copy project files
 COPY . .
 
-# Build Next.js app (mount secrets as temp files and export to ENV)
-RUN --mount=type=secret,id=oidc_client_id \
-    --mount=type=secret,id=oidc_client_secret \
-    --mount=type=secret,id=oidc_issuer \
-    --mount=type=secret,id=nextauth_secret \
-    export OIDC_CLIENT_ID=$(cat /run/secrets/oidc_client_id) && \
-    export OIDC_CLIENT_SECRET=$(cat /run/secrets/oidc_client_secret) && \
-    export OIDC_ISSUER=$(cat /run/secrets/oidc_issuer) && \
-    export NEXTAUTH_SECRET=$(cat /run/secrets/nextauth_secret) && \
-    export NEXTAUTH_URL=${NEXTAUTH_URL:-"http://localhost:3000"} && \
-    npm run build
+# Build Next.js app
+RUN npm run build
 
 # ---------- Run Stage ----------
 FROM node:20-alpine AS runner
