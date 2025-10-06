@@ -29,7 +29,7 @@ jobs:
       # Build and tag image with SHA and latest (pass auth secrets as build args)
       - name: Build Docker Image
         run: |
-          docker build \
+          DOCKER_BUILDKIT=0 docker build \
             --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} \
             --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} \
             --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} \
