@@ -31,10 +31,17 @@ jobs:
         run: docker buildx build --load --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} --build-arg NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
      
       # Push both tags
-      - name: Push Docker Image
+      - name: Build Docker Image
         run: |
-          docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
-          docker push ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest
+          docker buildx build --load \
+            --build-arg OIDC_CLIENT_ID="${{ secrets.OIDC_CLIENT_ID }}" \
+            --build-arg OIDC_CLIENT_SECRET="${{ secrets.OIDC_CLIENT_SECRET }}" \
+            --build-arg OIDC_ISSUER="${{ secrets.OIDC_ISSUER }}" \
+            --build-arg NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+            --build-arg NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
+            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
+            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest \
+            .
 
       - name: Logout from Docker Registry
         if: always()
