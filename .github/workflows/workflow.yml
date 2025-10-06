@@ -27,16 +27,9 @@ jobs:
         run: echo "${{ secrets.PASSWORD }}" | docker login -u ${{ secrets.USERNAME }} --password-stdin
 
       # Build and tag image with SHA and latest (pass auth secrets as build args)
+            # Build and tag image with SHA and latest (pass auth secrets as build args; disable BuildKit to avoid Buildx issues)
       - name: Build Docker Image
-        run: |
-          DOCKER_BUILDKIT=0 docker build \
-            --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} \
-            --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} \
-            --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} \
-            --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
-            --build-arg NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} \
-            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} \
-            -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
+        run: DOCKER_BUILDKIT=0 docker build --build-arg OIDC_CLIENT_ID=${{ secrets.OIDC_CLIENT_ID }} --build-arg OIDC_CLIENT_SECRET=${{ secrets.OIDC_CLIENT_SECRET }} --build-arg OIDC_ISSUER=${{ secrets.OIDC_ISSUER }} --build-arg NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} --build-arg NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG }} -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest .
 
       # Push both tags
       - name: Push Docker Image
