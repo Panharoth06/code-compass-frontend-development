@@ -45,7 +45,6 @@ jobs:
             -t ${{ secrets.USERNAME }}/${{ env.IMAGE_NAME }}:latest \
             .
 
-
       # Push both tags
       - name: Push Docker Image
         run: |
