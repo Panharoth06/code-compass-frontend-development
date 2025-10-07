@@ -31,6 +31,10 @@ export default function RegisterPage() {
   const [register, { isLoading }] = useSignupMutation()
   const [oauthRegister] = useOauthRegisterMutation()
 
+  useEffect(() => {
+    document.documentElement.classList.add('dark')
+  }, [])
+
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: DEFAULT_FORM_VALUES,
@@ -63,20 +67,17 @@ export default function RegisterPage() {
         success: "User registered successfully!",
         error: "Failed to register user"
       }
-    ).then(() => {
-      signIn("keycloak");
-    })
+    ).then(async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000)); 
+    signIn("keycloak");
+  })
   }
 
-  // if (isLoading) {
-  //   return <Loader />
-  // }
-
   return (
-    <div className="min-h-screen relative flex items-center justify-center">
+    <div className="min-h-screen relative flex items-center justify-center dark:bg-background">
       <TerminalBackground />
       <div className="w-full min-w-xs max-w-xl lg:max-w-6xl mx-4 lg:mx-0 relative z-10">
-        <div className="grid lg:grid-cols-2 bg-background gap-4 items-center">
+        <div className="grid lg:grid-cols-2  gap-4 items-center">
           {/* right side */}
           <CodeEditorPanel />
 
@@ -101,9 +102,8 @@ export default function RegisterPage() {
                       {...form.register("first_name")}
                       placeholder="Enter your first name"
                       disabled={isLoading}
-                      className={`terminal-input h-10 text-sm border ${
-                        form.formState.errors.first_name ? "border-red-500" : "border-gray-800"
-                      } text-white/90 selection:text-background selection:bg-white/90`}
+                      className={`terminal-input h-10 text-sm border ${form.formState.errors.first_name ? "border-red-500" : "border-gray-800"
+                        } text-white/90 selection:text-background selection:bg-white/90`}
                     />
                     {form.formState.errors.first_name ? (
                       <p className="text-xs text-destructive font-mono flex items-center gap-1">
@@ -125,9 +125,8 @@ export default function RegisterPage() {
                       {...form.register("last_name")}
                       placeholder="Enter your last name"
                       disabled={isLoading}
-                      className={`terminal-input h-10 text-sm border ${
-                        form.formState.errors.last_name ? "border-red-500" : "border-gray-800"
-                      } text-white/90 selection:text-background selection:bg-white/90`}
+                      className={`terminal-input h-10 text-sm border ${form.formState.errors.last_name ? "border-red-500" : "border-gray-800"
+                        } text-white/90 selection:text-background selection:bg-white/90`}
                     />
                     {form.formState.errors.last_name ? (
                       <p className="text-xs text-destructive font-mono flex items-center gap-1">
@@ -151,9 +150,8 @@ export default function RegisterPage() {
                     {...form.register("username")}
                     placeholder="Enter a unique username"
                     disabled={isLoading}
-                    className={`terminal-input h-10 text-sm border ${
-                      form.formState.errors.username ? "border-red-500" : "border-gray-800"
-                    } text-white/90 selection:text-background selection:bg-white/90`}
+                    className={`terminal-input h-10 text-sm border ${form.formState.errors.username ? "border-red-500" : "border-gray-800"
+                      } text-white/90 selection:text-background selection:bg-white/90`}
                   />
                   {form.formState.errors.username ? (
                     <p className="text-xs text-destructive font-mono flex items-center gap-1">
@@ -177,9 +175,8 @@ export default function RegisterPage() {
                     {...form.register("email")}
                     placeholder="Enter your email"
                     disabled={isLoading}
-                    className={`terminal-input h-10 text-sm border ${
-                      form.formState.errors.email ? "border-red-500" : "border-gray-800"
-                    } text-white/90 selection:text-background selection:bg-white/90`}
+                    className={`terminal-input h-10 text-sm border ${form.formState.errors.email ? "border-red-500" : "border-gray-800"
+                      } text-white/90 selection:text-background selection:bg-white/90`}
                   />
                   {form.formState.errors.email ? (
                     <p className="text-xs text-destructive font-mono flex items-center gap-1">
@@ -204,9 +201,8 @@ export default function RegisterPage() {
                       {...form.register("password")}
                       placeholder="••••••••"
                       disabled={isLoading}
-                      className={`terminal-input h-10 text-sm pr-10 border ${
-                        form.formState.errors.password ? "border-red-500" : "border-gray-800"
-                      } text-white/90 selection:text-background selection:bg-white/90`}
+                      className={`terminal-input h-10 text-sm pr-10 border ${form.formState.errors.password ? "border-red-500" : "border-gray-800"
+                        } text-white/90 selection:text-background selection:bg-white/90`}
                     />
                     <button
                       type="button"
@@ -240,9 +236,8 @@ export default function RegisterPage() {
                       {...form.register("confirmed_password")}
                       placeholder="••••••••"
                       disabled={isLoading}
-                      className={`terminal-input h-10 text-sm pr-10 border ${
-                        form.formState.errors.confirmed_password ? "border-red-500" : "border-gray-800"
-                      } text-white/90 selection:text-background selection:bg-white/90`}
+                      className={`terminal-input h-10 text-sm pr-10 border ${form.formState.errors.confirmed_password ? "border-red-500" : "border-gray-800"
+                        } text-white/90 selection:text-background selection:bg-white/90`}
                     />
                     <button
                       type="button"

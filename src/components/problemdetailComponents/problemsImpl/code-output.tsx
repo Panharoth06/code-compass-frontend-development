@@ -18,6 +18,8 @@ import {
   usePostBatchSubmissionsMutation,
   useRunBatchSubmissionsMutation,
 } from "@/lib/services/submission/submissionApi";
+import Loader from "@/components/loader/LoaderComponent";
+import ComputingLoader from "@/components/loader/ComputingLoader";
 
 type InternalTestCase = TestCase & { id: string };
 
@@ -44,7 +46,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
     useState<SubmissionResult | null>(null);
   const [inputError, setInputError] = useState<string | null>(null);
 
-  const [runBatchSubmissions] = useRunBatchSubmissionsMutation();
+  const [runBatchSubmissions, isLoading] = useRunBatchSubmissionsMutation();
   const [postBatchSubmissions] = usePostBatchSubmissionsMutation();
 
   // --- helpers ---
@@ -235,7 +237,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
         },
         submittedAt: new Date(),
         language: language.toUpperCase(),
-        time: `${(avgRuntime * 1000).toFixed(0)}ms`, 
+        time: `${(avgRuntime * 1000).toFixed(0)}ms`,
         memory: `${Math.round(avgMemory)} KB`,
       } as unknown as SubmissionResult);
     } catch (err) {
@@ -422,9 +424,15 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
           className="flex-1 min-h-0 p-3 overflow-y-auto"
         >
           {testResults.length === 0 ? (
-            <div className="text-center text-muted-foreground py-8 text-sm">
-              Run your code to see results here
-            </div>
+            (isRunning) ?
+              <div>
+                <ComputingLoader />
+                <p className="text-center animate-pulse text-2xl text-green-500">Computing...</p>
+              </div>
+              :
+              <div className="text-center text-muted-foreground py-8 text-sm">
+                Run your code to see results here
+              </div>
           ) : (
             <div className="space-y-3">
               {testResults.map((res, i) => (
@@ -436,8 +444,8 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
                         res.status === "passed"
                           ? "bg-green-500/20 text-green-400"
                           : res.status === "timeout"
-                          ? "bg-yellow-500/20 text-yellow-400"
-                          : "bg-red-500/20 text-red-400"
+                            ? "bg-yellow-500/20 text-yellow-400"
+                            : "bg-red-500/20 text-red-400"
                       }
                     >
                       {res.status === "passed" && (
@@ -485,65 +493,81 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
       </Tabs>
       {/* submission modal */}
       {showSubmissionModal && submissionResult?.status && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <Card className="w-80 p-4 space-y-3 bg-background">
-            <h3 className="text-lg font-semibold text-center">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fadeIn">
+          <Card className="max-w-sm w-full p-6 space-y-5 bg-background rounded-lg shadow-lg animate-slideDown">
+            <h3 className="text-2xl font-bold text-center text-gray-100">
               Submission Verdict
             </h3>
 
+            {/* Status Badge */}
             {(() => {
               const statusDesc =
-                submissionResult.status?.description ?? "Pending"; // fallback if undefined
+                submissionResult.status?.description ?? "Pending";
               const normalized = statusDesc.toLowerCase();
 
               let badgeClass =
-                "bg-red-500/20 text-red-400 w-full justify-center text-base";
+                "bg-red-500/20 text-red-400 flex items-center justify-center text-base px-3 py-1 rounded-full font-medium";
               let Icon = AlertCircle;
 
               if (normalized === "accepted") {
                 badgeClass =
-                  "bg-green-500/20 text-green-400 w-full justify-center text-base";
+                  "bg-green-500/20 text-green-400 flex items-center justify-center text-base px-3 py-1 rounded-full font-medium";
                 Icon = Check;
               } else if (normalized === "pending") {
                 badgeClass =
-                  "bg-blue-500/20 text-blue-400 w-full justify-center text-base";
+                  "bg-blue-500/20 text-blue-400 flex items-center justify-center text-base px-3 py-1 rounded-full font-medium";
                 Icon = Clock;
               }
 
               return (
-                <Badge className={badgeClass}>
-                  <Icon className="w-4 h-4 mr-2" />
-                  {statusDesc.toUpperCase()}
-                </Badge>
+                <div className="mx-auto">
+                  <Badge className={badgeClass}>
+                    <Icon className="w-8 h-5 mr-2 items-center" />
+                    {statusDesc.toUpperCase()}
+                  </Badge>
+                </div>
               );
             })()}
 
-            {submissionResult.time && (
-              <div className="text-sm text-center">
-                Runtime: {submissionResult.time}
+            {/* Stats */}
+            <div className="grid grid-cols-2 gap-4 text-based text-gray-300 text-center">
+              {submissionResult.time && (
+                <div>
+                  <span className="font-semibold text-gray-100">Runtime:</span>{" "}
+                  {submissionResult.time}
+                </div>
+              )}
+              {submissionResult.memory && (
+                <div>
+                  <span className="font-semibold text-gray-100">Memory:</span>{" "}
+                  {submissionResult.memory}
+                </div>
+              )}
+              <div>
+                <span className="font-semibold text-gray-100">Best Time:</span>{" "}
+                {problem.best_time_execution}s
               </div>
-            )}
-            {submissionResult.memory && (
-              <div className="text-sm text-center">
-                Memory: {submissionResult.memory}
+              <div>
+                <span className="font-semibold text-gray-100">Best Memory:</span>{" "}
+                {problem.best_memory_usage} KB
               </div>
-            )}
+              <div className="col-span-2">
+                <span className="font-semibold text-gray-100">Author:</span>{" "}
+                {problem.author}
+              </div>
+            </div>
+
+            {/* Error Message */}
             {submissionResult.stderr && (
-              <div className="text-sm text-red-400 text-center">
+              <div className="text-sm text-red-400 text-center font-medium bg-red-900/20 p-2 rounded">
                 {submissionResult.stderr}
               </div>
             )}
-            <div className="text-sm text-center">
-              Best Runtime: {problem.best_time_execution}s
-            </div>
-            <div className="text-sm text-center">
-              Best Memory: {problem.best_memory_usage} KB
-            </div>
-            <div className="text-sm text-center">Author: {problem.author}</div>
 
+            {/* Close Button */}
             <Button
               onClick={() => setShowSubmissionModal(false)}
-              className="w-full mt-2"
+              className="w-full mt-4 hover:cursor-pointer"
               variant="outline"
             >
               Close
@@ -551,6 +575,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
           </Card>
         </div>
       )}
+
     </div>
   );
 };
