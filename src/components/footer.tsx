@@ -48,18 +48,14 @@ const Footer = () => {
             <div className="flex items-center justify-center space-x-8 mb-6">
               {/* CodeCompass Logo */}
               <div className="group flex items-center space-x-3 transition-all duration-300">
-                <div className="relative">
+                <div className="relative w-40 h-40">
                   <Image
                     src={codecompasslogo}
                     alt="CodeCompass Logo"
-                    width={48}
-                    height={48}
+                    fill
                     className="w-12 h-12 object-contain filter drop-shadow-sm"
                   />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-[#CCF301] to-[#CCF301]/80 bg-clip-text text-transparent">
-                  CodeCompass
-                </span>
               </div>
               
               {/* Separator */}
@@ -67,18 +63,14 @@ const Footer = () => {
               
               {/* Official School Logo */}
               <div className="group flex items-center space-x-3 transition-all duration-300">
-                <div className="relative">
+                <div className="relative w-52 h-52">
                   <Image
-                    src="/image/istad.png"
+                    src="/New Logo iSTAD-06.png"
                     alt="ISTAD Logo"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 object-contain filter drop-shadow-sm"
+                    fill
+                    className=" object-contain filter drop-shadow-sm"
                   />
                 </div>
-                <span className="text-lg font-semibold text-white/90">
-                  ISTAD
-                </span>
               </div>
             </div>
             
@@ -167,25 +159,6 @@ const Footer = () => {
                           onMouseLeave={(e) => (e.target as HTMLElement).style.removeProperty('--hover-color')} />
                   </Link>
                 ))}
-              </div>
-
-              {/* Newsletter */}
-              <div className="space-y-3">
-                <p className="text-xs font-medium text-gray-300">
-                  Stay updated
-                </p>
-                <div className="relative group">
-                  <div className="flex rounded-lg overflow-hidden backdrop-blur-sm bg-gradient-to-r from-white/5 to-white/10 border border-white/10 ">
-                    <input
-                      type="email"
-                      placeholder="Enter email..."
-                      className="flex-1 px-3 py-2 text-xs bg-transparent text-white placeholder-gray-400 focus:outline-none transition-all duration-300"
-                    />
-                    <button className="relative px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-black text-xs font-semibold focus:outline-none group overflow-hidden">
-                      <span className="relative z-10">Subscribe</span>
-                    </button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
