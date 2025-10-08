@@ -18,8 +18,8 @@ import {
   usePostBatchSubmissionsMutation,
   useRunBatchSubmissionsMutation,
 } from "@/lib/services/submission/submissionApi";
-import Loader from "@/components/loader/LoaderComponent";
 import ComputingLoader from "@/components/loader/ComputingLoader";
+import confetti from "canvas-confetti";
 
 type InternalTestCase = TestCase & { id: string };
 
@@ -46,7 +46,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
     useState<SubmissionResult | null>(null);
   const [inputError, setInputError] = useState<string | null>(null);
 
-  const [runBatchSubmissions, isLoading] = useRunBatchSubmissionsMutation();
+  const [runBatchSubmissions] = useRunBatchSubmissionsMutation();
   const [postBatchSubmissions] = usePostBatchSubmissionsMutation();
 
   // --- helpers ---
@@ -285,6 +285,32 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
     );
   };
 
+  const ConfettiStars = () => {
+    const defaults = {
+      spread: 360,
+      ticks: 50,
+      gravity: 0,
+      decay: 0.94,
+      startVelocity: 30,
+      colors: ["#FFE400", "#FFBD00", "#E89400", "#FFCA6C", "#FDFFB8"],
+    }
+    const shoot = () => {
+      confetti({
+        ...defaults,
+        particleCount: 40,
+        scalar: 1.2,
+        shapes: ["star"],
+      })
+      confetti({
+        ...defaults,
+        particleCount: 10,
+        scalar: 0.75,
+        shapes: ["circle"],
+      })
+    }
+    setTimeout(shoot, 0);
+  } 
+
   return (
     <div className="min-h-0 border-t border-border flex flex-col bg-background">
       {/* action bar */}
@@ -513,6 +539,7 @@ const TestAndOutputPanel: React.FC<Props> = ({ problem, code, language }) => {
                 badgeClass =
                   "bg-green-500/20 text-green-400 flex items-center justify-center text-base px-3 py-1 rounded-full font-medium";
                 Icon = Check;
+                ConfettiStars()
               } else if (normalized === "pending") {
                 badgeClass =
                   "bg-blue-500/20 text-blue-400 flex items-center justify-center text-base px-3 py-1 rounded-full font-medium";

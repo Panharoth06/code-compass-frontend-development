@@ -10,18 +10,18 @@ import ProblemDescription from "./problemsImpl/problem-description";
 import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/monaco-editor";
 import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
 import TestAndOutputPanel from "./problemsImpl/code-output";
-import Loader from "../loader/LoaderComponent";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import CodeCompassSkeleton from "./problemsImpl/skeleton-problem-details";
 interface ProblemDetailsProps {
   problemId: number;
 }
 
 export default function ProblemDetailsComponent({ problemId }: ProblemDetailsProps) {
   const router = useRouter();
-  const {status} = useSession();
+  const { status } = useSession();
 
   const shouldFetch = status === "authenticated";
-  const { data, error, isLoading } = useGetProblemQuery(problemId, {
+  const { data, isError, isLoading } = useGetProblemQuery(problemId, {
     skip: !shouldFetch,
   });
 
@@ -72,30 +72,30 @@ int main() {
   const [code, setCode] = useState(codeTemplates["cpp"]);
   const [isMobile, setIsMobile] = useState(false);
   const [isDark, setIsDark] = useState<boolean>(true);
-  const[mounted, setMounted] = useState<boolean>(false);
+  const [mounted, setMounted] = useState<boolean>(false);
 
   useEffect(() => {
-      setMounted(true);
-      const saved = localStorage.getItem('darkMode');
-      if (saved) {
-        setIsDark(JSON.parse(saved));
+    setMounted(true);
+    const saved = localStorage.getItem('darkMode');
+    if (saved) {
+      setIsDark(JSON.parse(saved));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
-    }, []);
-  
-    useEffect(() => {
-      if (mounted) {
-        if (isDark) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
-        localStorage.setItem('darkMode', JSON.stringify(isDark));
-      }
-    }, [isDark, mounted]);
-  
-    const toggleTheme = () => {
-      setIsDark(prev => !prev);
-    };
+      localStorage.setItem('darkMode', JSON.stringify(isDark));
+    }
+  }, [isDark, mounted]);
+
+  const toggleTheme = () => {
+    setIsDark(prev => !prev);
+  };
 
   // Detect mobile
   useEffect(() => {
@@ -110,10 +110,43 @@ int main() {
     setCode(codeTemplates[newLanguage]);
   };
 
-  if (isLoading) return <Loader />;
-  if (error || !data) return <div className="p-4 rounded bg-red-100 text-red-800">Error loading problem, You must login first. Please try again later.</div>;
+  if (status === "loading") {
+    // Wait for NextAuth session to resolve first
+    return <CodeCompassSkeleton />;
+  }
 
-  
+  if (status === "unauthenticated") {
+    return (
+      <div className="p-4 rounded bg-red-100 text-red-800">
+        <p>You must log in first to view this problem.</p>
+        <button
+          onClick={() => signIn("keycloak")}
+          className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Go to Login
+        </button>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return <CodeCompassSkeleton />;
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="p-4 rounded bg-red-100 text-red-800">
+        <p>Error loading problem. Please try again later.</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
 
   return (
     <div className="flex flex-col h-full min-h-0 bg-background">
@@ -133,9 +166,9 @@ int main() {
         </div>
         <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto justify-end">
           <Button variant="outline" size="sm"><Share className="w-4 h-4 mr-1 sm:mr-2" /> Share</Button>
-<span onClick={toggleTheme} className={`hover:cursor-pointer transition-all duration-200 ${(isDark ? "text-yellow-500" : "text-gray-700")}`}>
-  {isDark ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5"/>}
-</span>
+          <span onClick={toggleTheme} className={`hover:cursor-pointer transition-all duration-200 ${(isDark ? "text-yellow-500" : "text-gray-700")}`}>
+            {isDark ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
+          </span>
         </div>
       </header>
 
@@ -170,8 +203,8 @@ int main() {
                 <div className="h-full flex flex-col">
                   <div className="p-3 border-b border-border flex items-center justify-between bg-muted">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-yellow-500 rounded flex items-center justify-center">
-                        <span className="text-black font-bold text-xs">
+                      <div className="w-4 h-4 bg-yellow-500 rounded-lg flex items-center justify-center px-4 py-4">
+                        <span className="text-black font-bold text-sm">
                           {language === "javascript"
                             ? "JS"
                             : language === "python"
@@ -181,7 +214,7 @@ int main() {
                                 : "C++"}
                         </span>
                       </div>
-                      <span className="font-medium text-sm">Code Editor</span>
+                      <span className="font-medium text-based">Code Editor</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Button

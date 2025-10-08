@@ -14,6 +14,7 @@ import { useGetCurrentUserQuery } from "@/lib/services/user/userApi";
 import CreateComment from "./CreateCommentComponent";
 import SubmissionHistoryComponent from "./SubmissionHistory";
 import { ProblemEditor } from "@/components/tiptap/text-editor";
+import SolutionComponent from "./SolutionComponent";
 
 interface ProblemDescriptionProps {
   problem: ProblemResponse | undefined;
@@ -34,11 +35,15 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
     immediatelyRender: false,
   });
 
+
+
   useEffect(() => {
     if (editor) {
       editor.commands.setContent(problem?.description || "");
     }
   }, [editor, problem?.description]);
+
+  if (!problem?.id) return <p className="text-red-600 text-2xl text-center">Problem not found</p>
 
   const getDifficultyColor = (difficulty: string | undefined) => {
     switch (difficulty) {
@@ -107,19 +112,19 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
             </section>
           </div>
         </TabsContent>
-        <TabsContent 
-        value="solutions"
-        className="flex-1 flex flex-col min-h-0"
+        <TabsContent
+          value="solutions"
+          className="flex-1 flex flex-col min-h-0"
         >
           <div className="overflow-auto">
-            <ProblemEditor/>
-            {/* <SubmissionHistoryComponent problem_id={problem?.id} /> */}
+            <ProblemEditor />
+            <SolutionComponent problem_id={problem?.id} />
           </div>
 
         </TabsContent>
-        <TabsContent 
-        value="submissions"
-        className="flex-1 flex flex-col min-h-0"
+        <TabsContent
+          value="submissions"
+          className="flex-1 flex flex-col min-h-0"
         >
           <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
             <SubmissionHistoryComponent problem_id={problem?.id} />
