@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Share, RotateCcw, MoonIcon, SunIcon } from "lucide-react";
 import ProblemDescription from "./problemsImpl/problem-description";
 import { MonacoEditor } from "@/components/problemdetailComponents/problemsImpl/monaco-editor";
-import { useGetProblemQuery } from "@/lib/services/problem/problemApi";
+import { useGetProblemQuery, useGetPublicProblemQuery } from "@/lib/services/problem/problemApi";
 import TestAndOutputPanel from "./problemsImpl/code-output";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import CodeCompassSkeleton from "./problemsImpl/skeleton-problem-details";
 interface ProblemDetailsProps {
   problemId: number;
@@ -20,23 +20,25 @@ export default function ProblemDetailsComponent({ problemId }: ProblemDetailsPro
   const router = useRouter();
   const { status } = useSession();
 
-  const shouldFetch = status === "authenticated";
-  const { data, isError, isLoading } = useGetProblemQuery(problemId, {
-    skip: !shouldFetch,
-  });
+  const problemQuery = useGetProblemQuery(problemId, { skip: status === "unauthenticated" });
+  const publicProblemQuery = useGetPublicProblemQuery(problemId, { skip: status === "authenticated" });
+
+  const data = problemQuery.data || publicProblemQuery.data;
+  const isLoading = problemQuery.isLoading || publicProblemQuery.isLoading;
+  const isError = problemQuery.isError || publicProblemQuery.isError;
 
 
   // Your original code templates
   const codeTemplates: Record<string, string> = {
     javascript: `function solve() {
 
-  // code your life's compass here
+  // Show us what you've got here 😎
 
 }
   
 solve();`,
     python: `def main():    
-    # code your life's compass here
+    // Show us what you've got here 😎
 
 if __name__ == "__main__":
     main()
@@ -49,7 +51,7 @@ class CodeCompass
 {
     public static void main(String[] args) throws java.lang.Exception
     {
-        // code your life's compass here
+        // Show us what you've got here 😎
 
     }
 }`,
@@ -61,7 +63,7 @@ int main() {
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    // code your life's compass here
+    // Show us what you've got here 😎
 
     return 0;
 }`,
@@ -109,25 +111,6 @@ int main() {
     setLanguage(newLanguage);
     setCode(codeTemplates[newLanguage]);
   };
-
-  if (status === "loading") {
-    // Wait for NextAuth session to resolve first
-    return <CodeCompassSkeleton />;
-  }
-
-  if (status === "unauthenticated") {
-    return (
-      <div className="p-4 rounded bg-red-100 text-red-800">
-        <p>You must log in first to view this problem.</p>
-        <button
-          onClick={() => signIn("keycloak")}
-          className="mt-2 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Go to Login
-        </button>
-      </div>
-    );
-  }
 
   if (isLoading) {
     return <CodeCompassSkeleton />;

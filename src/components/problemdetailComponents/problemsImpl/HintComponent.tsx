@@ -35,8 +35,6 @@ const HintComponent: React.FC<HintComponentProps> = ({ problemId }) => {
 
   if (problemLoading) return <Loader/>;
 
-// console.log(defaultAccordion);
-
 
   return (
     <Accordion

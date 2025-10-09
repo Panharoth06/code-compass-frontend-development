@@ -37,28 +37,6 @@ function ExampleComponent({ problem }: ExampleComponentProps) {
             <h6 className="font-semibold mb-3 text-foreground">
               Sample {index + 1}:
             </h6>
-
-            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() =>
-                  copyToClipboard(
-                    `Input: ${formattedInput}\nOutput: ${formattedOutput}`,
-                    `example-${index}`
-                  )
-                }
-                className="text-muted-foreground hover:text-foreground"
-                aria-label={`Copy example ${index + 1}`}
-              >
-                {copiedStates[`example-${index}`] ? (
-                  <Check className="w-4 h-4" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-background/50 p-3 rounded border">
                 <div className="flex items-center justify-between mb-2">

@@ -16,11 +16,20 @@ export const problemApi = baseApi.injectEndpoints({
       providesTags: (result, error, id) => [{ type: "Problems", id }],
     }),
     
+    getPublicProblem: builder.query<ProblemResponse | undefined, number>({
+      query: (id) => ({
+        url: `problems/${id}`,
+        method: "GET",
+      }),
+      providesTags: (result, error, id) => [{ type: "Problems", id }],
+    }),
+
     getAllProblems: builder.query<ProblemSummaryResponse[], void>({
       query: () => `problems/verified`,
       keepUnusedDataFor: 300, 
       providesTags: () => [{ type: "Problems" }],
     }),
+
 
     searchProblems: builder.query<ProblemSummaryResponse[], {searchQuery: string}>({
       // The parameter type is now correctly inferred from the generic argument:
@@ -32,4 +41,4 @@ export const problemApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useGetProblemQuery, useGetAllProblemsQuery, useSearchProblemsQuery } = problemApi;
+export const { useGetProblemQuery, useGetAllProblemsQuery, useSearchProblemsQuery, useGetPublicProblemQuery } = problemApi;

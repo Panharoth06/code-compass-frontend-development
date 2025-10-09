@@ -220,7 +220,7 @@ export function MonacoEditor({
       python: "python",
       javascript: "javascript",
     }
-    return languageMap[lang.toLowerCase()] || "plaintext"
+    return languageMap[lang] || "plaintext"
   }
 
   if (!mounted) {

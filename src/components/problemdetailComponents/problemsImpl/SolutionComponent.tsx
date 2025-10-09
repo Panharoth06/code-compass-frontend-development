@@ -1,15 +1,28 @@
+'use client'
+
 import React from 'react'
 import { useGetAllSolutionsQuery } from '@/lib/services/solution/solutionApi'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Code2, Clock, User } from 'lucide-react'
 import Image from 'next/image';
+import { useSession } from 'next-auth/react';
+import { MonacoEditor } from './monaco-editor'
 
 interface SolutionComponentProps {
   problem_id: number;
 }
 
 const SolutionComponent = (problem_id: SolutionComponentProps) => {
-  const { data: solutions, isLoading, isError } = useGetAllSolutionsQuery(problem_id);
+  const { status } = useSession();
+  const { data: solutions, isLoading, isError } = useGetAllSolutionsQuery(problem_id, { skip: status === 'unauthenticated' });
+
+  if (status === 'unauthenticated') return (
+    <div>
+      <p className='text-lg text-center text-black/70 dark:text-white/90 p-6'>
+        No data available
+      </p>
+    </div>
+  )
 
   if (isLoading)
     return (
@@ -32,6 +45,13 @@ const SolutionComponent = (problem_id: SolutionComponentProps) => {
       </p>
     )
 
+    const monacoLanguageMap: Record<string, string> = {
+  54: "cpp",
+  62: "java",
+  63: "javascript",
+  71: "python",
+}; 
+
   const displayLangaugeMap: Record<string, string> = {
     54: "C++",
     62: "Java",
@@ -40,8 +60,8 @@ const SolutionComponent = (problem_id: SolutionComponentProps) => {
   };
 
   return (
-    <div className="mx-auto px-4 py-6 space-y-6">
-      <h2 className="text-3xl font-semibold text-black/80 dark:text-white mb-6 border-b border-gray-300 dark:border-gray-700 pb-3">
+    <div className="mx-auto space-y-6">
+      <h2 className="text-2xl font-semibold text-black/80 dark:text-white border-b border-gray-300 dark:border-gray-700 pb-2">
         Solutions
       </h2>
 
@@ -51,7 +71,7 @@ const SolutionComponent = (problem_id: SolutionComponentProps) => {
           className="hover:shadow-lg transition-shadow border border-gray-200 dark:border-gray-700 rounded-2xl"
         >
           <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-2">
-            <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
               {solution.user_profile ? (
                 <div className="relative w-12 h-12 rounded-full overflow-hidden">
                   <Image
@@ -78,17 +98,25 @@ const SolutionComponent = (problem_id: SolutionComponentProps) => {
 
           <CardContent className="space-y-3">
 
-
-            <pre className="bg-gray-100 text-based dark:bg-gray-900 p-3 rounded-xl overflow-x-auto text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
+            {/* <pre className="bg-gray-100 text-sm dark:bg-gray-900 p-3 rounded-xl overflow-x-auto text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700">
               <code>{solution.source_code}</code>
-            </pre>
+            </pre> */}
 
             {solution.explanation && (
-              <div className="text-gray-700 dark:text-gray-300 text-lg">
+              <div className="text-gray-700 dark:text-gray-300 text-based">
                 <span className="font-medium">Explanation: </span>
                 {solution.explanation}
               </div>
             )}
+
+            <MonacoEditor
+              value={solution.source_code}
+              language={monacoLanguageMap[solution.language_id]}
+              readOnly={true}
+              height="400px"
+              showThemeSelector={false}
+            />
+
           </CardContent>
 
         </Card>

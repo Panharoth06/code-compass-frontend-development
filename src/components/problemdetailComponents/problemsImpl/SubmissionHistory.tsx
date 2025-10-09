@@ -6,6 +6,7 @@ import { Star, Code2, Coins } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MonacoEditor } from "./monaco-editor";
+import { useSession } from "next-auth/react";
 
 // --- Map Judge0 language IDs to readable names ---
 const monacoLanguageMap: Record<string, string> = {
@@ -51,11 +52,11 @@ const StatusBadge = ({ status }: { status: string }) => {
   const normalized = status.toUpperCase();
   let color: string = "bg-gray-700 text-white";
 
-  if (normalized === "ACCEPTED") color = "bg-green-600 text-white";
+  if (normalized === "ACCEPTED") color = "bg-green-500/15 border-green-500/20 text-green-600 dark:text-green-400 text-base";
   else if (["WRONG ANSWER", "RUNTIME ERROR"].includes(normalized))
-    color = "bg-red-600 text-white";
+    color = "bg-red-500/15 border-red-500/20 text-red-500 dark:text-red-300 text-base";
   else if (normalized === "TIME LIMIT EXCEEDED")
-    color = "bg-orange-500 text-white";
+    color = "bg-orange-500/15 border-orange-500/20 text-orange-600 dark:text-orange-400 text-base";
 
   return <Badge className={`${color} font-medium px-3 py-1`}>{status}</Badge>;
 };
@@ -66,6 +67,7 @@ const SubmissionHistoryComponent = ({ problem_id }: { problem_id?: number }) => 
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>("cpp");
 
+  const {status} = useSession();
 
   const {
     data: submissions,
@@ -74,8 +76,12 @@ const SubmissionHistoryComponent = ({ problem_id }: { problem_id?: number }) => 
     isError,
   } = useGetAllSubmissionHistoryQuery(
     { problem_id: problem_id as number },
-    { skip: skipQuery }
+    { skip: status === 'unauthenticated' || skipQuery }
   );
+
+  if (status === 'unauthenticated') return (
+    <p className="dark:text-white/90 text-black/70 text-lg text-center">No data available</p>
+  )
 
   if (skipQuery) {
     return (

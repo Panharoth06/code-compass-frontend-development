@@ -15,13 +15,15 @@ import CreateComment from "./CreateCommentComponent";
 import SubmissionHistoryComponent from "./SubmissionHistory";
 import { ProblemEditor } from "@/components/tiptap/text-editor";
 import SolutionComponent from "./SolutionComponent";
+import { useSession } from "next-auth/react";
 
 interface ProblemDescriptionProps {
   problem: ProblemResponse | undefined;
 }
 
 function ProblemDescription({ problem }: ProblemDescriptionProps) {
-  const { data: userData } = useGetCurrentUserQuery();
+  const {status} = useSession();
+  const { data: userData} = useGetCurrentUserQuery(void {skip: status === 'unauthenticated'});
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -116,7 +118,7 @@ function ProblemDescription({ problem }: ProblemDescriptionProps) {
           value="solutions"
           className="flex-1 flex flex-col min-h-0"
         >
-          <div className="overflow-auto">
+          <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll">
             <ProblemEditor />
             <SolutionComponent problem_id={problem?.id} />
           </div>

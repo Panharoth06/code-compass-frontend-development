@@ -9,14 +9,24 @@ const PUBLIC_ENDPOINTS = [
   "auth/login",
   "auth/refresh",
   "problems/verified",
+  "submissions/run/batch"
 ];
 
-function requiresAuthentication(path: string[]): boolean {
+function isPublicEndpoint(path: string[]): boolean {
   const fullPath = path.join("/");
-  return !PUBLIC_ENDPOINTS.some((publicPath) =>
-    fullPath.startsWith(publicPath)
+
+  return (
+    // static public endpoints
+    PUBLIC_ENDPOINTS.some((publicPath) => fullPath.startsWith(publicPath)) ||
+    // dynamic: only problems/{id} (numbers only, **no extra segments**)
+    /^problems\/\d+$/.test(fullPath)
   );
 }
+
+function requiresAuthentication(path: string[]): boolean {
+  return !isPublicEndpoint(path);
+}
+
 
 // Universal handler generator
 const createHandler =
